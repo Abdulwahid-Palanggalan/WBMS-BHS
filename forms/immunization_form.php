@@ -29,7 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $remarks = $_POST['remarks'];
     $recordedBy = $_SESSION['user_id'];
 
-    if (empty($babyId) || empty($vaccineId) || empty($dateGiven)) {
+    if ($nextDueDate && $dateGiven && strtotime($nextDueDate) <= strtotime($dateGiven)) {
+        $error = "Next due date must be after the date given.";
+    } elseif (empty($babyId) || empty($vaccineId) || empty($dateGiven)) {
         $error = "Please fill in all required fields.";
     } else {
         $sql = "INSERT INTO immunization_records (baby_id, vaccine_id, dose_number, date_given, next_dose_date, remarks, health_worker_id) 
@@ -142,5 +144,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const dateGiven = document.querySelector('input[name="date_given"]').value;
+            const nextDate = document.querySelector('input[name="next_due_date"]').value;
+            
+            if (dateGiven && nextDate) {
+                if (new Date(nextDate) <= new Date(dateGiven)) {
+                    e.preventDefault();
+                    alert('Next due date must be after the date given.');
+                }
+            }
+        });
+    </script>
 </body>
 </html>

@@ -21,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $remarks = $_POST['remarks'];
     $workerId = $_SESSION['user_id'];
 
-    if (empty($motherId) || empty($methodId) || empty($regDate)) {
+    if ($nextDate && $regDate && strtotime($nextDate) <= strtotime($regDate)) {
+        $error = "Next service date must be after the registration date.";
+    } elseif (empty($motherId) || empty($methodId) || empty($regDate)) {
         $error = "Please fill in required fields.";
     } else {
         $stmt = $pdo->prepare("INSERT INTO family_planning_records (mother_id, method_id, registration_date, next_service_date, remarks, health_worker_id) VALUES (?, ?, ?, ?, ?, ?)");
@@ -105,5 +107,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const regDate = document.querySelector('input[name="registration_date"]').value;
+            const nextDate = document.querySelector('input[name="next_service_date"]').value;
+            
+            if (regDate && nextDate) {
+                if (new Date(nextDate) <= new Date(regDate)) {
+                    e.preventDefault();
+                    alert('Next service date must be after the registration date.');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
