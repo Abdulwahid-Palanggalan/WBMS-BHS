@@ -10,12 +10,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];
 
-// Construct a stable base URL
-$scriptPath = $_SERVER['SCRIPT_NAME'];
-$dirPath = dirname($scriptPath);
-$dirPath = ($dirPath == DIRECTORY_SEPARATOR || $dirPath == '\\' || $dirPath == '/') ? '' : $dirPath;
-$baseUrl = $protocol . "://" . $host . $dirPath;
-$GLOBALS['base_url'] = $baseUrl;
+// Use centralized base URL
+$baseUrl = $GLOBALS['base_url'];
+$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
 
 // -----------------------------------------
 // Dynamic Sidebar Loading Based on Role - FIXED PATH

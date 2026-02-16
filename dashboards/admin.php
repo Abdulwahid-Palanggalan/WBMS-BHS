@@ -99,16 +99,7 @@ $pregnantWomen = $pdo->query("
     LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// Set the base URL
-if (!isset($GLOBALS['base_url'])) {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
-    $host = $_SERVER['HTTP_HOST'];
-    $scriptPath = $_SERVER['SCRIPT_NAME'];
-    $dirPath = dirname($scriptPath);
-    $dirPath = ($dirPath == DIRECTORY_SEPARATOR || $dirPath == '\\' || $dirPath == '/') ? '' : $dirPath;
-    $GLOBALS['base_url'] = $protocol . "://" . $host . $dirPath;
-}
-
+// Base URL is now centrally handled in database.php
 $baseUrl = $GLOBALS['base_url'];
 ?>
 

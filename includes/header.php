@@ -1,17 +1,7 @@
 <?php
 // Determine the base URL dynamically
-if (!isset($GLOBALS['base_url'])) {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
-    $host = $_SERVER['HTTP_HOST'];
-    $scriptPath = $_SERVER['SCRIPT_NAME'];
-    $dirPath = dirname($scriptPath);
-    // If in dashboards/ or forms/, we need the parent directory
-    if (strpos($dirPath, '/dashboards') !== false || strpos($dirPath, '/forms') !== false) {
-        $dirPath = dirname($dirPath);
-    }
-    $dirPath = ($dirPath == DIRECTORY_SEPARATOR || $dirPath == '\\' || $dirPath == '/') ? '' : $dirPath;
-    $GLOBALS['base_url'] = $protocol . "://" . $host . $dirPath;
-}
+// Base URL is now centrally handled in database.php
+$baseUrl = $GLOBALS['base_url'];
 
 // Get current page name
 $current_page = basename($_SERVER['PHP_SELF']);

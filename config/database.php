@@ -28,4 +28,25 @@ try {
     echo "<p>" . $e->getMessage() . "</p>";
     exit;
 }
+
+// Centralized Base URL calculation
+if (!isset($GLOBALS['base_url'])) {
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+    $host = $_SERVER['HTTP_HOST'];
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $path = dirname($scriptName);
+    $path = str_replace('\\', '/', $path);
+    
+    // Climb up from known subdirectories
+    $markers = ['/dashboards', '/forms', '/ajax', '/includes', '/config'];
+    foreach ($markers as $marker) {
+        if (($pos = strpos($path, $marker)) !== false) {
+            $path = substr($path, 0, $pos);
+            break;
+        }
+    }
+    
+    $path = ($path === '/') ? '' : rtrim($path, '/');
+    $GLOBALS['base_url'] = $protocol . "://" . $host . $path;
+}
 ?>
