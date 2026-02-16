@@ -1,4 +1,8 @@
 <?php
+// Enable Error Reporting for Debugging (Temporary)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Default Local XAMPP Credentials
 $host = 'localhost';
 $dbname = 'kibenes_ebirth';
@@ -9,16 +13,19 @@ $password = '';
 $creds_file = __DIR__ . '/db_credentials.php';
 if (file_exists($creds_file)) {
     include($creds_file);
-    $host = $db_host;
-    $dbname = $db_name;
-    $username = $db_user;
-    $password = $db_pass;
+    // Use the variables if they are set in the included file
+    if (isset($db_host)) $host = $db_host;
+    if (isset($db_name)) $dbname = $db_name;
+    if (isset($db_user)) $username = $db_user;
+    if (isset($db_pass)) $password = $db_pass;
 }
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    echo "<h1>Database Connection Error</h1>";
+    echo "<p>" . $e->getMessage() . "</p>";
+    exit;
 }
 ?>
