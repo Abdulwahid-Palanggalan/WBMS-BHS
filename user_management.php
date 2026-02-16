@@ -90,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($checkStmt->fetch()) {
             $error = "Username or email already exists!";
         } else {
-            $sql = "INSERT INTO users (first_name, last_name, username, email, role, password, status, created_at) 
-                    VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())";
+            $sql = "INSERT INTO users (first_name, last_name, username, email, role, password, assigned_sitios, status, created_at) 
+                    VALUES (?, ?, ?, ?, ?, ?, NULL, 'pending', NOW())";
             $stmt = $pdo->prepare($sql);
             
             if ($stmt->execute([$firstName, $lastName, $username, $email, $role, $password])) {

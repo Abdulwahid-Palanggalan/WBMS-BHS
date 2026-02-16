@@ -1,21 +1,16 @@
 <?php
 // Determine the base URL dynamically
 if (!isset($GLOBALS['base_url'])) {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
     $host = $_SERVER['HTTP_HOST'];
-    $scriptName = $_SERVER['SCRIPT_NAME'];
-    $pathParts = explode('/', $scriptName);
-
-    // Remove the script filename and any dashboard path
-    if (in_array('dashboards', $pathParts)) {
-        $pathParts = array_slice($pathParts, 0, array_search('dashboards', $pathParts));
-    } else {
-        $pathParts = array_slice($pathParts, 0, -1);
+    $scriptPath = $_SERVER['SCRIPT_NAME'];
+    $dirPath = dirname($scriptPath);
+    // If in dashboards/ or forms/, we need the parent directory
+    if (strpos($dirPath, '/dashboards') !== false || strpos($dirPath, '/forms') !== false) {
+        $dirPath = dirname($dirPath);
     }
-
-    $path = implode('/', $pathParts);
-    $GLOBALS['base_url'] = $protocol . "://" . $host . $path;
-    $GLOBALS['base_url'] = rtrim($GLOBALS['base_url'], '/');
+    $dirPath = ($dirPath == DIRECTORY_SEPARATOR || $dirPath == '\\' || $dirPath == '/') ? '' : $dirPath;
+    $GLOBALS['base_url'] = $protocol . "://" . $host . $dirPath;
 }
 
 // Get current page name

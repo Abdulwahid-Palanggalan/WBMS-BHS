@@ -101,11 +101,12 @@ $pregnantWomen = $pdo->query("
 
 // Set the base URL
 if (!isset($GLOBALS['base_url'])) {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
     $host = $_SERVER['HTTP_HOST'];
-    $path = dirname($_SERVER['SCRIPT_NAME']);
-    $GLOBALS['base_url'] = $protocol . "://" . $host . $path;
-    $GLOBALS['base_url'] = rtrim($GLOBALS['base_url'], '/');
+    $scriptPath = $_SERVER['SCRIPT_NAME'];
+    $dirPath = dirname($scriptPath);
+    $dirPath = ($dirPath == DIRECTORY_SEPARATOR || $dirPath == '\\' || $dirPath == '/') ? '' : $dirPath;
+    $GLOBALS['base_url'] = $protocol . "://" . $host . $dirPath;
 }
 
 $baseUrl = $GLOBALS['base_url'];

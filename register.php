@@ -70,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hashedSecurityAnswer = password_hash(strtolower(trim($security_answer)), PASSWORD_DEFAULT);
                 
                 // Insert user with pending status
-                $sql = "INSERT INTO users (first_name, middle_name, last_name, username, email, phone, role, password, security_question, security_answer, status, created_at) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())";
+                $sql = "INSERT INTO users (first_name, middle_name, last_name, username, email, phone, role, password, security_question, security_answer, assigned_sitios, status, created_at) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 'pending', NOW())";
                 $stmt = $pdo->prepare($sql);
                 
                 if ($stmt->execute([$firstName, $middleName, $lastName, $username, $email, $phone, $role, $hashedPassword, $security_question, $hashedSecurityAnswer])) {

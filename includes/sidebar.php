@@ -10,12 +10,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
 $host = $_SERVER['HTTP_HOST'];
 
-// Detect project folder (first folder after 'htdocs')
-$pathParts = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
-$projectFolder = $pathParts[0];
-
-// Construct a stable base URL, e.g., http://localhost/kibenes-ebirth
-$baseUrl = $protocol . "://" . $host . "/" . $projectFolder;
+// Construct a stable base URL
+$scriptPath = $_SERVER['SCRIPT_NAME'];
+$dirPath = dirname($scriptPath);
+$dirPath = ($dirPath == DIRECTORY_SEPARATOR || $dirPath == '\\' || $dirPath == '/') ? '' : $dirPath;
+$baseUrl = $protocol . "://" . $host . $dirPath;
 $GLOBALS['base_url'] = $baseUrl;
 
 // -----------------------------------------
