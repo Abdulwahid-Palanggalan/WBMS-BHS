@@ -1,8 +1,9 @@
 <?php
-$host = 'localhost';
-$dbname = 'kibenes_ebirth';
-$username = 'root';
-$password = '';
+// Use environment variables for cloud hosts (Railway/Render), fallback to XAMPP for local dev
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'kibenes_ebirth';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASS') ?: '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
