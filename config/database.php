@@ -1,16 +1,18 @@
 <?php
-// Support for Cloud Hosts (Railway/Render/Pantheon), fallback to XAMPP for local dev
-$host = getenv('DB_HOST') ?: (isset($_ENV['DB_HOST']) ? $_ENV['DB_HOST'] : 'localhost');
-$dbname = getenv('DB_NAME') ?: (isset($_ENV['DB_NAME']) ? $_ENV['DB_NAME'] : 'kibenes_ebirth');
-$username = getenv('DB_USER') ?: (isset($_ENV['DB_USER']) ? $_ENV['DB_USER'] : 'root');
-$password = getenv('DB_PASS') ?: (isset($_ENV['DB_PASSWORD']) ? $_ENV['DB_PASSWORD'] : '');
+// Default Local XAMPP Credentials
+$host = 'localhost';
+$dbname = 'kibenes_ebirth';
+$username = 'root';
+$password = '';
 
-// Pantheon special handling if needed
-if (isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-    $host = $_ENV['DB_HOST'];
-    $dbname = $_ENV['DB_NAME'];
-    $username = $_ENV['DB_USER'];
-    $password = $_ENV['DB_PASSWORD'];
+// If we are on the server, the CI/CD pipeline creates this secret file
+$creds_file = __DIR__ . '/db_credentials.php';
+if (file_exists($creds_file)) {
+    include($creds_file);
+    $host = $db_host;
+    $dbname = $db_name;
+    $username = $db_user;
+    $password = $db_pass;
 }
 
 try {

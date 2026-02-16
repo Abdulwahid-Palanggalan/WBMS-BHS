@@ -10,6 +10,15 @@ jobs:
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v4
+
+    - name: 🔐 Create DB Credentials File
+      run: |
+        echo "<?php" > config/db_credentials.php
+        echo "\$db_host = '${{ secrets.DB_HOST }}';" >> config/db_credentials.php
+        echo "\$db_name = '${{ secrets.DB_NAME }}';" >> config/db_credentials.php
+        echo "\$db_user = '${{ secrets.DB_USER }}';" >> config/db_credentials.php
+        echo "\$db_pass = '${{ secrets.DB_PASS }}';" >> config/db_credentials.php
+        echo "?>" >> config/db_credentials.php
     
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
