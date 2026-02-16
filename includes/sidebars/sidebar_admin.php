@@ -42,6 +42,18 @@ $baseUrl = $GLOBALS['base_url'];
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link text-dark <?= ($currentPage == 'immunization_records.php' || $currentPage == 'immunization_form.php') ? 'active bg-light text-primary' : '' ?>" 
+                   href="<?= $baseUrl ?>/immunization_records.php">
+                    <i class="fas fa-syringe me-2"></i>Immunization
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark <?= ($currentPage == 'family_planning.php') ? 'active bg-light text-primary' : '' ?>" 
+                   href="<?= $baseUrl ?>/family_planning.php">
+                    <i class="fas fa-pills me-2"></i>Family Planning
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-dark <?= ($currentPage == 'user_management.php') ? 'active bg-light text-primary' : '' ?>" 
                    href="<?= $baseUrl ?>/user_management.php">
                     <i class="fas fa-users-cog me-2"></i>User Management
