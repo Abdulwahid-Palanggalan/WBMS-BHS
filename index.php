@@ -1,5 +1,5 @@
 <?php
-// Last deployment: 2026-02-18 14:24 (Auto-Sync Test)
+// Last update: 2026-02-18 14:55 (Develop Branch Test - PR Workflow)
 header('Location: login.php');
 exit;
 ?>
