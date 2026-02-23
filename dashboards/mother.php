@@ -164,8 +164,8 @@ if (!$motherData) {
                             <i class="fas fa-exclamation-triangle me-2"></i>SOS EMERGENCY
                         </button>
                         <?php if ($isPregnant): ?>
-                        <span class="badge bg-primary-light text-primary px-4 py-2 rounded-pill fw-bold d-none d-md-inline">
-                            <i class="fas fa-baby me-2"></i><?= $weeksPregnant; ?> Weeks Pregnant
+                        <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-bold">
+                            <i class="fas fa-baby me-2"></i><?= $weeksPregnant; ?> Weeks
                         </span>
                         <?php endif; ?>
                     </div>
