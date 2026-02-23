@@ -60,6 +60,12 @@ $baseUrl = $GLOBALS['base_url'];
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link text-dark <?= ($currentPage == 'library.php') ? 'active bg-light text-primary' : '' ?>" 
+                   href="<?= $baseUrl ?>/library.php">
+                    <i class="fas fa-book-medical me-2"></i>Health Library
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-dark <?= ($currentPage == 'profile.php') ? 'active bg-light text-primary' : '' ?>" 
                    href="<?= $baseUrl ?>/profile.php">
                     <i class="fas fa-user me-2"></i>Profile
