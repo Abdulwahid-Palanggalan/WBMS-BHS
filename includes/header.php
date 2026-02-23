@@ -40,24 +40,20 @@ if (!function_exists('isLoggedIn')) {
                     <small class="badge bg-light text-dark ms-1"><?php echo $_SESSION['role']; ?></small>
                 </span>
                 
-                <div class="d-flex justify-content-center gap-2">
+                <div class="d-flex flex-wrap justify-content-center gap-2">
                     <?php if ($show_back_button): ?>
-                    <button class="btn btn-outline-light" onclick="window.history.back()">
-                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline">Back</span>
+                    <button class="btn btn-outline-light btn-sm px-3" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> <span class="d-none d-sm-inline ms-1">Back</span>
                     </button>
                     <?php endif; ?>
                     
                     <?php if ($show_nav_buttons): ?>
-                    <a class="btn btn-outline-light" href="<?php echo $GLOBALS['base_url']; ?>/profile.php">
-                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">Profile</span>
+                    <a class="btn btn-outline-light btn-sm px-3" href="<?php echo $GLOBALS['base_url']; ?>/profile.php">
+                        <i class="fas fa-user"></i> <span class="d-none d-sm-inline ms-1">Profile</span>
                     </a>
-                    <?php endif; ?>
                     
-                    <!-- Logout Button - Only show on dashboard -->
-                    <?php if ($show_nav_buttons): ?>
-                    <a class="btn btn-danger" href="#" onclick="confirmLogout(event)">
-                        <i class="fas fa-sign-out-alt"></i> <span class="d-none d-md-inline">Logout</span>
-                        <span class="d-inline d-md-none">Logout</span>
+                    <a class="btn btn-danger btn-sm px-3" href="#" onclick="confirmLogout(event)">
+                        <i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline ms-1">Logout</span>
                     </a>
                     <?php endif; ?>
                 </div>
