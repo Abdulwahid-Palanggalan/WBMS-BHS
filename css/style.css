@@ -3,7 +3,8 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.login-container, .registration-container {
+.login-container,
+.registration-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +12,8 @@ body {
     background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
 }
 
-.login-container .card, .registration-container .card {
+.login-container .card,
+.registration-container .card {
     width: 100%;
     max-width: 400px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -82,6 +84,47 @@ body {
     padding: 20px;
 }
 
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding-top: 15px;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        /* Height of the navbar */
+        left: 0;
+        width: 250px;
+        height: calc(100vh - 56px);
+        margin-left: -250px;
+        transition: margin-left 0.3s ease-in-out;
+        background-color: #fff;
+        z-index: 1040;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.show {
+        margin-left: 0;
+    }
+
+    .stats-number {
+        font-size: 1.8rem;
+    }
+
+    h1.h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .table-responsive {
+        border: 0;
+    }
+}
+
 .dashboard-card {
     transition: transform 0.3s;
     border-radius: 10px;
@@ -114,7 +157,8 @@ body {
     color: #4e73df;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
     border-color: #4e73df;
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
 }

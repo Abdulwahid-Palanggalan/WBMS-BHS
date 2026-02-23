@@ -17,36 +17,51 @@ if (!function_exists('isLoggedIn')) {
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to right, #1a73e8, #6a11cb);">
     <div class="container-fluid">
+        <!-- Sidebar Toggler for Mobile -->
+        <button class="btn btn-link text-white d-md-none me-2 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars fa-lg"></i>
+        </button>
+
         <a class="navbar-brand" href="<?php echo $GLOBALS['base_url']; ?>/dashboard.php">
             <i class="fas fa-hospital me-2"></i>
-            Health Station System
+            <span class="d-none d-sm-inline">Health Station System</span>
+            <span class="d-inline d-sm-none">BHS</span>
         </a>
 
-        <div class="d-flex ms-auto">
-            <span class="navbar-text text-white me-3">
-                <i class="fas fa-user-circle"></i>
-                <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
-                <small class="badge bg-light text-dark ms-1"><?php echo $_SESSION['role']; ?></small>
-            </span>
-            
-            <?php if ($show_back_button): ?>
-            <button class="btn btn-outline-light me-2" onclick="window.history.back()">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <?php endif; ?>
-            
-            <?php if ($show_nav_buttons): ?>
-            <a class="btn btn-outline-light me-2" href="<?php echo $GLOBALS['base_url']; ?>/profile.php">
-                <i class="fas fa-user"></i> Profile
-            </a>
-            <?php endif; ?>
-            
-            <!-- Logout Button - Only show on dashboard -->
-            <?php if ($show_nav_buttons): ?>
-            <a class="btn btn-danger" href="#" onclick="confirmLogout(event)">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-            <?php endif; ?>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="d-flex flex-column flex-lg-row ms-auto align-items-lg-center mt-2 mt-lg-0">
+                <span class="navbar-text text-white me-lg-3 mb-2 mb-lg-0 text-center text-lg-start">
+                    <i class="fas fa-user-circle"></i>
+                    <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
+                    <small class="badge bg-light text-dark ms-1"><?php echo $_SESSION['role']; ?></small>
+                </span>
+                
+                <div class="d-flex justify-content-center gap-2">
+                    <?php if ($show_back_button): ?>
+                    <button class="btn btn-outline-light" onclick="window.history.back()">
+                        <i class="fas fa-arrow-left"></i> <span class="d-none d-md-inline">Back</span>
+                    </button>
+                    <?php endif; ?>
+                    
+                    <?php if ($show_nav_buttons): ?>
+                    <a class="btn btn-outline-light" href="<?php echo $GLOBALS['base_url']; ?>/profile.php">
+                        <i class="fas fa-user"></i> <span class="d-none d-md-inline">Profile</span>
+                    </a>
+                    <?php endif; ?>
+                    
+                    <!-- Logout Button - Only show on dashboard -->
+                    <?php if ($show_nav_buttons): ?>
+                    <a class="btn btn-danger" href="#" onclick="confirmLogout(event)">
+                        <i class="fas fa-sign-out-alt"></i> <span class="d-none d-md-inline">Logout</span>
+                        <span class="d-inline d-md-none">Logout</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

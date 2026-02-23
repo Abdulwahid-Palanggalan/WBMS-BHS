@@ -3,7 +3,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $baseUrl = $GLOBALS['base_url'];
 ?>
 <!-- MIDWIFE SIDEBAR - PURE WHITE -->
-<div class="col-md-3 col-lg-2 bg-white shadow-sm p-0">
+<div class="sidebar col-md-3 col-lg-2 bg-white shadow-sm p-0 collapse d-md-block" id="sidebarMenu">
     <div class="d-flex flex-column flex-shrink-0 p-3">
         <div class="sidebar-header text-center p-3 border-bottom">
             <h5 class="text-primary"><i class="fas fa-user-nurse me-2"></i>MIDWIFE PANEL</h5>
