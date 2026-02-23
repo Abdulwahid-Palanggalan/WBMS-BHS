@@ -69,3 +69,15 @@ CREATE TABLE IF NOT EXISTS family_planning_records (
     FOREIGN KEY (mother_id) REFERENCES mothers(id) ON DELETE CASCADE,
     FOREIGN KEY (method_id) REFERENCES family_planning_methods(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+-- 7. Emergency SOS Alerts
+CREATE TABLE IF NOT EXISTS emergency_alerts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    mother_id INT NOT NULL,
+    alert_type VARCHAR(50) DEFAULT 'General Emergency',
+    status ENUM('active', 'responding', 'resolved') DEFAULT 'active',
+    location_data TEXT,
+    resolved_by INT,
+    resolved_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (mother_id) REFERENCES mothers(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

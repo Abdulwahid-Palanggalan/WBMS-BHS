@@ -6,7 +6,7 @@ require_once $rootPath . '/includes/auth.php';
 require_once $rootPath . '/includes/functions.php';
 
 if (!isAuthorized(['admin'])) {
-    header("Location: " . $rootPath . "/login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -333,7 +333,7 @@ $baseUrl = $GLOBALS['base_url'];
         <div class="row">
             <?php include_once $rootPath . '/includes/sidebar.php'; ?>
             
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <main class="ms-sm-auto px-md-4 main-content">
                 <!-- Dashboard Header -->
                 <div class="dashboard-header">
                     <div class="row align-items-center">
@@ -371,82 +371,59 @@ $baseUrl = $GLOBALS['base_url'];
                     </div>
                 </div>
 
-                <!-- Quick Access Cards -->
-                <div class="content-section">
-                    <div class="section-header">
-                        <h5><i class="fas fa-tachometer-alt me-2"></i>Quick Access</h5>
+                <!-- Quick Access Grid -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header border-0 bg-transparent py-4">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-th-large me-2 text-primary"></i>Quick Actions</h5>
                     </div>
-                    <div class="section-body">
+                    <div class="card-body pt-0">
                         <div class="row g-3">
-                            <!-- Prenatal Records -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/prenatal_records.php" class="quick-access-card">
-                                    <i class="fas fa-heartbeat"></i>
-                                    <div class="count"><?php echo $prenatalRecordsCount; ?></div>
-                                    <div class="label">Prenatal Records</div>
+                                <a href="<?php echo $baseUrl; ?>/prenatal_records.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-heartbeat text-primary fa-2x mb-2"></i>
+                                    <span class="fw-bold">Prenatal</span>
                                 </a>
                             </div>
-                            
-                            <!-- Postnatal Records -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/postnatal_records.php" class="quick-access-card">
-                                    <i class="fas fa-baby-carriage"></i>
-                                    <div class="count"><?php echo $postnatalRecordsCount; ?></div>
-                                    <div class="label">Postnatal Records</div>
+                                <a href="<?php echo $baseUrl; ?>/postnatal_records.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-baby-carriage text-success fa-2x mb-2"></i>
+                                    <span class="fw-bold">Postnatal</span>
                                 </a>
                             </div>
-                            
-                            <!-- Registered Mothers -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/mothers_list.php" class="quick-access-card">
-                                    <i class="fas fa-female"></i>
-                                    <div class="count"><?php echo $mothersCount; ?></div>
-                                    <div class="label">Registered Mothers</div>
+                                <a href="<?php echo $baseUrl; ?>/mothers_list.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-female text-info fa-2x mb-2"></i>
+                                    <span class="fw-bold">Mothers</span>
                                 </a>
                             </div>
-                            
-                            <!-- Registered Babies -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/birth_records.php" class="quick-access-card">
-                                    <i class="fas fa-baby"></i>
-                                    <div class="count"><?php echo $birthsCount; ?></div>
-                                    <div class="label">Registered Babies</div>
+                                <a href="<?php echo $baseUrl; ?>/forms/birth_registration.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-baby text-warning fa-2x mb-2"></i>
+                                    <span class="fw-bold">Birth Reg</span>
                                 </a>
                             </div>
-
-                            <!-- Total Users -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/user_management.php" class="quick-access-card">
-                                    <i class="fas fa-users"></i>
-                                    <div class="count"><?php echo $usersCount; ?></div>
-                                    <div class="label">Total Users</div>
+                                <a href="<?php echo $baseUrl; ?>/user_management.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-users-cog text-primary fa-2x mb-2"></i>
+                                    <span class="fw-bold">Users</span>
                                 </a>
                             </div>
-
-                            <!-- Pregnant Women -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/pregnant_women.php" class="quick-access-card">
-                                    <i class="fas fa-baby"></i>
-                                    <div class="count"><?php echo $pregnantWomenCount; ?></div>
-                                    <div class="label">Pregnant Women</div>
+                                <a href="<?php echo $baseUrl; ?>/pregnant_women.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-calendar-check text-danger fa-2x mb-2"></i>
+                                    <span class="fw-bold">Pregnancy</span>
                                 </a>
                             </div>
-
-                            <!-- Activity Logs -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/activity_logs.php" class="quick-access-card">
-                                    <i class="fas fa-history"></i>
-                                    <div class="count"><?php echo $activitiesCount; ?></div>
-                                    <div class="label">Activity Logs</div>
+                                <a href="<?php echo $baseUrl; ?>/reports.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-chart-line text-secondary fa-2x mb-2"></i>
+                                    <span class="fw-bold">Reports</span>
                                 </a>
                             </div>
-
-                            <!-- User Management -->
                             <div class="col-md-3 col-6">
-                                <a href="<?php echo $baseUrl; ?>/user_management.php" class="quick-access-card">
-                                    <i class="fas fa-users-cog"></i>
-                                    <div class="count">Manage</div>
-                                    <div class="label">User Management</div>
+                                <a href="<?php echo $baseUrl; ?>/activity_logs.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
+                                    <i class="fas fa-history text-dark fa-2x mb-2"></i>
+                                    <span class="fw-bold">Logs</span>
                                 </a>
                             </div>
                         </div>

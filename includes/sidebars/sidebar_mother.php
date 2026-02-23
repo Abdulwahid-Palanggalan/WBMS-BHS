@@ -3,7 +3,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $baseUrl = $GLOBALS['base_url'];
 ?>
 <!-- MOTHER SIDEBAR - PURE WHITE -->
-<div class="sidebar col-md-3 col-lg-2 bg-white shadow-sm p-0 collapse d-md-block" id="sidebarMenu">
+<div class="sidebar bg-white shadow-sm p-0 collapse d-md-block" id="sidebarMenu">
     <div class="d-flex flex-column flex-shrink-0 p-3">
         <div class="sidebar-header text-center p-3 border-bottom">
             <h5 class="text-primary"><i class="fas fa-user me-2"></i>MOTHER'S PORTAL</h5>
@@ -27,6 +27,12 @@ $baseUrl = $GLOBALS['base_url'];
                 <a class="nav-link text-dark <?= ($currentPage == 'mother_self_registration.php') ? 'active bg-light text-primary' : '' ?>" 
                    href="<?= $baseUrl ?>/forms/mother_self_registration.php">
                     <i class="fas fa-user-edit me-2"></i>My Mother Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark <?= ($currentPage == 'library.php') ? 'active bg-light text-primary' : '' ?>" 
+                   href="<?= $baseUrl ?>/library.php">
+                    <i class="fas fa-book-medical me-2"></i>Health Library
                 </a>
             </li>
             <li class="nav-item">
