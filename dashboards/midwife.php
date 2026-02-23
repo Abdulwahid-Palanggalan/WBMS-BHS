@@ -227,29 +227,82 @@ $upcomingAppointments = $pdo->query("
                             </div>
                         </div>
 
-                        <!-- Upcoming Appointments (Bento Small) -->
+                        <!-- Quick Actions Grid (Bento Small) -->
                         <div class="col-lg-4">
                             <div class="card h-100 border-0 shadow-sm">
                                 <div class="card-header border-0 bg-transparent py-4">
-                                    <h5 class="mb-0 fw-bold">Next Appointments</h5>
+                                    <h5 class="mb-0 fw-bold">Quick Actions</h5>
                                 </div>
                                 <div class="card-body pt-0">
-                                    <?php if (!empty($upcomingAppointments)): ?>
-                                        <?php foreach ($upcomingAppointments as $app): ?>
-                                            <div class="p-3 bg-light rounded-3 mb-3 border-start border-4 border-primary">
-                                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                                    <span class="fw-bold"><?= htmlspecialchars($app['first_name'] . ' ' . $app['last_name']); ?></span>
-                                                    <small class="text-primary fw-medium"><?= date('M d', strtotime($app['visit_date'])); ?></small>
-                                                </div>
-                                                <small class="text-muted"><i class="fas fa-phone-alt me-1"></i> <?= $app['phone']; ?></small>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <div class="text-center py-5">
-                                            <i class="fas fa-calendar-day fa-3x text-light mb-3"></i>
-                                            <p class="text-muted">No appointments today</p>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <a href="../forms/prenatal_form.php" class="btn btn-light w-100 py-3 border text-start">
+                                                <i class="fas fa-heartbeat text-primary mb-2 d-block"></i>
+                                                <span class="small fw-bold">Prenatal</span>
+                                            </a>
                                         </div>
-                                    <?php endif; ?>
+                                        <div class="col-6">
+                                            <a href="../forms/postnatal_form.php" class="btn btn-light w-100 py-3 border text-start">
+                                                <i class="fas fa-baby-carriage text-success mb-2 d-block"></i>
+                                                <span class="small fw-bold">Postnatal</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="../forms/mother_registration.php" class="btn btn-light w-100 py-3 border text-start">
+                                                <i class="fas fa-user-plus text-warning mb-2 d-block"></i>
+                                                <span class="small fw-bold">Reg Mother</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="../forms/birth_registration.php" class="btn btn-light w-100 py-3 border text-start">
+                                                <i class="fas fa-baby text-info mb-2 d-block"></i>
+                                                <span class="small fw-bold">Reg Birth</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="../immunization_records.php" class="btn btn-light w-100 py-3 border text-start">
+                                                <i class="fas fa-syringe text-danger mb-2 d-block"></i>
+                                                <span class="small fw-bold">Vaccines</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="../library.php" class="btn btn-light w-100 py-3 border text-start">
+                                                <i class="fas fa-book-medical text-primary mb-2 d-block"></i>
+                                                <span class="small fw-bold">Library</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 mb-4">
+                        <!-- Upcoming Appointments -->
+                        <div class="col-lg-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header border-0 bg-transparent py-4">
+                                    <h5 class="mb-0 fw-bold">Upcoming Appointments</h5>
+                                </div>
+                                <div class="card-body pt-0">
+                                    <div class="row g-3">
+                                        <?php if (!empty($upcomingAppointments)): ?>
+                                            <?php foreach ($upcomingAppointments as $app): ?>
+                                                <div class="col-md-3">
+                                                    <div class="p-3 bg-light rounded-3 border-start border-4 border-primary">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <span class="fw-bold"><?= htmlspecialchars($app['first_name'] . ' ' . $app['last_name']); ?></span>
+                                                        </div>
+                                                        <small class="text-primary fw-medium"><?= date('M d', strtotime($app['visit_date'])); ?></small>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12 text-center py-4">
+                                                <p class="text-muted">No appointments today</p>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
