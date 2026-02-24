@@ -279,25 +279,25 @@ $upcomingAppointments = $pdo->query("
                         </div>
                         
                         <div class="grid grid-cols-2 gap-3">
-                            <a href="../forms/prenatal_form.php" class="bg-white/10 hover:bg-health-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
+                            <a href="<?= $baseUrl ?>/forms/prenatal_form.php" class="bg-white/10 hover:bg-health-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
                                 <div class="w-10 h-10 bg-health-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-health-400 group-hover/item:text-white transition-colors">
                                     <i class="fas fa-heartbeat"></i>
                                 </div>
                                 <span class="text-[10px] font-black text-white uppercase tracking-widest">Prenatal</span>
                             </a>
-                            <a href="../forms/postnatal_form.php" class="bg-white/10 hover:bg-sky-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
+                            <a href="<?= $baseUrl ?>/forms/postnatal_form.php" class="bg-white/10 hover:bg-sky-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
                                 <div class="w-10 h-10 bg-sky-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-sky-400 group-hover/item:text-white transition-colors">
                                     <i class="fas fa-baby-carriage"></i>
                                 </div>
                                 <span class="text-[10px] font-black text-white uppercase tracking-widest">Postnatal</span>
                             </a>
-                            <a href="../forms/mother_registration.php" class="bg-white/10 hover:bg-amber-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
+                            <a href="<?= $baseUrl ?>/forms/mother_registration.php" class="bg-white/10 hover:bg-amber-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
                                 <div class="w-10 h-10 bg-amber-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-amber-400 group-hover/item:text-white transition-colors">
                                     <i class="fas fa-user-plus"></i>
                                 </div>
                                 <span class="text-[10px] font-black text-white uppercase tracking-widest">Register</span>
                             </a>
-                            <a href="../forms/birth_registration.php" class="bg-white/10 hover:bg-emerald-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
+                            <a href="<?= $baseUrl ?>/forms/birth_registration.php" class="bg-white/10 hover:bg-emerald-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
                                 <div class="w-10 h-10 bg-emerald-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-emerald-400 group-hover/item:text-white transition-colors">
                                     <i class="fas fa-baby"></i>
                                 </div>
@@ -306,14 +306,14 @@ $upcomingAppointments = $pdo->query("
                         </div>
 
                         <div class="mt-8 flex flex-col gap-2">
-                            <a href="../immunization_records.php" class="bg-white/5 hover:bg-white/10 p-4 rounded-2xl flex items-center justify-between group/pill transition-all">
+                            <a href="<?= $baseUrl ?>/immunization_records.php" class="bg-white/5 hover:bg-white/10 p-4 rounded-2xl flex items-center justify-between group/pill transition-all">
                                 <div class="flex items-center gap-3">
                                     <i class="fas fa-syringe text-rose-500"></i>
                                     <span class="text-[11px] font-bold text-white uppercase tracking-widest">Immunization Center</span>
                                 </div>
                                 <i class="fas fa-arrow-right text-slate-600 group-hover/pill:text-white transition-colors text-xs"></i>
                             </a>
-                            <a href="../library.php" class="bg-white/5 hover:bg-white/10 p-4 rounded-2xl flex items-center justify-between group/pill transition-all">
+                            <a href="<?= $baseUrl ?>/library.php" class="bg-white/5 hover:bg-white/10 p-4 rounded-2xl flex items-center justify-between group/pill transition-all">
                                 <div class="flex items-center gap-3">
                                     <i class="fas fa-book-medical text-sky-500"></i>
                                     <span class="text-[11px] font-bold text-white uppercase tracking-widest">Health Resources</span>

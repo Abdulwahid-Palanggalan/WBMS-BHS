@@ -82,6 +82,8 @@ if (!$motherData) {
         $nextAppointment = $nextAppStmt->fetch(PDO::FETCH_ASSOC);
     }
 }
+
+$baseUrl = $GLOBALS['base_url'] ?? '';
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +132,7 @@ if (!$motherData) {
                     <h3 class="text-xl font-bold">Welcome to your Health Portal!</h3>
                     <p class="text-health-50 mt-1">Complete your profile to unlock pregnancy tracking, digital records, and health reminders.</p>
                 </div>
-                <a href="../forms/mother_self_registration.php" class="bg-white text-health-600 font-bold px-6 py-3 rounded-xl hover:bg-health-50 transition-colors shadow-lg z-10">
+                <a href="<?= $baseUrl ?>/forms/mother_self_registration.php" class="bg-white text-health-600 font-bold px-6 py-3 rounded-xl hover:bg-health-50 transition-colors shadow-lg z-10">
                     Complete Profile Now
                 </a>
             </div>
@@ -282,7 +284,7 @@ if (!$motherData) {
                     <div class="card-health overflow-hidden">
                         <div class="px-8 py-6 flex items-center justify-between bg-white border-b border-slate-100">
                             <h3 class="text-lg font-bold text-slate-800">My Children</h3>
-                            <a href="../forms/birth_registration.php" class="text-xs font-bold text-health-600 hover:text-health-700 uppercase tracking-widest flex items-center gap-1.5 transition-colors">
+                            <a href="<?= $baseUrl ?>/forms/birth_registration.php" class="text-xs font-bold text-health-600 hover:text-health-700 uppercase tracking-widest flex items-center gap-1.5 transition-colors">
                                 <i class="fas fa-plus-circle"></i> Add Record
                             </a>
                         </div>
@@ -384,7 +386,7 @@ if (!$motherData) {
                             <i class="fas fa-chevron-right text-slate-200 text-xs group-hover:translate-x-1 transition-transform"></i>
                         </button>
 
-                        <a href="../library.php" class="w-full p-4 rounded-3xl hover:bg-slate-50 transition-all flex items-center gap-4 group">
+                        <a href="<?= $baseUrl ?>/library.php" class="w-full p-4 rounded-3xl hover:bg-slate-50 transition-all flex items-center gap-4 group">
                             <div class="w-11 h-11 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-lg group-hover:bg-amber-600 group-hover:text-white transition-all">
                                 <i class="fas fa-book-medical"></i>
                             </div>
@@ -427,8 +429,8 @@ if (!$motherData) {
                     fetch(url).then(r => r.text()).then(d => modalContent.innerHTML = d);
                 });
             };
-            loadModal('prenatalModal', '../ajax/get_mother_prenatal_records.php');
-            loadModal('postnatalModal', '../ajax/get_mother_postnatal_records.php');
+            loadModal('prenatalModal', '<?= $baseUrl ?>/ajax/get_mother_prenatal_records.php');
+            loadModal('postnatalModal', '<?= $baseUrl ?>/ajax/get_mother_postnatal_records.php');
 
             // SOS Handler
             document.getElementById('sosTrigger').addEventListener('click', function() {
@@ -458,7 +460,7 @@ if (!$motherData) {
             });
 
             function sendSos(location) {
-                fetch('../ajax/trigger_sos.php', {
+                fetch('<?= $baseUrl ?>/ajax/trigger_sos.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `alert_type=Urgent SOS&location=${encodeURIComponent(location)}`
@@ -479,68 +481,6 @@ if (!$motherData) {
                             icon: 'error',
                             customClass: { popup: 'rounded-[2rem]' }
                         });
-                    }
-                });
-            }
-        });
-    </script>
-</body>
-</html>
-            </main>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <div class="modal fade" id="prenatalModal" tabindex="-1"><div class="modal-dialog modal-xl"><div class="modal-content"></div></div></div>
-    <div class="modal fade" id="postnatalModal" tabindex="-1"><div class="modal-dialog modal-xl"><div class="modal-content"></div></div></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // AJAX Loaders for Modals
-            const loadModal = (id, url) => {
-                document.getElementById(id).addEventListener('show.bs.modal', function() {
-                    const modalContent = this.querySelector('.modal-content');
-                    modalContent.innerHTML = '<div class="p-5 text-center"><div class="spinner-border text-primary"></div></div>';
-                    fetch(url).then(r => r.text()).then(d => modalContent.innerHTML = d);
-                });
-            };
-            loadModal('prenatalModal', '../ajax/get_mother_prenatal_records.php');
-            loadModal('postnatalModal', '../ajax/get_mother_postnatal_records.php');
-
-            // SOS Handler
-            document.getElementById('sosTrigger').addEventListener('click', function() {
-                Swal.fire({
-                    title: 'Trigger Emergency Alert?',
-                    text: "This will immediately notify the midwife of your status.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#ef4444',
-                    cancelButtonColor: '#64748b',
-                    confirmButtonText: 'Yes, Send SOS!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        navigator.geolocation.getCurrentPosition(position => {
-                            sendSos(`${position.coords.latitude}, ${position.coords.longitude}`);
-                        }, () => {
-                            sendSos('Location access denied');
-                        });
-                    }
-                });
-            });
-
-            function sendSos(location) {
-                fetch('../ajax/trigger_sos.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `alert_type=Urgent SOS&location=${encodeURIComponent(location)}`
-                })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire('Alert Sent!', data.message, 'success');
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
                     }
                 });
             }
