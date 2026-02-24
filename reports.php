@@ -1238,153 +1238,17 @@ function generateDOMPDFHTML() {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports - Kibenes eBirth</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Reports - WBMS-BHS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <?php include_once 'includes/tailwind_config.php'; ?>
     <style>
-        .role-badge {
-            font-size: 0.8rem;
-        }
-        .stats-card {
-            border-left: 4px solid;
-            transition: transform 0.2s;
-        }
-        .stats-card:hover {
-            transform: translateY(-2px);
-        }
-        .table-responsive {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        /* BHW and BNS Report Styles */
-        .official-report-card {
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .official-table {
-            font-size: 0.85rem;
-        }
-        .official-table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-        .section-title {
-            background-color: #e9ecef;
-            padding: 8px 15px;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        /* Action buttons styling */
-        .action-buttons {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        /* Admin Report Specific Styles */
-        .summary-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .summary-value {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .summary-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        /* Prenatal and Postnatal Combined Record Styles */
-        .mother-section {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #fafafa;
-        }
-        .mother-header {
-            background: #e9ecef;
-            padding: 10px 15px;
-            margin: -15px -15px 15px -15px;
-            border-radius: 8px 8px 0 0;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .prenatal-row {
-            background-color: #f0f8ff !important;
-        }
-        .postnatal-row {
-            background-color: #fff0f5 !important;
-        }
-
-        /* Report Header with Logos */
-        .report-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #2c3e50;
-        }
-        .logo-container {
-            width: 150px;
-            text-align: center;
-        }
-        .logo-container img {
-            max-width: 100%;
-            height: auto;
-            max-height: 120px;
-        }
-        .header-center {
-            text-align: center;
-            flex-grow: 1;
-            padding: 0 20px;
-        }
-        .header-center h4 {
-            margin: 5px 0;
-            color: #2c3e50;
-            font-weight: bold;
-        }
-        .header-center p {
-            margin: 2px 0;
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .header-center .report-period {
-            font-weight: bold;
-            color: #2c3e50;
-            margin-top: 5px;
-            font-size: 0.9rem;
-        }
-
-        /* Print Styles with Logos */
         @media print {
-            body * {
-                visibility: hidden !important;
-            }
-
-            #print-area, #print-area * {
-                visibility: visible !important;
-            }
-
+            body * { visibility: hidden !important; }
+            #print-area, #print-area * { visibility: visible !important; }
             #print-area {
                 position: absolute;
                 top: 0;
@@ -1394,209 +1258,86 @@ function generateDOMPDFHTML() {
                 padding: 10px !important;
                 background: white !important;
             }
-
-            /* Print Header with Logos */
-            .print-header {
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                margin-bottom: 15px !important;
-                padding-bottom: 10px !important;
-                border-bottom: 1px solid #000 !important;
-                page-break-after: avoid !important;
-            }
-            .print-logo-left, .print-logo-right {
-                width: 100px !important;
-                text-align: center !important;
-            }
-            .print-logo-left img, .print-logo-right img {
-                max-width: 100% !important;
-                height: auto !important;
-                max-height: 100px !important;
-            }
-            .print-header-center {
-                text-align: center !important;
-                flex-grow: 1 !important;
-                padding: 0 10px !important;
-            }
-            .print-header-center h4 {
-                margin: 2px 0 !important;
-                font-size: 14pt !important;
-                font-weight: bold !important;
-                color: #2c3e50 !important;
-            }
-            .print-header-center p {
-                margin: 1px 0 !important;
-                font-size: 9pt !important;
-                color: #666 !important;
-            }
-            .print-header-center .report-period {
-                font-weight: bold !important;
-                color: #2c3e50 !important;
-                margin-top: 3px !important;
-                font-size: 9pt !important;
-            }
-
-            @page {
-                size: portrait;
-                margin: 15mm;
-            }
-
-            /* BNS Report - Landscape */
-            #print-area.bns-report {
-                page: bns-landscape;
-            }
-
-            @page bns-landscape {
-                size: landscape;
-                margin: 10mm;
-            }
-
-            #print-area.bns-report .official-table {
-                table-layout: fixed;
-                width: 100% !important;
-                font-size: 8pt !important;
-            }
-
-            #print-area.bns-report .official-table th,
-            #print-area.bns-report .official-table td {
-                padding: 2px 3px !important;
-                word-wrap: break-word;
-                line-height: 1.1 !important;
-            }
-
-            #print-area.bns-report .card-body {
-                padding: 5px !important;
-            }
-
-            /* Midwife Combined Report - Landscape */
-            #print-area.midwife-combined {
-                page: midwife-landscape;
-            }
-
-            @page midwife-landscape {
-                size: landscape;
-                margin: 10mm;
-            }
-
-            #print-area.midwife-combined .table {
-                table-layout: fixed;
-                width: 100% !important;
-                font-size: 8pt !important;
-            }
-
-            #print-area.midwife-combined .table th,
-            #print-area.midwife-combined .table td {
-                padding: 3px 4px !important;
-                word-wrap: break-word;
-                line-height: 1.1 !important;
-            }
-
-            #print-area.midwife-combined .card-body {
-                padding: 8px !important;
-            }
-
-            /* Optimized column widths for midwife combined report in landscape */
-            #print-area.midwife-combined .table th:nth-child(1),
-            #print-area.midwife-combined .table td:nth-child(1) { width: 14% !important; }
-            #print-area.midwife-combined .table th:nth-child(2),
-            #print-area.midwife-combined .table td:nth-child(2) { width: 8% !important; }
-            #print-area.midwife-combined .table th:nth-child(3),
-            #print-area.midwife-combined .table td:nth-child(3) { width: 8% !important; }
-            #print-area.midwife-combined .table th:nth-child(4),
-            #print-area.midwife-combined .table td:nth-child(4) { width: 6% !important; }
-            #print-area.midwife-combined .table th:nth-child(5),
-            #print-area.midwife-combined .table td:nth-child(5) { width: 8% !important; }
-            #print-area.midwife-combined .table th:nth-child(6),
-            #print-area.midwife-combined .table td:nth-child(6) { width: 6% !important; }
-            #print-area.midwife-combined .table th:nth-child(7),
-            #print-area.midwife-combined .table td:nth-child(7) { width: 18% !important; }
-            #print-area.midwife-combined .table th:nth-child(8),
-            #print-area.midwife-combined .table td:nth-child(8) { width: 22% !important; }
-            #print-area.midwife-combined .table th:nth-child(9),
-            #print-area.midwife-combined .table td:nth-child(9) { width: 10% !important; }
-
-            .no-print {
-                display: none !important;
-            }
-            
-            body {
-                font-size: 10pt !important;
-                line-height: 1.2 !important;
-            }
-            
-            .table {
-                font-size: 9pt !important;
-            }
-            
-            .table th,
-            .table td {
-                padding: 4px 6px !important;
-            }
         }
-        
-        /* BHW Sitio Info Box */
-        .bhw-sitio-info-box {
-            background: #e8f4fd;
-            border-left: 4px solid #3498db;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        .bhw-sitio-info-box strong {
-            color: #2c3e50;
-        }
-        .bhw-sitio-badge {
-            background: #3498db;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin: 0 3px;
-        }
-
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-full font-inter">
+    <?php include_once 'includes/header.php'; ?>
     
-<?php include_once 'includes/header.php'; ?>
-    
-<div class="container-fluid">
-    <div class="row">
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         <?php include_once 'includes/sidebar.php'; ?>
         
-        <main class="main-content">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <div>
-                    <h1 class="h2">Reports</h1>
-                    <span class="badge bg-primary role-badge"><?php echo strtoupper($userRole); ?> Access</span>
+        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
+            <header class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight">Reports & Analytics</h1>
+                    <p class="text-slate-500 text-sm font-medium">Generate health monitoring reports for <?= ucfirst($userRole) ?></p>
                 </div>
-            </div>
-            
+                <div class="flex items-center gap-3">
+                    <a href="?download_pdf=1&report_type=<?= $reportType ?>&report_month=<?= $reportMonth ?>&time_period=<?= $timePeriod ?>&start_date=<?= $startDate ?>&end_date=<?= $endDate ?>" 
+                       class="bg-rose-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-rose-100 hover:bg-rose-700 transition-all flex items-center gap-3">
+                        <i class="fas fa-file-pdf"></i>
+                        Export PDF
+                    </a>
+                    <button onclick="optimizePrint()" class="bg-health-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-health-100 hover:bg-health-700 transition-all flex items-center gap-3">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
+                </div>
+            </header>
+
             <!-- Report Filters -->
-            <div class="card mb-4 no-print">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-filter"></i> Report Filters</h5>
+            <section class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Report Type</label>
+                        <select name="report_type" onchange="this.form.submit()" class="w-full bg-slate-50 border-none rounded-2xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-health-600 transition-all">
+                            <?php if ($userRole === 'admin'): ?>
+                                <option value="activity" <?= $reportType === 'activity' ? 'selected' : '' ?>>Activity Logs</option>
+                            <?php elseif ($userRole === 'midwife'): ?>
+                                <option value="prenatal_postnatal_combined" <?= $reportType === 'prenatal_postnatal_combined' ? 'selected' : '' ?>>Maternal Care Combined</option>
+                                <option value="birth_registration" <?= $reportType === 'birth_registration' ? 'selected' : '' ?>>Birth Registrations</option>
+                            <?php elseif ($userRole === 'bhw'): ?>
+                                <option value="monthly" <?= $reportType === 'monthly' ? 'selected' : '' ?>>Monthly Community Report</option>
+                            <?php elseif ($userRole === 'bns'): ?>
+                                <option value="monthly" <?= $reportType === 'monthly' ? 'selected' : '' ?>>Monthly Nutrition Report</option>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Time Period</label>
+                        <select name="time_period" id="timePeriodSelector" onchange="this.form.submit()" class="w-full bg-slate-50 border-none rounded-2xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-health-600 transition-all">
+                            <option value="this-month" <?= $timePeriod === 'this-month' ? 'selected' : '' ?>>This Month</option>
+                            <option value="last-month" <?= $timePeriod === 'last-month' ? 'selected' : '' ?>>Last Month</option>
+                            <option value="this-quarter" <?= $timePeriod === 'this-quarter' ? 'selected' : '' ?>>This Quarter</option>
+                            <option value="this-year" <?= $timePeriod === 'this-year' ? 'selected' : '' ?>>This Year</option>
+                            <option value="custom" <?= $timePeriod === 'custom' ? 'selected' : '' ?>>Custom Range</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2" id="startDateCol" style="<?= $timePeriod !== 'custom' ? 'display: none;' : '' ?>">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Start Date</label>
+                        <input type="date" name="start_date" value="<?= $startDate ?>" class="w-full bg-slate-50 border-none rounded-2xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-health-600 transition-all">
+                    </div>
+
+                    <div class="space-y-2" id="endDateCol" style="<?= $timePeriod !== 'custom' ? 'display: none;' : '' ?>">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">End Date</label>
+                        <div class="flex gap-2">
+                            <input type="date" name="end_date" value="<?= $endDate ?>" class="w-full bg-slate-50 border-none rounded-2xl py-3 px-4 text-sm font-bold focus:ring-2 focus:ring-health-600 transition-all">
+                            <button type="submit" class="bg-health-600 text-white p-3 rounded-2xl hover:bg-health-700 transition-all">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <div class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-soft overflow-hidden">
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-xl font-black text-slate-900 uppercase tracking-tight"><?= $reportTitle ?></h2>
+                    <div class="flex-1 h-px bg-slate-100"></div>
                 </div>
-                <div class="card-body">
-                    <form method="GET" action="">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="report_type" class="form-label">Report Type</label>
-                                <select class="form-select" id="report_type" name="report_type">
-                                    <!-- Admin Reports -->
-                                    <?php if ($userRole === 'admin'): ?>
-                                        <option value="activity" <?php echo $reportType === 'activity' ? 'selected' : ''; ?>>Activity Logs</option>
-                                    
-                                    <!-- Midwife Reports -->
-                                    <?php elseif ($userRole === 'midwife'): ?>
-                                        <option value="prenatal_postnatal_combined" <?php echo $reportType === 'prenatal_postnatal_combined' ? 'selected' : ''; ?>>Prenatal and Postnatal Care Record</option>
-                                        <option value="birth_registration" <?php echo $reportType === 'birth_registration' ? 'selected' : ''; ?>>Birth Registration Report</option>
-                                    
-                                    <!-- BHW Reports -->
-                                    <?php elseif ($userRole === 'bhw'): ?>
-                                        <option value="monthly" <?php echo $reportType === 'monthly' ? 'selected' : ''; ?>>Monthly BHW Report</option>
                                         
                                     <!-- BNS Reports -->
                                     <?php elseif ($userRole === 'bns'): ?>
@@ -1699,286 +1440,232 @@ function generateDOMPDFHTML() {
                             </div>
                         </div>
                         
-                        <div class="card-body">
-                            <?php if (!empty($summaryStats)): ?>
-                            <div class="summary-card">
-                                <div class="row text-center">
-                                    <div class="col-md-3">
-                                        <div class="summary-value"><?php echo $summaryStats['total_activities']; ?></div>
-                                        <div class="summary-label">Total Activities</div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="summary-value"><?php echo $summaryStats['unique_users']; ?></div>
-                                        <div class="summary-label">Unique Users</div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="summary-value"><?php echo date('M j', strtotime($summaryStats['first_activity'])); ?></div>
-                                        <div class="summary-label">First Activity</div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="summary-value"><?php echo date('M j', strtotime($summaryStats['last_activity'])); ?></div>
-                                        <div class="summary-label">Last Activity</div>
-                                    </div>
-                                </div>
+                <?php if ($userRole === 'admin' && $reportType === 'activity'): ?>
+                    <!-- Admin Activity Logs -->
+                    <div id="print-area" class="space-y-8">
+                        <?php if (!empty($summaryStats)): ?>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 rounded-3xl text-white shadow-lg shadow-indigo-100">
+                                <div class="text-3xl font-black mb-1"><?php echo $summaryStats['total_activities']; ?></div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest opacity-80">Total Activities</div>
                             </div>
-                            <?php endif; ?>
-
-                            <?php if (!empty($reportData)): ?>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Date & Time</th>
-                                            <th>User</th>
-                                            <th>Role</th>
-                                            <th>Activity Description</th>
-                                            <th>IP Address</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($reportData as $row): ?>
-                                        <tr>
-                                            <td><?php echo date('M j, Y g:i A', strtotime($row['timestamp'])); ?></td>
-                                            <td>
-                                                <?php if ($row['username']): ?>
-                                                    <?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?>
-                                                    <br><small class="text-muted">(@<?php echo htmlspecialchars($row['username']); ?>)</small>
-                                                <?php else: ?>
-                                                    <span class="text-muted">System</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-secondary"><?php echo ucfirst($row['role'] ?? 'System'); ?></span>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($row['activity']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['ip_address'] ?? 'N/A'); ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                            <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 p-6 rounded-3xl text-white shadow-lg shadow-emerald-100">
+                                <div class="text-3xl font-black mb-1"><?php echo $summaryStats['unique_users']; ?></div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest opacity-80">Unique Users</div>
                             </div>
-                            <?php else: ?>
-                            <div class="alert alert-info text-center">
-                                <i class="fas fa-info-circle"></i> No activity records found for the selected period.
+                            <div class="bg-gradient-to-br from-amber-600 to-amber-700 p-6 rounded-3xl text-white shadow-lg shadow-amber-100">
+                                <div class="text-xl font-black mb-1"><?php echo date('M j, Y', strtotime($summaryStats['first_activity'])); ?></div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest opacity-80">First Recorded</div>
                             </div>
-                            <?php endif; ?>
+                            <div class="bg-gradient-to-br from-rose-600 to-rose-700 p-6 rounded-3xl text-white shadow-lg shadow-rose-100">
+                                <div class="text-xl font-black mb-1"><?php echo date('M j, Y', strtotime($summaryStats['last_activity'])); ?></div>
+                                <div class="text-[10px] font-bold uppercase tracking-widest opacity-80">Last Activity</div>
+                            </div>
                         </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($reportData)): ?>
+                        <div class="overflow-x-auto rounded-2xl border border-slate-100">
+                            <table class="w-full text-left font-inter">
+                                <thead class="bg-slate-50 border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Timestamp</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">User Details</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Role</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Action</th>
+                                        <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    <?php foreach ($reportData as $row): ?>
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
+                                        <td class="px-6 py-4 text-xs font-bold text-slate-500"><?php echo date('M j, g:i A', strtotime($row['timestamp'])); ?></td>
+                                        <td class="px-6 py-4">
+                                            <?php if ($row['username']): ?>
+                                                <div class="text-sm font-black text-slate-900"><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></div>
+                                                <div class="text-[10px] font-bold text-slate-400 lowercase italic">@<?php echo htmlspecialchars($row['username']); ?></div>
+                                            <?php else: ?>
+                                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">System</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-slate-200">
+                                                <?php echo ucfirst($row['role'] ?? 'System'); ?>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm font-medium text-slate-600"><?php echo htmlspecialchars($row['activity']); ?></td>
+                                        <td class="px-6 py-4 text-[10px] font-mono text-slate-400"><?php echo htmlspecialchars($row['ip_address'] ?? 'N/A'); ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <?php else: ?>
+                        <div class="py-20 flex flex-col items-center justify-center opacity-30 select-none">
+                            <i class="fas fa-history text-6xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest">No activity logs found</p>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
                     </div>
                 <?php endif; ?>
 
             <!-- Midwife Reports -->
             <?php elseif ($userRole === 'midwife'): ?>
-                <?php if ($reportType === 'prenatal_postnatal_combined'): ?>
-                    <!-- Prenatal and Postnatal Care Record - SINGLE TABLE -->
-                    <div class="card midwife-combined" id="print-area">
-                        <!-- PRINT HEADER WITH LOGOS -->
-                        <div class="print-header d-none d-print-block">
-                            <div class="print-logo-left">
-                                <img src="images/doh-logo.png" alt="DOH Logo">
-                            </div>
-                            <div class="print-header-center">
-                                <h4>PRENATAL AND POSTNATAL CARE RECORD</h4>
-                                <p>BARANGAY HEALTH STATION - KIBENES</p>
-                                <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                                <div class="report-period">
-                                    Period: <?php echo date('M j, Y', strtotime($startDate)); ?> to <?php echo date('M j, Y', strtotime($endDate)); ?>
-                                </div>
-                            </div>
-                            <div class="print-logo-right">
-                                <img src="images/brgy-logo.png" alt="Barangay Logo">
-                            </div>
-                        </div>
-                        
-                        <!-- SCREEN HEADER -->
-                        <div class="report-header no-print">
-                            <div class="logo-container">
-                                <img src="images/doh-logo.png" alt="DOH Logo">
-                            </div>
-                            <div class="header-center">
-                                <h4>PRENATAL AND POSTNATAL CARE RECORD</h4>
-                                <p>BARANGAY HEALTH STATION - KIBENES</p>
-                                <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                                <div class="report-period">
-                                    Period: <?php echo date('M j, Y', strtotime($startDate)); ?> to <?php echo date('M j, Y', strtotime($endDate)); ?>
-                                </div>
-                            </div>
-                            <div class="logo-container text-end">
-                                <img src="images/brgy-logo.png" alt="Barangay Logo">
-                            </div>
-                        </div>
-
-                        <!-- SINGLE TABLE -->
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th width="12%">MOTHER NAME</th>
-                                        <th width="8%">DATE</th>
-                                        <th width="8%">TYPE</th>
-                                        <th width="8%">BP</th>
-                                        <th width="6%">WT</th>
-                                        <th width="8%">AOG/TEMP</th>
-                                        <th width="6%">HB</th>
-                                        <th width="15%">BABY INFO</th>
-                                        <th width="20%">FINDINGS/TREATMENT</th>
-                                        <th width="9%">NEXT VISIT</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($combinedRecords)): ?>
-                                        <?php foreach ($combinedRecords as $record): ?>
-                                        <tr class="<?php echo $record['record_type'] === 'prenatal' ? 'prenatal-row' : 'postnatal-row'; ?>">
-                                            <td class="text-left">
-                                                <strong><?php echo htmlspecialchars($record['last_name'] . ', ' . $record['first_name']); ?></strong>
-                                                <br><small><?php echo htmlspecialchars($record['phone']); ?></small>
-                                            </td>
-                                            <td><?php echo date('m/d/Y', strtotime($record['visit_date'])); ?></td>
-                                            <td>
-                                                <?php echo $record['record_type'] === 'prenatal' ? 'Prenatal' : 'Postnatal'; ?>
-                                            </td>
-                                            <td><?php echo $record['blood_pressure'] ?? 'N/A'; ?></td>
-                                            <td>
-                                                <?php if ($record['record_type'] === 'prenatal'): ?>
-                                                    <?php echo $record['weight'] ?? 'N/A'; ?>
-                                                <?php else: ?>
-                                                    <?php echo $record['mother_weight'] ?? 'N/A'; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($record['record_type'] === 'prenatal'): ?>
-                                                    <?php echo $record['gestational_age'] ?? 'N/A'; ?>
-                                                <?php else: ?>
-                                                    <?php echo $record['temperature'] ?? 'N/A'; ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?php echo $record['hb_level'] ?? 'N/A'; ?></td>
-                                            <td class="text-left">
-                                                <?php if ($record['record_type'] === 'postnatal' && !empty($record['baby_first_name'])): ?>
-                                                    <strong>Baby:</strong> <?php echo htmlspecialchars($record['baby_first_name'] . ' ' . $record['baby_last_name']); ?><br>
-                                                    <strong>DOB:</strong> <?php echo !empty($record['birth_date']) ? date('m/d/Y', strtotime($record['birth_date'])) : 'N/A'; ?><br>
-                                                    <strong>Gender:</strong> <?php echo $record['gender'] ?? 'N/A'; ?>
-                                                <?php else: ?>
-                                                    -
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-left">
-                                                <?php
-                                                $findings = [];
-                                                if (!empty($record['complaints'])) $findings[] = "C: " . $record['complaints'];
-                                                if (!empty($record['findings'])) $findings[] = "F: " . $record['findings'];
-                                                if (!empty($record['treatment'])) $findings[] = "T: " . $record['treatment'];
-                                                
-                                                echo implode(' ', $findings) ?: 'None';
-                                                ?>
-                                            </td>
-                                            <td><?php echo !empty($record['next_visit_date']) ? date('m/d/Y', strtotime($record['next_visit_date'])) : 'N/A'; ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="10" class="text-center text-muted">
-                                                No prenatal or postnatal records found for the selected period.
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- PREPARED BY SECTION -->
-                        <div class="row mt-4">
-                            <div class="col-md-6 offset-md-6">
+                <?php if ($userRole === 'midwife'): ?>
+                    <?php if ($reportType === 'prenatal_postnatal_combined'): ?>
+                        <div id="print-area" class="space-y-8">
+                            <!-- Printable Header -->
+                            <div class="hidden print:flex justify-between items-center border-b-2 border-slate-900 pb-6 mb-8">
+                                <img src="images/doh-logo.png" class="h-20 w-auto" alt="DOH">
                                 <div class="text-center">
-                                    <p class="mb-0">Prepared by:</p>
-                                    <div class="mt-2">
-                                        <strong><?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?></strong>
-                                        <div style="width: 60%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                        <small class="text-muted">Signature Over Printed Name</small>
+                                    <h4 class="text-xl font-black uppercase tracking-tight">Prenatal & Postnatal Care Record</h4>
+                                    <p class="text-[10px] font-bold text-slate-500 uppercase">Barangay Health Station - Kibenes</p>
+                                    <div class="text-[10px] font-black mt-1 uppercase tracking-widest">Period: <?= date('M j, Y', strtotime($startDate)) ?> - <?= date('M j, Y', strtotime($endDate)) ?></div>
+                                </div>
+                                <img src="images/brgy-logo.png" class="h-20 w-auto" alt="Barangay">
+                            </div>
+
+                            <div class="overflow-x-auto rounded-3xl border border-slate-100 shadow-sm print:border-none">
+                                <table class="w-full text-left font-inter">
+                                    <thead class="bg-slate-50 border-b border-slate-100 print:bg-slate-100">
+                                        <tr class="divide-x divide-slate-100 print:divide-slate-200">
+                                            <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Mother Name</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Date</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Type</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">BP</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Wt</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">AOG/Temp</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">HB</th>
+                                            <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Baby Details</th>
+                                            <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Findings/Treatment</th>
+                                            <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Next Visit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-50">
+                                        <?php if (!empty($combinedRecords)): ?>
+                                            <?php foreach ($combinedRecords as $record): ?>
+                                            <tr class="divide-x divide-slate-50 border-b border-slate-50 print:border-slate-100 <?= $record['record_type'] === 'prenatal' ? 'bg-indigo-50/20' : 'bg-rose-50/20' ?>">
+                                                <td class="px-4 py-3">
+                                                    <div class="text-sm font-black text-slate-900"><?= htmlspecialchars($record['last_name'] . ', ' . $record['first_name']) ?></div>
+                                                    <div class="text-[10px] font-bold text-slate-400"><?= htmlspecialchars($record['phone']) ?></div>
+                                                </td>
+                                                <td class="px-3 py-3 text-center text-xs font-bold text-slate-600"><?= date('m/d/y', strtotime($record['visit_date'])) ?></td>
+                                                <td class="px-3 py-3 text-center">
+                                                    <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest <?= $record['record_type'] === 'prenatal' ? 'bg-indigo-100 text-indigo-700' : 'bg-rose-100 text-rose-700' ?>">
+                                                        <?= $record['record_type'] ?>
+                                                    </span>
+                                                </td>
+                                                <td class="px-3 py-3 text-center text-xs font-black tracking-tight"><?= $record['blood_pressure'] ?: '-' ?></td>
+                                                <td class="px-3 py-3 text-center text-xs font-medium text-slate-600"><?= ($record['record_type'] === 'prenatal' ? $record['weight'] : $record['mother_weight']) ?: '-' ?></td>
+                                                <td class="px-3 py-3 text-center text-xs font-medium text-slate-600"><?= ($record['record_type'] === 'prenatal' ? $record['gestational_age'] . 'w' : $record['temperature'] . '°C') ?: '-' ?></td>
+                                                <td class="px-3 py-3 text-center text-xs font-medium text-slate-600"><?= $record['hb_level'] ?: '-' ?></td>
+                                                <td class="px-4 py-3">
+                                                    <?php if ($record['record_type'] === 'postnatal' && !empty($record['baby_first_name'])): ?>
+                                                        <div class="text-xs font-black text-slate-800"><?= htmlspecialchars($record['baby_first_name']) ?></div>
+                                                        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-tight"><?= $record['gender'] ?> • <?= date('m/d/y', strtotime($record['birth_date'])) ?></div>
+                                                    <?php else: ?>
+                                                        <span class="text-[9px] font-black text-slate-300 uppercase italic">In Utero</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="px-4 py-3">
+                                                    <p class="text-[11px] font-medium text-slate-600 leading-relaxed max-w-[200px] print:max-w-none">
+                                                        <?php
+                                                        $parts = [];
+                                                        if (!empty($record['complaints'])) $parts[] = "<span class='font-black text-slate-900 uppercase text-[9px]'>C:</span> " . $record['complaints'];
+                                                        if (!empty($record['findings'])) $parts[] = "<span class='font-black text-slate-900 uppercase text-[9px]'>F:</span> " . $record['findings'];
+                                                        if (!empty($record['treatment'])) $parts[] = "<span class='font-black text-slate-900 uppercase text-[9px]'>T:</span> " . $record['treatment'];
+                                                        echo implode('<br>', $parts) ?: '-';
+                                                        ?>
+                                                    </p>
+                                                </td>
+                                                <td class="px-3 py-3 text-center text-xs font-black text-health-600"><?= !empty($record['next_visit_date']) ? date('m/d/y', strtotime($record['next_visit_date'])) : '-' ?></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="10" class="py-12 text-center opacity-30">
+                                                    <i class="fas fa-notes-medical text-4xl mb-2"></i>
+                                                    <p class="text-[10px] font-black uppercase tracking-widest">No mother care records found</p>
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Prepared Section -->
+                            <div class="flex justify-end mt-12 pr-12">
+                                <div class="text-center space-y-4">
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Prepared by</p>
+                                    <div class="space-y-1">
+                                        <div class="text-sm font-black text-slate-900 uppercase tracking-tight"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></div>
+                                        <div class="h-px bg-slate-900 w-full"></div>
+                                        <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Official Designation</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 
                 <?php elseif ($reportType === 'birth_registration'): ?>
                     <!-- Birth Registration Report -->
-                    <div class="card" id="print-area">
-                        <!-- PRINT HEADER WITH LOGOS -->
-                        <div class="print-header d-none d-print-block">
-                            <div class="print-logo-left">
-                                <img src="images/doh-logo.png" alt="DOH Logo">
+                    <div id="print-area" class="space-y-8">
+                        <!-- Printable Header -->
+                        <div class="hidden print:flex justify-between items-center border-b-2 border-slate-900 pb-6 mb-8">
+                            <img src="images/doh-logo.png" class="h-20 w-auto" alt="DOH">
+                            <div class="text-center">
+                                <h4 class="text-xl font-black uppercase tracking-tight">Birth Registration Report</h4>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase">Barangay Health Station - Kibenes</p>
+                                <div class="text-[10px] font-black mt-1 uppercase tracking-widest">Period: <?= date('M j, Y', strtotime($startDate)) ?> - <?= date('M j, Y', strtotime($endDate)) ?></div>
                             </div>
-                            <div class="print-header-center">
-                                <h4>BIRTH REGISTRATION REPORT</h4>
-                                <p>BARANGAY HEALTH STATION - KIBENES</p>
-                                <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                                <div class="report-period">
-                                    Period: <?php echo date('M j, Y', strtotime($startDate)); ?> to <?php echo date('M j, Y', strtotime($endDate)); ?>
-                                </div>
-                            </div>
-                            <div class="print-logo-right">
-                                <img src="images/brgy-logo.png" alt="Barangay Logo">
-                            </div>
-                        </div>
-                        
-                        <!-- SCREEN HEADER -->
-                        <div class="report-header no-print">
-                            <div class="logo-container">
-                                <img src="images/doh-logo.png" alt="DOH Logo">
-                            </div>
-                            <div class="header-center">
-                                <h4>BIRTH REGISTRATION REPORT</h4>
-                                <p>BARANGAY HEALTH STATION - KIBENES</p>
-                                <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                                <div class="report-period">
-                                    Period: <?php echo date('M j, Y', strtotime($startDate)); ?> to <?php echo date('M j, Y', strtotime($endDate)); ?>
-                                </div>
-                            </div>
-                            <div class="logo-container text-end">
-                                <img src="images/brgy-logo.png" alt="Barangay Logo">
-                            </div>
+                            <img src="images/brgy-logo.png" class="h-20 w-auto" alt="Barangay">
                         </div>
 
-                        <!-- Birth Records Table -->
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th width="8%">BIRTH DATE</th>
-                                        <th width="15%">MOTHER NAME</th>
-                                        <th width="12%">BABY NAME</th>
-                                        <th width="8%">GENDER</th>
-                                        <th width="8%">BIRTH WEIGHT</th>
-                                        <th width="12%">PLACE OF BIRTH</th>
-                                        <th width="15%">ATTENDED BY</th>
-                                        <th width="12%">ADDRESS</th>
-                                        <th width="10%">REGISTRATION DATE</th>
+                        <div class="overflow-x-auto rounded-3xl border border-slate-100 shadow-sm print:border-none">
+                            <table class="w-full text-left font-inter">
+                                <thead class="bg-slate-50 border-b border-slate-100 print:bg-slate-100">
+                                    <tr class="divide-x divide-slate-100">
+                                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">DOB</th>
+                                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Mother Name</th>
+                                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Baby Details</th>
+                                        <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center" width="80">Gender</th>
+                                        <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center" width="80">Wt (kg)</th>
+                                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Place of Birth</th>
+                                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Attendant</th>
+                                        <th class="px-4 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest">Address</th>
+                                        <th class="px-3 py-3 text-[9px] font-black text-slate-400 uppercase tracking-widest text-center">Registered</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="divide-y divide-slate-50">
                                     <?php if (!empty($birthRecords)): ?>
                                         <?php foreach ($birthRecords as $record): ?>
-                                        <tr>
-                                            <td><?php echo date('m/d/Y', strtotime($record['birth_date'])); ?></td>
-                                            <td class="text-left">
-                                                <strong><?php echo htmlspecialchars($record['mother_last_name'] . ', ' . $record['mother_first_name']); ?></strong>
-                                                <br><small><?php echo htmlspecialchars($record['mother_phone']); ?></small>
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50/30 transition-colors">
+                                            <td class="px-4 py-3 text-center text-xs font-black text-slate-600"><?= date('m/d/y', strtotime($record['birth_date'])) ?></td>
+                                            <td class="px-4 py-3">
+                                                <div class="text-sm font-black text-slate-900"><?= htmlspecialchars($record['mother_last_name'] . ', ' . $record['mother_first_name']) ?></div>
+                                                <div class="text-[10px] font-bold text-slate-400 tracking-tight"><?= htmlspecialchars($record['mother_phone']) ?></div>
                                             </td>
-                                            <td class="text-left">
-                                                <strong><?php echo htmlspecialchars($record['baby_first_name'] . ' ' . $record['baby_last_name']); ?></strong>
+                                            <td class="px-4 py-3">
+                                                <div class="text-sm font-black text-indigo-700"><?= htmlspecialchars($record['baby_first_name'] . ' ' . $record['baby_last_name']) ?></div>
                                             </td>
-                                            <td><?php echo ucfirst($record['gender']); ?></td>
-                                            <td><?php echo $record['birth_weight']; ?> kg</td>
-                                            <td><?php echo htmlspecialchars($record['birth_place']); ?></td>
-                                            <td><?php echo htmlspecialchars($record['birth_attendant']); ?></td>
-                                            <td class="text-left"><?php echo htmlspecialchars($record['address']); ?></td>
-                                            <td><?php echo !empty($record['registered_at']) ? date('m/d/Y', strtotime($record['registered_at'])) : 'N/A'; ?></td>
+                                            <td class="px-3 py-3 text-center">
+                                                <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest <?= $record['gender'] === 'male' ? 'bg-blue-100 text-blue-700' : 'bg-pink-100 text-pink-700' ?>">
+                                                    <?= $record['gender'] ?>
+                                                </span>
+                                            </td>
+                                            <td class="px-3 py-3 text-center text-xs font-black text-slate-700"><?= number_format($record['birth_weight'], 2) ?></td>
+                                            <td class="px-4 py-3 text-xs font-medium text-slate-600"><?= htmlspecialchars($record['birth_place']) ?></td>
+                                            <td class="px-4 py-3 text-xs font-medium text-slate-600"><?= htmlspecialchars($record['birth_attendant']) ?></td>
+                                            <td class="px-4 py-3 text-[10px] font-bold text-slate-400 uppercase tracking-tight"><?= htmlspecialchars($record['address']) ?></td>
+                                            <td class="px-3 py-3 text-center text-[10px] font-black text-health-600 uppercase tracking-widest italic"><?= !empty($record['registered_at']) ? date('m/d/y', strtotime($record['registered_at'])) : 'Pending' ?></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="9" class="text-center text-muted">
-                                                No birth records found for the selected period.
+                                            <td colspan="9" class="py-12 text-center opacity-30">
+                                                <i class="fas fa-baby text-4xl mb-2"></i>
+                                                <p class="text-[10px] font-black uppercase tracking-widest">No birth registrations found</p>
                                             </td>
                                         </tr>
                                     <?php endif; ?>
@@ -1986,481 +1673,323 @@ function generateDOMPDFHTML() {
                             </table>
                         </div>
 
-                        <!-- PREPARED BY SECTION -->
-                        <div class="row mt-4">
-                            <div class="col-md-6 offset-md-6">
-                                <div class="text-center">
-                                    <p class="mb-0">Prepared by:</p>
-                                    <div class="mt-2">
-                                        <strong><?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?></strong>
-                                        <div style="width: 60%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                        <small class="text-muted">Signature Over Printed Name</small>
-                                    </div>
+                        <!-- Signatures -->
+                        <div class="flex justify-end mt-12 pr-12 print:mt-24">
+                            <div class="text-center space-y-4">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Authenticated by</p>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-black text-slate-900 uppercase tracking-tight"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></div>
+                                    <div class="h-px bg-slate-900 w-full"></div>
+                                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Registered Midwife</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 <?php endif; ?>
 
-            <!-- BHW Monthly Report -->
             <?php elseif ($userRole === 'bhw' && $reportType === 'monthly'): ?>
-            <div class="official-report-card" id="print-area">
-                <!-- PRINT HEADER WITH LOGOS -->
-                <div class="print-header d-none d-print-block">
-                    <div class="print-logo-left">
-                        <img src="images/doh-logo.png" alt="DOH Logo">
-                    </div>
-                    <div class="print-header-center">
-                        <h4>BARANGAY HEALTH WORKER MONTHLY REPORT</h4>
-                        <p>BARANGAY HEALTH STATION - KIBENES</p>
-                        <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                        <div class="report-period">
-                            Month: <?php echo date('F Y', strtotime($reportMonth . '-01')); ?>
+                <div id="print-area" class="space-y-8">
+                    <!-- Printable Header -->
+                    <div class="hidden print:flex justify-between items-center border-b-2 border-slate-900 pb-6 mb-4">
+                        <img src="images/doh-logo.png" class="h-16 w-auto" alt="DOH">
+                        <div class="text-center">
+                            <h4 class="text-lg font-black uppercase tracking-tight text-slate-900">Barangay Health Worker Monthly Report</h4>
+                            <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Kibenes Health Station • Carmen, North Cotabato</p>
+                            <p class="text-[10px] font-black mt-1 uppercase text-health-600">Month of <?= date('F Y', strtotime($reportMonth . '-01')) ?></p>
                         </div>
-                        <!-- BHW INFO -->
-                        <div style="margin-top: 5px; font-size: 9pt;">
-                            <strong>BHW:</strong> <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
+                        <img src="images/brgy-logo.png" class="h-16 w-auto" alt="Barangay">
+                    </div>
+                    
+                    <div class="bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100/50 flex flex-wrap items-center gap-6 no-print">
+                        <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                            <i class="fas fa-id-badge text-xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[10px] font-black text-indigo-400 uppercase tracking-widest leading-none mb-1">Assigned BHW</div>
+                            <div class="text-lg font-black text-slate-900"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></div>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
                             <?php 
                             $bhwSitios = getBHWSitiosForDisplay();
                             if (!empty($bhwSitios)): 
+                                $sitiosArray = explode(', ', $bhwSitios);
+                                foreach ($sitiosArray as $sitio): 
                             ?>
-                                • <strong>Assigned Sitios:</strong> <?php echo $bhwSitios; ?>
+                                <span class="bg-white px-3 py-1.5 rounded-xl text-[10px] font-black text-indigo-600 uppercase tracking-widest shadow-sm border border-indigo-100 flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-[8px]"></i>
+                                    <?= $sitio ?>
+                                </span>
+                            <?php endforeach; else: ?>
+                                <span class="bg-amber-50 text-amber-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest italic border border-amber-100">No Sitio Assigned</span>
                             <?php endif; ?>
                         </div>
                     </div>
-                    <div class="print-logo-right">
-                        <img src="images/brgy-logo.png" alt="Barangay Logo">
-                    </div>
-                </div>
-                
-                <!-- SCREEN HEADER -->
-                <div class="report-header no-print">
-                    <div class="logo-container">
-                        <img src="images/doh-logo.png" alt="DOH Logo">
-                    </div>
-                    <div class="header-center">
-                        <h4>BARANGAY HEALTH WORKER MONTHLY REPORT</h4>
-                        <p>BARANGAY HEALTH STATION - KIBENES</p>
-                        <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                        <div class="report-period">
-                            Month: <?php echo date('F Y', strtotime($reportMonth . '-01')); ?>
+
+                    <div class="space-y-8">
+                        <!-- Maternal Care Section -->
+                        <section class="rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                            <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                                <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest">I. Maternal Care Indicators</h3>
+                                <i class="fas fa-female text-slate-300"></i>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left font-inter text-xs">
+                                    <thead class="bg-slate-100/50 print:bg-slate-200">
+                                        <tr class="divide-x divide-slate-100">
+                                            <th class="px-6 py-4 font-black text-slate-500 uppercase tracking-tighter" style="width: 55%">Indicator Description</th>
+                                            <th class="px-4 py-4 font-black text-slate-500 uppercase tracking-tighter text-center" style="width: 15%">Previous Month</th>
+                                            <th class="px-4 py-4 font-black text-slate-900 uppercase tracking-tighter text-center bg-slate-100" style="width: 15%">Current Month</th>
+                                            <th class="px-4 py-4 font-black text-health-600 uppercase tracking-tighter text-center font-black" style="width: 15%">Cumulative Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-50 whitespace-nowrap">
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50 transition-colors">
+                                            <td class="px-6 py-4 font-medium text-slate-700">1. Newly Pregnant referred for prenatal</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $maternalData['new_referred']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50 group-hover:bg-slate-100/50"><?= $maternalData['new_referred']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $maternalData['new_referred']['prev'] + $maternalData['new_referred']['current'] ?></td>
+                                        </tr>
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700">2. Newly Pregnant assisted for prenatal</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $maternalData['new_assisted']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50"><?= $maternalData['new_assisted']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $maternalData['new_assisted']['prev'] + $maternalData['new_assisted']['current'] ?></td>
+                                        </tr>
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700">3. Pregnant women tracked (follow-up)</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $maternalData['tracked']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50"><?= $maternalData['tracked']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $maternalData['tracked']['prev'] + $maternalData['tracked']['current'] ?></td>
+                                        </tr>
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700">4. Total Deliveries (Home & Facility)</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $maternalData['deliveries']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50"><?= $maternalData['deliveries']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $maternalData['deliveries']['prev'] + $maternalData['deliveries']['current'] ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <!-- Child Care Section -->
+                        <section class="rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                            <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                                <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest">II. Child Care Indicators</h3>
+                                <i class="fas fa-baby text-slate-300"></i>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left font-inter text-xs">
+                                    <thead class="bg-slate-100/50">
+                                        <tr class="divide-x divide-slate-100">
+                                            <th class="px-6 py-4 font-black text-slate-500 uppercase tracking-tighter" style="width: 55%">Indicator Description</th>
+                                            <th class="px-4 py-4 font-black text-slate-500 uppercase tracking-tighter text-center" style="width: 15%">Previous Month</th>
+                                            <th class="px-4 py-4 font-black text-slate-900 uppercase tracking-tighter text-center bg-slate-100" style="width: 15%">Current Month</th>
+                                            <th class="px-4 py-4 font-black text-health-600 uppercase tracking-tighter text-center font-black" style="width: 15%">Cumulative Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-50 whitespace-nowrap">
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700">1. Under 1yr referred for immunization</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $childCareData['immun_referred']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50"><?= $childCareData['immun_referred']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $childCareData['immun_referred']['prev'] + $childCareData['immun_referred']['current'] ?></td>
+                                        </tr>
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700">2. Under 1yr assisted immunization</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $childCareData['immun_assisted']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50"><?= $childCareData['immun_assisted']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $childCareData['immun_assisted']['prev'] + $childCareData['immun_assisted']['current'] ?></td>
+                                        </tr>
+                                        <tr class="divide-x divide-slate-50 hover:bg-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700">3. NIP Defaulters tracked</td>
+                                            <td class="px-4 py-4 text-center font-bold text-slate-400"><?= $childCareData['defaulter_tracked']['prev'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-slate-900 bg-slate-50"><?= $childCareData['defaulter_tracked']['current'] ?></td>
+                                            <td class="px-4 py-4 text-center font-black text-health-600 italic"><?= $childCareData['defaulter_tracked']['prev'] + $childCareData['defaulter_tracked']['current'] ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <!-- TB Section -->
+                        <section class="rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
+                            <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                                <h3 class="text-xs font-black text-slate-800 uppercase tracking-widest">III. Tuberculosis Program</h3>
+                                <i class="fas fa-microscope text-slate-300"></i>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left font-inter text-xs">
+                                    <thead class="bg-slate-100/50">
+                                        <tr class="divide-x divide-slate-100">
+                                            <th class="px-6 py-4 font-black text-slate-500 uppercase tracking-tighter" style="width: 55%">Indicator Description</th>
+                                            <th class="px-4 py-4 font-black text-slate-500 uppercase tracking-tighter text-center" style="width: 15%">Prev</th>
+                                            <th class="px-4 py-4 font-black text-slate-900 uppercase tracking-tighter text-center bg-slate-100" style="width: 15%">Current</th>
+                                            <th class="px-4 py-4 font-black text-health-600 uppercase tracking-tighter text-center font-black" style="width: 15%">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-50">
+                                        <tr class="divide-x divide-slate-50">
+                                            <td class="px-6 py-4 font-medium text-slate-700 italic">No TB indicators recorded for this period</td>
+                                            <td class="px-4 py-4 text-center text-slate-300">-</td>
+                                            <td class="px-4 py-4 text-center text-slate-300 bg-slate-50">-</td>
+                                            <td class="px-4 py-4 text-center text-slate-300">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-loose italic">
+                            <i class="fas fa-info-circle mr-1"></i> Data sources should be based on actual household visits, not solely from TCL.
+                        </p>
+
+                        <!-- Signature Matrix -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 print:mt-32">
+                            <div class="text-center space-y-4">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Prepared By</p>
+                                <div class="space-y-1">
+                                    <div class="text-xs font-black text-slate-900 uppercase tracking-tight"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></div>
+                                    <div class="h-px bg-slate-900 w-full mx-auto" style="width: 80%"></div>
+                                    <div class="text-[8px] font-bold text-slate-400 uppercase">Barangay Health Worker</div>
+                                </div>
+                            </div>
+                            <div class="text-center space-y-4">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Reviewed By</p>
+                                <div class="space-y-1">
+                                    <div class="text-xs font-black text-slate-900 uppercase tracking-tight opacity-0 italic">Midwife Name</div>
+                                    <div class="h-px bg-slate-900 w-full mx-auto" style="width: 80%"></div>
+                                    <div class="text-[8px] font-bold text-slate-400 uppercase">Public Health Midwife</div>
+                                </div>
+                            </div>
+                            <div class="text-center space-y-4">
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Approved By</p>
+                                <div class="space-y-1">
+                                    <div class="text-xs font-black text-slate-900 uppercase tracking-tight">HON. RONALD K. AKMAD</div>
+                                    <div class="h-px bg-slate-900 w-full mx-auto" style="width: 80%"></div>
+                                    <div class="text-[8px] font-bold text-slate-400 uppercase">Punong Barangay</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="logo-container text-end">
-                        <img src="images/brgy-logo.png" alt="Barangay Logo">
-                    </div>
                 </div>
-                
-                <!-- BHW Sitio Info Box -->
-                <div class="bhw-sitio-info-box no-print">
-                    <i class="fas fa-map-marker-alt me-2"></i>
-                    <strong>BHW:</strong> <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
-                    <?php 
-                    $bhwSitios = getBHWSitiosForDisplay();
-                    if (!empty($bhwSitios)): 
-                    ?>
-                        • <strong>Assigned Sitios:</strong> 
-                        <?php 
-                        $sitiosArray = explode(', ', $bhwSitios);
-                        foreach ($sitiosArray as $sitio): 
-                        ?>
-                            <span class="bhw-sitio-badge"><?php echo $sitio; ?></span>
-                        <?php endforeach; ?>
-                        <small class="text-muted d-block mt-1">This report shows data only for your assigned sitios.</small>
-                    <?php else: ?>
-                        <span class="text-warning">No sitio assignment</span>
-                    <?php endif; ?>
-                </div>
-
-                    <!-- Maternal Care Section -->
-                    <div class="section mb-4">
-                        <h6 class="section-title bg-light p-2">Maternal Care</h6>
-                        <div class="table-responsive">
-                            <table class="table table-bordered official-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 60%">Indicator</th>
-                                        <th style="width: 13%">Previous Month</th>
-                                        <th style="width: 13%">Current Month</th>
-                                        <th style="width: 14%">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style="text-align: left">1. Number of newly Pregnant Women referred to BHS for prenatal:</td>
-                                        <td><?php echo $maternalData['new_referred']['prev']; ?></td>
-                                        <td><?php echo $maternalData['new_referred']['current']; ?></td>
-                                        <td><?php echo $maternalData['new_referred']['prev'] + $maternalData['new_referred']['current']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left">2. Number of newly Pregnant Women assisted for prenatal:</td>
-                                        <td><?php echo $maternalData['new_assisted']['prev']; ?></td>
-                                        <td><?php echo $maternalData['new_assisted']['current']; ?></td>
-                                        <td><?php echo $maternalData['new_assisted']['prev'] + $maternalData['new_assisted']['current']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left">3. Number of pregnant women tracked (follow-up visits):</td>
-                                        <td><?php echo $maternalData['tracked']['prev']; ?></td>
-                                        <td><?php echo $maternalData['tracked']['current']; ?></td>
-                                        <td><?php echo $maternalData['tracked']['prev'] + $maternalData['tracked']['current']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left">4. Number of deliveries (Home and Facility):</td>
-                                        <td><?php echo $maternalData['deliveries']['prev']; ?></td>
-                                        <td><?php echo $maternalData['deliveries']['current']; ?></td>
-                                        <td><?php echo $maternalData['deliveries']['prev'] + $maternalData['deliveries']['current']; ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Child Care Section -->
-                    <div class="section mb-4">
-                        <h6 class="section-title bg-light p-2">Child Care</h6>
-                        <div class="table-responsive">
-                            <table class="table table-bordered official-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 60%">Indicator</th>
-                                        <th style="width: 13%">Previous Month</th>
-                                        <th style="width: 13%">Current Month</th>
-                                        <th style="width: 14%">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style="text-align: left">1. Number of newly under 1 year old referred to BHS for immunization:</td>
-                                        <td><?php echo $childCareData['immun_referred']['prev']; ?></td>
-                                        <td><?php echo $childCareData['immun_referred']['current']; ?></td>
-                                        <td><?php echo $childCareData['immun_referred']['prev'] + $childCareData['immun_referred']['current']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left">2. Number of newly under 1 year old assisted immunization:</td>
-                                        <td><?php echo $childCareData['immun_assisted']['prev']; ?></td>
-                                        <td><?php echo $childCareData['immun_assisted']['current']; ?></td>
-                                        <td><?php echo $childCareData['immun_assisted']['prev'] + $childCareData['immun_assisted']['current']; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left">3. Number of NIP defaulter tracked:</td>
-                                        <td><?php echo $childCareData['defaulter_tracked']['prev']; ?></td>
-                                        <td><?php echo $childCareData['defaulter_tracked']['current']; ?></td>
-                                        <td><?php echo $childCareData['defaulter_tracked']['prev'] + $childCareData['defaulter_tracked']['current']; ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Tuberculosis Program Section -->
-                    <div class="section mb-4">
-                        <h6 class="section-title bg-light p-2">Tuberculosis Program</h6>
-                        <div class="table-responsive">
-                            <table class="table table-bordered official-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 60%">Indicator</th>
-                                        <th style="width: 13%">Previous Month</th>
-                                        <th style="width: 13%">Current Month</th>
-                                        <th style="width: 14%">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                        <td class="text-left">1. Number of TB presumptive cases referred to RHU:</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="text-left">2. Number of sputum follows-up conducted:</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Note -->
-                    <div class="mt-3">
-                        <p class="fst-italic"><small>Note: Sources of data should be based from your household visits not from TCL.</small></p>
-                    </div>
-
-                    <!-- Signatures -->
-                    <div style="margin-top: 15px;">
-                        <table style="width: 100%; border-collapse: collapse; font-size: 10pt; border: none;">
-                            <tr>
-                                <!-- Prepared -->
-                                <td style="width: 50%; padding: 5px 10px; border: none;">
-                                    <strong>Prepared by:</strong><br><br>
-                                    <div style="text-align: center;">
-                                        <span style="font-weight: bold;">
-                                            <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
-                                        </span>
-                                        <div style="width: 85%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                        <div style="font-size: 8pt; margin-top: 1px;">
-                                            Signature Over Printed Name of BHW
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <!-- Reviewed -->
-                                <td style="width: 50%; padding: 5px 10px; border: none;">
-                                    <strong>Reviewed by:</strong><br><br>
-                                    <div style="text-align: center;">
-                                        <span style="font-weight: bold;">&nbsp;</span>
-                                        <div style="width: 85%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                        <div style="font-size: 8pt; margin-top: 1px;">
-                                            Signature Over Printed Name of Midwife/Nurse
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Approved -->
-                            <tr>
-                                <td colspan="2" style="padding: 10px; text-align: center; border: none;">
-                                    <strong>Approved by:</strong><br><br>
-                                    <div style="text-align: center;">
-                                        <span style="font-weight: bold;">Ronald K. Akmad</span>
-                                        <div style="width: 35%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                        <div style="font-size: 8pt; margin-top: 1px;">
-                                            Signature Over Printed Name of Punong Barangay
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
             <!-- BNS Monthly Report -->
             <?php elseif ($userRole === 'bns' && $reportType === 'monthly'): ?>
-            <div id="print-area" class="bns-report">
-                <!-- PRINT HEADER WITH LOGOS -->
-                <div class="print-header d-none d-print-block">
-                    <div class="print-logo-left">
-                        <img src="images/doh-logo.png" alt="DOH Logo">
-                    </div>
-                    <div class="print-header-center">
-                        <h4>BARANGAY NUTRITION SCHOLAR MONTHLY REPORT</h4>
-                        <p>BARANGAY HEALTH STATION - KIBENES</p>
-                        <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                        <div class="report-period">
-                            Month: <?php echo date('F Y', strtotime($reportMonth . '-01')); ?>
+                <div id="print-area" class="space-y-12">
+                     <!-- Printable Header -->
+                     <div class="hidden print:flex justify-between items-center border-b-2 border-slate-900 pb-6 mb-8">
+                        <img src="images/doh-logo.png" class="h-20 w-auto" alt="DOH">
+                        <div class="text-center">
+                            <h4 class="text-xl font-black uppercase tracking-tight text-slate-900">Barangay Nutrition Scholar Monthly Report</h4>
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-loose">Kibenes Health Station • Carmen, North Cotabato</p>
+                            <p class="text-[11px] font-black mt-1 uppercase text-health-600 bg-health-50 px-4 py-1 rounded-full inline-block">Period: <?= date('F Y', strtotime($reportMonth . '-01')) ?></p>
                         </div>
+                        <img src="images/brgy-logo.png" class="h-20 w-auto" alt="Barangay">
                     </div>
-                    <div class="print-logo-right">
-                        <img src="images/brgy-logo.png" alt="Barangay Logo">
-                    </div>
-                </div>
-                
-                <!-- SCREEN HEADER -->
-                <div class="report-header no-print">
-                    <div class="logo-container">
-                        <img src="images/doh-logo.png" alt="DOH Logo">
-                    </div>
-                    <div class="header-center">
-                        <h4>BARANGAY NUTRITION SCHOLAR MONTHLY REPORT</h4>
-                        <p>BARANGAY HEALTH STATION - KIBENES</p>
-                        <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                        <div class="report-period">
-                            Month: <?php echo date('F Y', strtotime($reportMonth . '-01')); ?>
-                        </div>
-                    </div>
-                    <div class="logo-container text-end">
-                        <img src="images/brgy-logo.png" alt="Barangay Logo">
-                    </div>
-                </div>
 
-                <div class="official-report-card">
-                    <div class="card-body">
-                        <!-- Acknowledgement Receipt Table -->
-                        <div class="table-responsive">
-                            <table class="table table-bordered official-table">
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 px-2">
+                             <div class="w-1.5 h-6 bg-health-600 rounded-full"></div>
+                             <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">Child Nutrition Registry & Acknowledgement</h3>
+                        </div>
+
+                        <div class="overflow-x-auto rounded-[2rem] border border-slate-100 shadow-sm print:border-none print:shadow-none">
+                            <table class="w-full text-left font-inter table-fixed">
                                 <thead>
-                                    <tr>
-                                        <th rowspan="2">NO.</th>
-                                        <th rowspan="2">NAME OF PARENTS/GUARDIAN</th>
-                                        <th rowspan="2">PUROK/ BARANGAY</th>
-                                        <th colspan="3">MALNOURISHED CHILDREN</th>
-                                        <th rowspan="2">Check (/) if<br>PREGNANT MOTHER</th>
-                                        <th rowspan="2">Check (/) if<br>LACTATING MOTHER</th>
-                                        <th rowspan="2"># of Children below 5 years old</th>
-                                        <th rowspan="2">Signature</th>
-                                    </tr>
-                                    <tr>
-                                        <th>NAME</th>
-                                        <th>AGE</th>
-                                        <th>GENDER (Male/Female)</th>
+                                    <tr class="bg-slate-50 border-b border-slate-100 text-[9px] font-black text-slate-400 uppercase tracking-widest divide-x divide-slate-100 print:bg-slate-100 print:divide-slate-200">
+                                        <th class="px-3 py-4 text-center" width="40">#</th>
+                                        <th class="px-4 py-4" width="200">Parent/Guardian</th>
+                                        <th class="px-4 py-4 text-center" width="120">Purok</th>
+                                        <th class="px-4 py-4" width="220">Child Name</th>
+                                        <th class="px-3 py-4 text-center" width="60">Age</th>
+                                        <th class="px-3 py-4 text-center" width="60">Gen</th>
+                                        <th class="px-3 py-4 text-center" width="60">Preg</th>
+                                        <th class="px-3 py-4 text-center" width="60">Lact</th>
+                                        <th class="px-3 py-4 text-center" width="80">Sub-5</th>
+                                        <th class="px-4 py-4 text-center" width="140">Signature</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="divide-y divide-slate-50">
                                     <?php $counter = 1; ?>
                                     <?php foreach ($acknowledgementData as $row): ?>
-                                    <tr>
-                                        <td><?php echo $counter; ?></td>
-                                        <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['address']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['child_first_name'] . ' ' . $row['child_last_name']); ?></td>
-                                        <td><?php echo $row['child_age']; ?></td>
-                                        <td><?php echo $row['gender'] === 'male' ? 'M' : 'F'; ?></td>
-                                        <td></td>  
-                                        <!-- <?php echo $row['is_pregnant'] ? '✓' : ''; ?> -->
-                                        <td></td>
-                                        <td><?php echo $row['children_under_5']; ?></td>
-                                        <td class="signature-cell"></td>
+                                    <tr class="divide-x divide-slate-50 hover:bg-slate-50 transition-colors text-[11px] print:divide-slate-100">
+                                        <td class="px-3 py-3 text-center font-bold text-slate-400 italic"><?= $counter ?></td>
+                                        <td class="px-4 py-3 font-black text-slate-900"><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
+                                        <td class="px-4 py-3 text-center text-slate-500"><?= htmlspecialchars($row['address']) ?></td>
+                                        <td class="px-4 py-3 font-bold text-indigo-700"><?= htmlspecialchars($row['child_first_name'] . ' ' . $row['child_last_name']) ?></td>
+                                        <td class="px-3 py-3 text-center font-black"><?= $row['child_age'] ?></td>
+                                        <td class="px-3 py-3 text-center uppercase font-bold text-slate-400"><?= substr($row['gender'], 0, 1) ?></td>
+                                        <td class="px-3 py-3 text-center opacity-20">-</td>
+                                        <td class="px-3 py-3 text-center opacity-20">-</td>
+                                        <td class="px-3 py-3 text-center font-black text-health-600"><?= $row['children_under_5'] ?></td>
+                                        <td class="px-4 py-3 bg-slate-50/50 print:bg-transparent"></td>
                                     </tr>
                                     <?php $counter++; ?>
                                     <?php endforeach; ?>
                                     
-                                    <!-- Empty rows for additional entries -->
                                     <?php for ($i = $counter; $i <= 10; $i++): ?>
-                                    <tr>
-                                        <td><?php echo $i; ?></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="signature-cell"></td>
+                                    <tr class="divide-x divide-slate-50 border-b border-slate-50 text-[11px] h-10 print:divide-slate-100">
+                                        <td class="px-3 text-center text-slate-300"><?= $i ?></td>
+                                        <td class="px-4"></td><td class="px-4"></td><td class="px-4"></td><td class="px-3"></td><td class="px-3"></td><td class="px-3"></td><td class="px-3"></td><td class="px-3"></td><td class="px-4 bg-slate-50/50 print:bg-transparent"></td>
                                     </tr>
                                     <?php endfor; ?>
                                 </tbody>
                             </table>
                         </div>
+                    </div>
 
-                        <!-- SIGNATURE SECTIONS -->
-                        <div style="margin-top: 30px;">
-                            <table style="width: 100%; border-collapse: collapse; font-size: 10pt; border: none;">
-                                <tr>
-                                    <!-- Prepared -->
-                                    <td style="width: 50%; padding: 5px 10px; border: none;">
-                                        <strong>Prepared by:</strong><br><br>
-                                        <div style="text-align: center;">
-                                            <span style="font-weight: bold;">
-                                                <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?>
-                                            </span>
-                                            <div style="width: 85%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                            <div style="font-size: 8pt; margin-top: 1px;">
-                                                Signature Over Printed Name of BNS
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <!-- Reviewed -->
-                                    <td style="width: 50%; padding: 5px 10px; border: none;">
-                                        <strong>Reviewed by:</strong><br><br>
-                                        <div style="text-align: center;">
-                                            <span style="font-weight: bold;">&nbsp;</span>
-                                            <div style="width: 85%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                            <div style="font-size: 8pt; margin-top: 1px;">
-                                                Signature Over Printed Name of Midwife/Nurse
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Approved -->
-                                <tr>
-                                    <td colspan="2" style="padding: 10px; text-align: center; border: none;">
-                                        <strong>Approved by:</strong><br><br>
-                                        <div style="text-align: center;">
-                                            <span style="font-weight: bold;">Ronald K. Akmad</span>
-                                            <div style="width: 35%; margin: 1px auto; border-bottom: 1px solid #000;"></div>
-                                            <div style="font-size: 8pt; margin-top: 1px;">
-                                                Signature Over Printed Name of Punong Barangay
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
+                    <!-- Signature Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 print:mt-32">
+                        <div class="text-center space-y-4">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Prepared By</p>
+                            <div class="space-y-1">
+                                <div class="text-xs font-black text-slate-900 uppercase tracking-tight"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name'] ?></div>
+                                <div class="h-px bg-slate-900 w-full mx-auto" style="width: 80%"></div>
+                                <div class="text-[8px] font-bold text-slate-400 uppercase tracking-tight">Barangay Nutrition Scholar</div>
+                            </div>
+                        </div>
+                        <div class="text-center space-y-4">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Reviewed By</p>
+                            <div class="space-y-1">
+                                <div class="text-xs font-black text-slate-900 uppercase tracking-tight opacity-0 italic">Midwife Name</div>
+                                <div class="h-px bg-slate-900 w-full mx-auto" style="width: 80%"></div>
+                                <div class="text-[8px] font-bold text-slate-400 uppercase tracking-tight">Public Health Midwife</div>
+                            </div>
+                        </div>
+                        <div class="text-center space-y-4">
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none">Approved By</p>
+                            <div class="space-y-1">
+                                <div class="text-xs font-black text-slate-900 uppercase tracking-tight">HON. RONALD K. AKMAD</div>
+                                <div class="h-px bg-slate-900 w-full mx-auto" style="width: 80%"></div>
+                                <div class="text-[8px] font-bold text-slate-400 uppercase tracking-tight">Punong Barangay</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
             <?php endif; ?>
 
         </main>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Show/hide custom date range
-    document.getElementById('time_period')?.addEventListener('change', function() {
+    document.getElementById('timePeriodSelector')?.addEventListener('change', function() {
         const isCustom = this.value === 'custom';
-        const startContainer = document.getElementById('start_date_container');
-        const endContainer = document.getElementById('end_date_container');
+        const startCol = document.getElementById('startDateCol');
+        const endCol = document.getElementById('endDateCol');
         
-        if (startContainer && endContainer) {
-            startContainer.style.display = isCustom ? 'block' : 'none';
-            endContainer.style.display = isCustom ? 'block' : 'none';
+        if (startCol && endCol) {
+            startCol.style.display = isCustom ? 'block' : 'none';
+            endCol.style.display = isCustom ? 'block' : 'none';
         }
     });
 
-    // Optimized print for reports
     function optimizePrint() {
-        // Check URL parameters to determine report type
-        const urlParams = new URLSearchParams(window.location.search);
-        const reportType = urlParams.get('report_type');
-        const userRole = '<?php echo $userRole; ?>'; // Get PHP variable
-        
-        let landscapeStyle = '';
-        
-        // Apply landscape for BNS monthly report and Midwife combined report
-        if ((userRole === 'bns' && reportType === 'monthly') || 
-            (userRole === 'midwife' && reportType === 'prenatal_postnatal_combined')) {
-            
-            landscapeStyle = `
-                @media print {
-                    @page {
-                        size: landscape;
-                        margin: 10mm;
-                    }
-                    body {
-                        margin: 0 !important;
-                        padding: 0 !important;
-                    }
-                    #print-area {
-                        width: 100% !important;
-                        margin: 0 !important;
-                        padding: 10px !important;
-                    }
-                }
-            `;
-        }
-        
-        // Create and append style
-        const style = document.createElement('style');
-        style.innerHTML = landscapeStyle;
-        document.head.appendChild(style);
-        
-        // Print after a short delay to ensure styles are applied
-        setTimeout(() => {
-            window.print();
-            // Remove style after printing
-            setTimeout(() => {
-                if (style.parentNode) {
-                    style.parentNode.removeChild(style);
-                }
-            }, 1000);
-        }, 500);
+        window.print();
     }
-
-    // Update all print buttons
-    document.addEventListener('DOMContentLoaded', function() {
-        const printButtons = document.querySelectorAll('button[onclick="window.print()"]');
-        printButtons.forEach(btn => {
-            btn.setAttribute('onclick', 'optimizePrint()');
-        });
-    });
 </script>
 </body>
 </html>

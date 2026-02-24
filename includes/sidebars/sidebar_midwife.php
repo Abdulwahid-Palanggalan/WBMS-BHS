@@ -1,76 +1,72 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
-$baseUrl = $GLOBALS['base_url'];
+$baseUrl = $GLOBALS['base_url'] ?? '';
 ?>
-<!-- MIDWIFE SIDEBAR - PURE WHITE -->
-<div class="sidebar bg-white shadow-sm" id="sidebarMenu">
-    <div class="d-flex flex-column flex-shrink-0 p-3">
-        <div class="sidebar-header text-center p-3 border-bottom">
-            <h5 class="text-primary"><i class="fas fa-user-nurse me-2"></i>MIDWIFE PANEL</h5>
-            <small class="text-muted">Maternal & Child Care</small>
-        </div>
-        
-        <ul class="nav nav-pills flex-column mb-auto mt-3">
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'dashboard.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/dashboard.php">
-                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'birth_registration.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/forms/birth_registration.php">
-                    <i class="fas fa-baby me-2"></i>Birth Registration
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'mother_registration.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/forms/mother_registration.php">
-                    <i class="fas fa-user-plus me-2"></i>Register Mother
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'prenatal_form.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/forms/prenatal_form.php">
-                    <i class="fas fa-heartbeat me-2"></i>Prenatal Care
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'postnatal_form.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/forms/postnatal_form.php">
-                    <i class="fas fa-child me-2"></i>Postnatal Care
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'immunization_records.php' || $currentPage == 'immunization_form.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/immunization_records.php">
-                    <i class="fas fa-syringe me-2"></i>Immunization
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'family_planning.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/family_planning.php">
-                    <i class="fas fa-pills me-2"></i>Family Planning
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'reports.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/reports.php">
-                    <i class="fas fa-chart-bar me-2"></i>Reports
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'library.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/library.php">
-                    <i class="fas fa-book-medical me-2"></i>Health Library
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark <?= ($currentPage == 'profile.php') ? 'active bg-light text-primary' : '' ?>" 
-                   href="<?= $baseUrl ?>/profile.php">
-                    <i class="fas fa-user me-2"></i>Profile
-                </a>
-            </li>
-        </ul>
+
+<!-- Midwife Branding Section -->
+<div class="mb-8 px-2 flex items-center gap-3">
+    <div class="w-10 h-10 bg-health-600 rounded-xl flex items-center justify-center text-white shadow-soft">
+        <i class="fas fa-user-nurse"></i>
+    </div>
+    <div>
+        <h3 class="text-sm font-bold text-slate-800 tracking-tight">Midwife Panel</h3>
+        <p class="text-[10px] font-semibold text-health-600 uppercase tracking-wider">Maternal & Child Care</p>
     </div>
 </div>
+
+<nav class="space-y-8">
+    <!-- Main Group -->
+    <div>
+        <h4 class="px-2 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">General</h4>
+        <div class="space-y-1">
+            <a href="<?= $baseUrl ?>/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'dashboard.php') ? 'bg-health-50 text-health-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
+                <i class="fas fa-grid-2 w-5 text-center <?= ($currentPage == 'dashboard.php') ? 'text-health-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Maternal Care Group -->
+    <div>
+        <h4 class="px-2 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Maternal Care</h4>
+        <div class="space-y-1">
+            <?php
+            $navItems = [
+                ['url' => 'forms/birth_registration.php', 'icon' => 'fa-baby', 'label' => 'Register Birth', 'active' => ($currentPage == 'birth_registration.php')],
+                ['url' => 'forms/mother_registration.php', 'icon' => 'fa-user-plus', 'label' => 'Register Mother', 'active' => ($currentPage == 'mother_registration.php')],
+                ['url' => 'forms/prenatal_form.php', 'icon' => 'fa-heart-pulse', 'label' => 'Prenatal Care', 'active' => ($currentPage == 'prenatal_form.php')],
+                ['url' => 'forms/postnatal_form.php', 'icon' => 'fa-child-reaching', 'label' => 'Postnatal Care', 'active' => ($currentPage == 'postnatal_form.php')],
+                ['url' => 'immunization_records.php', 'icon' => 'fa-syringe', 'label' => 'Immunization', 'active' => ($currentPage == 'immunization_records.php' || $currentPage == 'immunization_form.php')],
+                ['url' => 'family_planning.php', 'icon' => 'fa-pills', 'label' => 'Family Planning', 'active' => ($currentPage == 'family_planning.php')],
+            ];
+
+            foreach ($navItems as $item): ?>
+                <a href="<?= $baseUrl ?>/<?= $item['url'] ?>" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= $item['active'] ? 'bg-health-50 text-health-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
+                    <div class="flex items-center justify-center w-5 h-5">
+                        <i class="fas <?= $item['icon'] ?> text-sm <?= $item['active'] ? 'text-health-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
+                    </div>
+                    <span><?= $item['label'] ?></span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- System Group -->
+    <div>
+        <h4 class="px-2 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Services</h4>
+        <div class="space-y-1">
+            <a href="<?= $baseUrl ?>/reports.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'reports.php') ? 'bg-health-50 text-health-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
+                <i class="fas fa-chart-pie w-5 text-center <?= ($currentPage == 'reports.php') ? 'text-health-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
+                <span>Reports</span>
+            </a>
+            <a href="<?= $baseUrl ?>/library.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'library.php') ? 'bg-health-50 text-health-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
+                <i class="fas fa-book-medical w-5 text-center <?= ($currentPage == 'library.php') ? 'text-health-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
+                <span>Health Library</span>
+            </a>
+            <a href="<?= $baseUrl ?>/profile.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'profile.php') ? 'bg-health-50 text-health-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
+                <i class="fas fa-user-circle w-5 text-center <?= ($currentPage == 'profile.php') ? 'text-health-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
+                <span>My Profile</span>
+            </a>
+        </div>
+    </div>
+</nav>

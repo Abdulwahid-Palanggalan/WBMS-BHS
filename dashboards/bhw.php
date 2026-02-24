@@ -145,570 +145,398 @@ $totalPregnant = count($pregnantWomen);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BHW Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>BHW Dashboard - Community Health</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .dashboard-header {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid #28a745;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border-left: 4px solid;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            text-align: center;
-            height: 100%;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card.mothers { border-left-color: #007bff; }
-        .stat-card.babies { border-left-color: #28a745; }
-        .stat-card.pregnant { border-left-color: #dc3545; }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            margin: 0 auto 1rem auto;
-        }
-        
-        .stat-card.mothers .stat-icon { background: #e3f2fd; color: #007bff; }
-        .stat-card.babies .stat-icon { background: #e8f5e8; color: #28a745; }
-        .stat-card.pregnant .stat-icon { background: #ffebee; color: #dc3545; }
-        
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            color: #2c3e50;
-        }
-        
-        .stat-label {
-            color: #6c757d;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        
-        @media (max-width: 768px) {
-            .stat-card {
-                padding: 1rem;
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .stat-card-bhw {
+                @apply bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer;
             }
-            .stat-number {
-                font-size: 1.25rem;
+            .table-modern-bhw th {
+                @apply px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50;
             }
-            .stat-label {
-                font-size: 0.75rem;
+            .table-modern-bhw td {
+                @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-50;
             }
-            .stat-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-                margin-bottom: 0.5rem;
+            .tab-btn {
+                @apply px-6 py-3 text-sm font-bold uppercase tracking-widest border-b-2 transition-all duration-300;
+            }
+            .tab-btn-active {
+                @apply border-emerald-600 text-emerald-600 bg-emerald-50/50;
+            }
+            .tab-btn-inactive {
+                @apply border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50;
             }
         }
-
-        
-        .section-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-        
-        .section-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-        }
-        
-        .section-header h5 {
-            margin: 0;
-            font-weight: 600;
-        }
-        
-        .section-body {
-            padding: 1.5rem;
-        }
-        
-        .sitio-badge {
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            background: #e3f2fd;
-            color: #007bff;
-            border: 1px solid #bbdefb;
-        }
-        
-        .pregnant-badge {
-            background: #ffebee;
-            color: #dc3545;
-            border: 1px solid #ffcdd2;
-        }
-        
-        .table-hover tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .table-responsive {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #6c757d;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        
-        .profile-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #007bff;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .tab-content {
-            background: white;
-            border-radius: 0 0 12px 12px;
-            padding: 1.5rem;
-        }
-        
-        .nav-tabs {
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .nav-tabs .nav-link {
-            border: none;
-            color: #6c757d;
-            font-weight: 500;
-            padding: 0.75rem 1rem;
-            white-space: nowrap;
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: #007bff;
-            border-bottom: 3px solid #007bff;
-            background: transparent;
-        }
-
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-full">
     <?php include_once __DIR__ . '/../includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
-            
-            <main class="main-content">
-                <!-- Dashboard Header with Sitio Info -->
-                <div class="dashboard-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="h3 mb-2">BHW Dashboard</h1>
-                            <p class="mb-0 opacity-75">
-                                Welcome, <strong><?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?></strong>
-                                • Today: <?php echo date('l, F j, Y'); ?>
-                            </p>
-                            
-                            <!-- Assigned Sitios -->
-                            <?php if (!empty($bhwSitioArray)): ?>
-                            <div class="mt-2">
-                                <small class="text-muted">Assigned Sitios:</small>
-                                <?php foreach ($bhwSitioArray as $sitio): ?>
-                                    <span class="badge bg-primary me-1"><?php echo htmlspecialchars($sitio); ?></span>
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8">
+            <!-- Dashboard Header -->
+            <header class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <h1 class="text-2xl font-black text-slate-900 tracking-tight">BHW Dashboard</h1>
+                    </div>
+                    <p class="text-slate-500 text-sm font-medium">
+                        Welcome, <span class="text-slate-900 font-bold"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?></span> 
+                        <span class="mx-2 text-slate-300">•</span> 
+                        <?= date('l, F j, Y'); ?>
+                    </p>
+                    
+                    <!-- Assigned Sitios -->
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest self-center mr-2">Assigned Sitios:</span>
+                        <?php if (!empty($bhwSitioArray)): ?>
+                            <?php foreach ($bhwSitioArray as $sitio): ?>
+                                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-black px-3 py-1 rounded-full border border-emerald-100 uppercase tracking-tighter">
+                                    <i class="fas fa-location-dot me-1"></i><?= htmlspecialchars($sitio); ?>
+                                </span>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <span class="bg-amber-50 text-amber-700 text-[10px] font-black px-3 py-1 rounded-full border border-amber-100 uppercase tracking-widest">
+                                <i class="fas fa-triangle-exclamation me-1"></i>No Assignments
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-end gap-2">
+                    <div class="bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-xl shadow-slate-200 flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Community Risk</p>
+                            <p class="text-sm font-black">LOW STATUS</p>
+                        </div>
+                        <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-shield-heart"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Quick Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Registered Mothers -->
+                <div class="stat-card-bhw border-l-4 border-sky-500" onclick="switchTab('mothers')">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Registered Mothers</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $totalMothers; ?></h3>
+                        </div>
+                        <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center text-xl shadow-soft">
+                            <i class="fas fa-person-breastfeeding"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-[10px] font-bold">
+                        <span class="text-sky-600 bg-sky-50 px-2 py-1 rounded-lg uppercase tracking-tight">Active Registry</span>
+                        <span class="text-slate-400">Total in Assigned Area</span>
+                    </div>
+                </div>
+
+                <!-- Registered Babies -->
+                <div class="stat-card-bhw border-l-4 border-emerald-500" onclick="switchTab('babies')">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Registered Babies</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $totalBabies; ?></h3>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl shadow-soft">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-[10px] font-bold">
+                        <span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg uppercase tracking-tight">Growth Monitoring</span>
+                        <span class="text-slate-400">Total in Assigned Area</span>
+                    </div>
+                </div>
+
+                <!-- Pregnant Women -->
+                <div class="stat-card-bhw border-l-4 border-rose-500" onclick="switchTab('pregnant')">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Pregnant Women</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $totalPregnant; ?></h3>
+                        </div>
+                        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl shadow-soft">
+                            <i class="fas fa-heart-pulse"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-[10px] font-bold">
+                        <span class="text-rose-600 bg-rose-50 px-2 py-1 rounded-lg uppercase tracking-tight">Prenatal Vigilance</span>
+                        <span class="text-slate-400">Total in Assigned Area</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Population Overview -->
+            <section class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                <div class="px-8 py-6 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800 tracking-tight">Population Management</h2>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Detailed breakdown of residents</p>
+                    </div>
+                    
+                    <div class="flex bg-slate-50 p-1 rounded-2xl border border-slate-100 self-start md:self-center">
+                        <button id="tab-mothers" onclick="switchTab('mothers')" class="tab-btn tab-btn-active rounded-xl">
+                            <i class="fas fa-person-breastfeeding me-2"></i>Mothers
+                        </button>
+                        <button id="tab-babies" onclick="switchTab('babies')" class="tab-btn tab-btn-inactive rounded-xl">
+                            <i class="fas fa-baby me-2"></i>Babies
+                        </button>
+                        <button id="tab-pregnant" onclick="switchTab('pregnant')" class="tab-btn tab-btn-inactive rounded-xl">
+                            <i class="fas fa-heart-pulse me-2"></i>Pregnant
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mothers Table -->
+                <div id="content-mothers" class="overflow-x-auto p-4 content-section">
+                    <?php if (!empty($allMothers)): ?>
+                        <table class="w-full table-modern-bhw border-collapse">
+                            <thead>
+                                <tr>
+                                    <th>Mother Name</th>
+                                    <th>Address/Sitio</th>
+                                    <th>Demographics</th>
+                                    <th>Registry Stats</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($allMothers as $mother): 
+                                    $addressParts = explode(',', $mother['address']);
+                                    $sitio = $addressParts[0];
+                                    $isPregnant = !empty($mother['lmp']);
+                                ?>
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
+                                                <?= strtoupper(substr($mother['first_name'], 0, 1)); ?>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-slate-800 tracking-tight transition-colors group-hover:text-sky-700"><?= htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?></span>
+                                                <span class="text-[10px] font-medium text-slate-400 italic"><?= $mother['phone'] ?: 'No Phone'; ?></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="bg-slate-100 text-slate-600 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-tighter shadow-sm">
+                                            <?= htmlspecialchars($sitio); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-xs font-medium text-slate-500">
+                                            <span>Age: <strong class="text-slate-800"><?= floor($mother['age']); ?>y</strong></span>
+                                            <span>Status: <strong class="text-slate-800"><?= htmlspecialchars($mother['civil_status']); ?></strong></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-emerald-50 text-emerald-600 text-[10px] font-black px-3 py-1.5 rounded-full border border-emerald-100">
+                                                <?= $mother['total_children']; ?> CHILDREN
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if ($isPregnant): ?>
+                                            <span class="bg-rose-50 text-rose-600 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-rose-100 italic">Pregnant</span>
+                                        <?php else: ?>
+                                            <span class="bg-slate-50 text-slate-400 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-slate-100">Stable</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
                                 <?php endforeach; ?>
-                            </div>
-                            <?php else: ?>
-                            <div class="mt-2">
-                                <span class="badge bg-warning">No sitio assignment</span>
-                            </div>
-                            <?php endif; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center py-20 opacity-30">
+                            <i class="fas fa-person-breastfeeding text-6xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest">No mother data available in your sitios</p>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Quick Stats -->
-                <div class="row mb-4">
-                    <div class="col-md-4 mb-3">
-                        <div class="stat-card mothers" onclick="showTab('mothers')">
-                            <div class="stat-icon">
-                                <i class="fas fa-user-friends"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $totalMothers; ?></div>
-                            <div class="stat-label">Registered Mothers</div>
-                            <small class="text-muted">In your assigned sitios</small>
+                <!-- Babies Table -->
+                <div id="content-babies" class="overflow-x-auto p-4 content-section hidden">
+                    <?php if (!empty($allBabies)): ?>
+                        <table class="w-full table-modern-bhw border-collapse">
+                            <thead>
+                                <tr>
+                                    <th>Child Profile</th>
+                                    <th>Birth Identity</th>
+                                    <th>Vital Growth</th>
+                                    <th>Maternal Link</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($allBabies as $baby): 
+                                    $addressParts = explode(',', $baby['mother_address']);
+                                    $sitio = $addressParts[0];
+                                ?>
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 <?= $baby['gender'] == 'male' ? 'bg-sky-100 text-sky-600' : 'bg-rose-100 text-rose-600' ?> rounded-2xl flex items-center justify-center text-sm shadow-sm">
+                                                <i class="fas <?= $baby['gender'] == 'male' ? 'fa-mars' : 'fa-venus' ?>"></i>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-slate-800 tracking-tight group-hover:text-emerald-700 transition-colors"><?= htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?></span>
+                                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest"><?= $baby['age_formatted']; ?></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-xs space-y-0.5">
+                                            <span class="font-black text-slate-800"><?= date('M d, Y', strtotime($baby['birth_date'])); ?></span>
+                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter italic">DOB Recorded</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <span class="bg-amber-50 text-amber-700 text-[10px] font-black px-3 py-1.5 rounded-full border border-amber-100">
+                                                <?= $baby['birth_weight'] ?: '0.0'; ?> KG
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-xs font-bold text-slate-600 underline decoration-slate-200 decoration-2 underline-offset-4">
+                                            <?= htmlspecialchars($baby['mother_first_name'] . ' ' . $baby['mother_last_name']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="bg-emerald-50 text-emerald-600 text-[10px] font-black px-3 py-1.5 rounded-full border border-emerald-100 uppercase tracking-tighter">
+                                            <?= htmlspecialchars($sitio); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center py-20 opacity-30">
+                            <i class="fas fa-baby text-6xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest">No baby records found in your sitios</p>
                         </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="stat-card babies" onclick="showTab('babies')">
-                            <div class="stat-icon">
-                                <i class="fas fa-baby"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $totalBabies; ?></div>
-                            <div class="stat-label">Registered Babies</div>
-                            <small class="text-muted">In your assigned sitios</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="stat-card pregnant" onclick="showTab('pregnant')">
-                            <div class="stat-icon">
-                                <i class="fas fa-heartbeat"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $totalPregnant; ?></div>
-                            <div class="stat-label">Pregnant Women</div>
-                            <small class="text-muted">In your assigned sitios</small>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Main Content Tabs -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h5><i class="fas fa-chart-bar me-2"></i>Population Overview</h5>
-                    </div>
-                    
-                    <!-- Tabs Navigation -->
-                    <nav>
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <button class="nav-link active" id="nav-mothers-tab" data-bs-toggle="tab" 
-                                    data-bs-target="#nav-mothers" type="button" role="tab">
-                                <i class="fas fa-user-friends me-1"></i>
-                                Mothers (<?php echo $totalMothers; ?>)
-                            </button>
-                            <button class="nav-link" id="nav-babies-tab" data-bs-toggle="tab" 
-                                    data-bs-target="#nav-babies" type="button" role="tab">
-                                <i class="fas fa-baby me-1"></i>
-                                Babies (<?php echo $totalBabies; ?>)
-                            </button>
-                            <button class="nav-link" id="nav-pregnant-tab" data-bs-toggle="tab" 
-                                    data-bs-target="#nav-pregnant" type="button" role="tab">
-                                <i class="fas fa-heartbeat me-1"></i>
-                                Pregnant (<?php echo $totalPregnant; ?>)
-                            </button>
+                <!-- Pregnant Women Table -->
+                <div id="content-pregnant" class="overflow-x-auto p-4 content-section hidden">
+                    <?php if (!empty($pregnantWomen)): ?>
+                        <table class="w-full table-modern-bhw border-collapse">
+                            <thead>
+                                <tr>
+                                    <th>Patient Profile</th>
+                                    <th>Due Date (EDC)</th>
+                                    <th>Gestation Progress</th>
+                                    <th>Visits & Parity</th>
+                                    <th>Community Support</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pregnantWomen as $woman): 
+                                    $addressParts = explode(',', $woman['address']);
+                                    $sitio = $addressParts[0];
+                                    $progress = min(100, ($woman['gestational_weeks'] / 40) * 100);
+                                ?>
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-rose-500 text-white rounded-2xl flex items-center justify-center text-sm font-bold shadow-lg shadow-rose-100">
+                                                <i class="fas fa-heart-pulse"></i>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-slate-800 tracking-tight group-hover:text-rose-700 transition-colors"><?= htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']); ?></span>
+                                                <span class="text-[10px] font-bold text-rose-500 uppercase tracking-widest italic">High Priority Monitoring</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col">
+                                            <span class="font-black text-slate-800 text-sm"><?= date('M d, Y', strtotime($woman['edc'])); ?></span>
+                                            <?php if ($woman['days_until_due'] > 0): ?>
+                                                <span class="text-[10px] font-black text-emerald-600 uppercase tracking-tighter"><?= $woman['days_until_due']; ?> DAYS REMAINING</span>
+                                            <?php else: ?>
+                                                <span class="text-[10px] font-black text-rose-600 uppercase tracking-tighter animation-pulse italic">OVERDUE BY <?= abs($woman['days_until_due']); ?> DAYS</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col gap-2 w-40">
+                                            <div class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                                <span>Week <?= number_format($woman['gestational_weeks'], 1); ?></span>
+                                                <span><?= round($progress); ?>%</span>
+                                            </div>
+                                            <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                                <div class="bg-rose-500 h-full rounded-full shadow-[0_0_8px_rgba(244,63,94,0.5)] transition-all duration-1000" style="width: <?= $progress; ?>%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-[10px] font-black gap-1">
+                                            <span class="bg-sky-50 text-sky-600 px-3 py-1.5 rounded-full border border-sky-100 w-fit">G<?= $woman['gravida']; ?> P<?= $woman['para']; ?> L<?= $woman['living_children']; ?></span>
+                                            <span class="bg-purple-50 text-purple-600 px-3 py-1.5 rounded-full border border-purple-100 w-fit"><?= $woman['prenatal_visits']; ?> PRENATAL VISITS</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-xs font-bold text-slate-600 italic">
+                                            <span>Mr. <?= htmlspecialchars($woman['husband_first_name'] ?: '---'); ?></span>
+                                            <span class="text-[10px] text-slate-400 uppercase tracking-tighter">Emergency Hub: <?= htmlspecialchars($sitio); ?></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center py-20 opacity-30">
+                            <i class="fas fa-heart-pulse text-6xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest">No prenatal cases in your community</p>
                         </div>
-                    </nav>
-                    
-                    <!-- Tabs Content -->
-                    <div class="tab-content" id="nav-tabContent">
-                        
-                        <!-- Mothers Tab -->
-                        <div class="tab-pane fade show active" id="nav-mothers" role="tabpanel">
-                            <?php if (!empty($allMothers)): ?>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Mother</th>
-                                                <th>Sitio</th>
-                                                <th>Age</th>
-                                                <th>Civil Status</th>
-                                                <th>Contact</th>
-                                                <th>Children</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($allMothers as $mother): 
-                                                // Extract sitio from address
-                                                $addressParts = explode(',', $mother['address']);
-                                                $sitio = $addressParts[0];
-                                                $isPregnant = !empty($mother['lmp']);
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="profile-avatar">
-                                                            <?php echo strtoupper(substr($mother['first_name'], 0, 1)); ?>
-                                                        </div>
-                                                        <div>
-                                                            <strong><?php echo htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?></strong>
-                                                            <?php if ($mother['middle_name']): ?>
-                                                                <br><small class="text-muted"><?php echo htmlspecialchars($mother['middle_name']); ?></small>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span class="sitio-badge"><?php echo htmlspecialchars($sitio); ?></span>
-                                                </td>
-                                                <td><?php echo floor($mother['age']); ?> years</td>
-                                                <td><?php echo htmlspecialchars($mother['civil_status']); ?></td>
-                                                <td>
-                                                    <?php if ($mother['phone']): ?>
-                                                        <i class="fas fa-phone text-primary me-1"></i><?php echo htmlspecialchars($mother['phone']); ?><br>
-                                                    <?php endif; ?>
-                                                    <?php if ($mother['emergency_contact']): ?>
-                                                        <small class="text-muted">Emergency: <?php echo htmlspecialchars($mother['emergency_contact']); ?></small>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-secondary"><?php echo $mother['total_children']; ?> children</span>
-                                                </td>
-                                                <td>
-                                                    <?php if ($isPregnant): ?>
-                                                        <span class="badge bg-danger">Pregnant</span>
-                                                    <?php else: ?>
-                                                        <span class="badge bg-success">Not Pregnant</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php else: ?>
-                                <div class="empty-state">
-                                    <i class="fas fa-user-friends"></i>
-                                    <h5>No Mothers Found</h5>
-                                    <p class="text-muted">No mothers registered in your assigned sitios.</p>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <!-- Babies Tab -->
-                        <div class="tab-pane fade" id="nav-babies" role="tabpanel">
-                            <?php if (!empty($allBabies)): ?>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Baby</th>
-                                                <th>Sitio</th>
-                                                <th>Birth Date</th>
-                                                <th>Age</th>
-                                                <th>Gender</th>
-                                                <th>Weight</th>
-                                                <th>Mother</th>
-                                                <th>Delivery</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($allBabies as $baby): 
-                                                // Extract sitio from address
-                                                $addressParts = explode(',', $baby['mother_address']);
-                                                $sitio = $addressParts[0];
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <strong><?php echo htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?></strong>
-                                                <?php if ($baby['gender'] == 'male'): ?>
-                                                    <i class="fas fa-mars text-primary ms-1"></i>
-                                                <?php else: ?>
-                                                    <i class="fas fa-venus text-danger ms-1"></i>
-                                                <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <span class="sitio-badge"><?php echo htmlspecialchars($sitio); ?></span>
-                                                </td>
-                                                <td>
-                                                    <?php if ($baby['birth_date'] && $baby['birth_date'] != '0000-00-00'): ?>
-                                                        <?php echo date('M j, Y', strtotime($baby['birth_date'])); ?>
-                                                    <?php else: ?>
-                                                        N/A
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td><?php echo $baby['age_formatted']; ?></td>
-                                                <td>
-                                                    <span class="badge bg-<?php echo $baby['gender'] == 'male' ? 'primary' : 'danger'; ?>">
-                                                        <?php echo ucfirst($baby['gender']); ?>
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <?php if ($baby['birth_weight']): ?>
-                                                        <?php echo $baby['birth_weight']; ?> kg
-                                                    <?php else: ?>
-                                                        N/A
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <?php echo htmlspecialchars($baby['mother_first_name'] . ' ' . $baby['mother_last_name']); ?>
-                                                </td>
-                                                <td>
-                                                    <?php if ($baby['delivery_type']): ?>
-                                                        <small class="text-muted"><?php echo ucfirst($baby['delivery_type']); ?></small>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php else: ?>
-                                <div class="empty-state">
-                                    <i class="fas fa-baby"></i>
-                                    <h5>No Babies Found</h5>
-                                    <p class="text-muted">No babies registered in your assigned sitios.</p>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <!-- Pregnant Women Tab -->
-                        <div class="tab-pane fade" id="nav-pregnant" role="tabpanel">
-                            <?php if (!empty($pregnantWomen)): ?>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Mother</th>
-                                                <th>Sitio</th>
-                                                <th>Age</th>
-                                                <th>Contact</th>
-                                                <th>Due Date</th>
-                                                <th>Progress</th>
-                                                <th>Prenatal Visits</th>
-                                                <th>G/P</th>
-                                                <th>Husband</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($pregnantWomen as $woman): 
-                                                // Extract sitio from address
-                                                $addressParts = explode(',', $woman['address']);
-                                                $sitio = $addressParts[0];
-                                                
-                                                // Calculate progress percentage
-                                                $progress = min(100, ($woman['gestational_weeks'] / 40) * 100);
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="profile-avatar bg-danger">
-                                                            <i class="fas fa-heartbeat"></i>
-                                                        </div>
-                                                        <div>
-                                                            <strong><?php echo htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']); ?></strong>
-                                                            <br><small class="text-muted">G: <?php echo $woman['gravida']; ?> P: <?php echo $woman['para']; ?></small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span class="sitio-badge"><?php echo htmlspecialchars($sitio); ?></span>
-                                                </td>
-                                                <td><?php echo floor($woman['age']); ?> years</td>
-                                                <td>
-                                                    <i class="fas fa-phone text-primary me-1"></i><?php echo htmlspecialchars($woman['phone']); ?>
-                                                </td>
-                                                <td>
-                                                    <?php if ($woman['edc']): ?>
-                                                        <strong><?php echo date('M j, Y', strtotime($woman['edc'])); ?></strong>
-                                                        <br>
-                                                        <?php if ($woman['days_until_due'] > 0): ?>
-                                                            <small class="text-success"><?php echo $woman['days_until_due']; ?> days left</small>
-                                                        <?php else: ?>
-                                                            <small class="text-danger">Overdue by <?php echo abs($woman['days_until_due']); ?> days</small>
-                                                        <?php endif; ?>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="me-2" style="width: 60px;">
-                                                            <div class="progress" style="height: 6px;">
-                                                                <div class="progress-bar bg-danger" role="progressbar" 
-                                                                     style="width: <?php echo $progress; ?>%"></div>
-                                                            </div>
-                                                        </div>
-                                                        <small>Week <?php echo number_format($woman['gestational_weeks'], 1); ?></small>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-info"><?php echo $woman['prenatal_visits']; ?> visits</span>
-                                                    <?php if ($woman['last_visit']): ?>
-                                                        <br><small>Last: <?php echo date('M j', strtotime($woman['last_visit'])); ?></small>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <small>G<?php echo $woman['gravida']; ?>P<?php echo $woman['para']; ?></small>
-                                                    <?php if ($woman['abortions'] > 0): ?>
-                                                        <br><small class="text-danger">A: <?php echo $woman['abortions']; ?></small>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <?php if ($woman['husband_first_name']): ?>
-                                                        <?php echo htmlspecialchars($woman['husband_first_name'] . ' ' . $woman['husband_last_name']); ?>
-                                                        <?php if ($woman['husband_phone']): ?>
-                                                            <br><small class="text-muted"><?php echo htmlspecialchars($woman['husband_phone']); ?></small>
-                                                        <?php endif; ?>
-                                                    <?php else: ?>
-                                                        <span class="text-muted">N/A</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php else: ?>
-                                <div class="empty-state">
-                                    <i class="fas fa-heartbeat"></i>
-                                    <h5>No Pregnant Women Found</h5>
-                                    <p class="text-muted">No pregnant women in your assigned sitios.</p>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
-            </main>
-        </div>
+            </section>
+        </main>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Layout & Interactivity Script -->
     <script>
-        // Auto-refresh every 5 minutes
-        setTimeout(function() {
+        function switchTab(tab) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('hidden'));
+            // Remove active styles from all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('tab-btn-active');
+                el.classList.add('tab-btn-inactive');
+            });
+
+            // Show target section
+            document.getElementById('content-' + tab).classList.remove('hidden');
+            // Add active styles to target button
+            document.getElementById('tab-' + tab).classList.remove('tab-btn-inactive');
+            document.getElementById('tab-' + tab).classList.add('tab-btn-active');
+        }
+
+        // Auto-refresh for Data Sync (Every 5 Minutes)
+        setTimeout(() => {
             window.location.reload();
         }, 300000);
-        
-        // Function to show specific tab when clicking on stat cards
-        function showTab(tabName) {
-            var tabButton = document.getElementById('nav-' + tabName + '-tab');
-            var bsTab = new bootstrap.Tab(tabButton);
-            bsTab.show();
-        }
-        
-        // Initialize tooltips
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
+
+        // Responsive Sidebar Toggle Logic is handled in header.php
     </script>
 </body>
 </html>
