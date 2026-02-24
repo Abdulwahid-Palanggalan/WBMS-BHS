@@ -231,90 +231,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .section-title {
-            background: linear-gradient(135deg, #1a73e8 0%, #6a11cb 100%);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 20px 0 15px 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        .form-control, .form-select {
-            border-radius: 6px;
-            border: 1.5px solid #e0e0e0;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
-        }
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
-        }
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .field-warning {
-            font-size: 0.875rem;
-            color: #856404;
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 4px;
-            padding: 5px 10px;
-            margin-top: 5px;
-            display: none;
-        }
-        .is-invalid {
-            border-color: #dc3545 !important;
-            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.15) !important;
-        }
-        .is-valid {
-            border-color: #198754 !important;
-        }
-        .warning-icon {
-            color: #856404;
-            margin-right: 5px;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .edit-mode-banner {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-        .readonly-field {
-            background-color: #f8f9fa;
-            border-color: #e9ecef;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
-        .lock-icon {
-            color: #6c757d;
-            margin-right: 5px;
-        }
-        .edit-mode-badge {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .info-section {
-            background-color: #e7f3ff;
-            border: 1px solid #b6d7ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-header {
+                @apply flex items-center gap-3 py-4 border-b border-slate-100 mb-6;
+            }
+            .section-icon {
+                @apply w-10 h-10 bg-health-50 text-health-600 rounded-xl flex items-center justify-center text-lg;
+            }
+            .form-input-premium {
+                @apply w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-health-500 focus:ring-4 focus:ring-health-500/10 outline-none transition-all duration-200 bg-white;
+            }
+            .form-label-premium {
+                @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1;
+            }
+            .card-premium {
+                @apply bg-white rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50 p-8;
+            }
+            .info-box {
+                @apply bg-slate-50 rounded-2xl p-6 border border-slate-100;
+            }
+            .badge-edit {
+                @apply bg-amber-500 text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-amber-200;
+            }
         }
     </style>
 </head>
@@ -325,391 +264,505 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include_once INCLUDE_PATH . 'sidebar.php'; ?>
 
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2"><?php echo $isEditMode ? 'Edit Birth Record' : 'Birth Registration'; ?></h1>
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                <div>
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                        <i class="fas fa-baby text-health-600"></i>
+                        <?php echo $isEditMode ? 'Edit Birth Record' : 'Birth Registration'; ?>
+                    </h1>
+                    <p class="text-slate-500 font-medium mt-1">
+                        Professional health record management system
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
                     <?php if ($isEditMode && $birthRecord): ?>
-                        <span class="edit-mode-badge">
-                            <i class="fas fa-edit me-1"></i>Edit Mode
+                        <span class="badge-edit">
+                            <i class="fas fa-edit me-1"></i>Edit Mode Active
                         </span>
                     <?php endif; ?>
-                </div>
-
-                <?php if ($isEditMode): ?>
-                    <div class="edit-mode-banner">
-                        <i class="fas fa-edit me-2"></i>
-                        You are editing birth record for: <strong><?php echo htmlspecialchars($birthRecord['first_name'] . ' ' . $birthRecord['last_name']); ?></strong>
-                        | Birth Date: <?php echo date('F j, Y', strtotime($birthRecord['birth_date'])); ?>
+                    <div class="px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        Ref: WBMS-BR-<?= date('Y') ?>
                     </div>
+                </div>
+            </div>
+
+            <?php if ($isEditMode): ?>
+                <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 flex items-center gap-4 text-amber-800">
+                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-lg">
+                        <i class="fas fa-user-pen"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase font-black tracking-widest mb-0.5">Currently Editing</p>
+                        <p class="font-bold"><?php echo htmlspecialchars($birthRecord['first_name'] . ' ' . $birthRecord['last_name']); ?> (Born: <?php echo date('F j, Y', strtotime($birthRecord['birth_date'])); ?>)</p>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Success/Error Alerts -->
+            <?php if ($message): ?>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top duration-500">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p class="font-bold text-sm"><?php echo $message; ?></p>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-center gap-3 text-rose-800 animate-in fade-in slide-in-from-top duration-500">
+                    <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <p class="font-bold text-sm"><?php echo $error; ?></p>
+                </div>
+            <?php endif; ?>
+
+            <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 flex items-center gap-3 text-sky-800">
+                <div class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <p class="text-sm font-medium">Fields marked with <span class="text-rose-500 font-bold">*</span> are required for official registration.</p>
+            </div>
+
+            <form method="POST" action="" id="birthRegistrationForm" class="space-y-8" novalidate>
+                <?php if ($isEditMode && $birthRecord): ?>
+                    <input type="hidden" name="birth_id" value="<?php echo $birthRecord['id']; ?>">
                 <?php endif; ?>
 
-                <?php if ($message): ?>
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>
-                    <?php echo $message; ?>
-                </div>
-                <?php endif; ?>
+                <!-- Mother Selection -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-venus text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Mother Selection</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Assign this record to a registered mother</p>
+                        </div>
+                    </div>
 
-                <?php if ($error): ?>
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <?php echo $error; ?>
-                </div>
-                <?php endif; ?>
-
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Fields marked with <span class="text-danger">*</span> are required.
-                </div>
-
-                <div class="card">
-                    <div class="card-body">
-                        <form method="POST" action="" id="birthRegistrationForm" novalidate>
-                            <?php if ($isEditMode && $birthRecord): ?>
-                                <input type="hidden" name="birth_id" value="<?php echo $birthRecord['id']; ?>">
-                            <?php endif; ?>
-
-                            <!-- Mother Selection -->
-                            <?php if ($_SESSION['role'] === 'mother' && count($mothers) > 0): ?>
-                                <input type="hidden" name="mother_id" value="<?php echo $mothers[0]['id']; ?>">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> You are <?php echo $isEditMode ? 'editing' : 'registering'; ?> a birth for yourself: 
-                                    <strong><?php echo htmlspecialchars($mothers[0]['first_name'] . ' ' . $mothers[0]['last_name']); ?></strong>
-                                </div>
-                            <?php else: ?>
-                                <div class="section-title">Mother Selection</div>
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <label for="mother_id" class="form-label required-field">Select Mother</label>
-                                        <?php if ($isEditMode && $birthRecord): ?>
-                                            <!-- In edit mode: READ-ONLY -->
-                                            <input type="text" class="form-control readonly-field" 
-                                                   value="<?php echo htmlspecialchars($birthRecord['mother_first_name'] . ' ' . $birthRecord['mother_last_name']); ?>" 
-                                                   readonly>
-                                            <input type="hidden" name="mother_id" value="<?php echo $birthRecord['mother_id']; ?>">
-                                            <small class="text-muted"><i class="fas fa-lock lock-icon"></i>Mother cannot be changed in edit mode</small>
-                                        <?php else: ?>
-                                            <!-- In new record mode, show dropdown -->
-                                            <select class="form-select" id="mother_id" name="mother_id" required>
-                                                <option value="">Select Mother</option>
-                                                <?php foreach ($mothers as $mother): ?>
-                                                <option value="<?php echo $mother['id']; ?>" 
-                                                    <?php echo (isset($_GET['mother_id']) && $_GET['mother_id'] == $mother['id']) ? 'selected' : ''; ?>>
-                                                    <?php echo htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?>
-                                                </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <div class="field-warning" id="mother_id_warning">
-                                                <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                                Please select a mother
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-
-                            <!-- Mother's Information (Display Only) -->
-                            <div class="section-title">Mother's Information</div>
-                            <div class="info-section">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <strong>Name:</strong> 
-                                        <?php if ($isEditMode && $birthRecord): ?>
-                                            <?php echo htmlspecialchars($birthRecord['mother_first_name'] . ' ' . ($birthRecord['mother_middle_name'] ? $birthRecord['mother_middle_name'] . ' ' : '') . $birthRecord['mother_last_name']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">Will be automatically retrieved</span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <strong>Birthdate:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['mother_birthdate']): ?>
-                                            <?php echo date('F j, Y', strtotime($birthRecord['mother_birthdate'])); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">-</span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <strong>Occupation:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['mother_occupation']): ?>
-                                            <?php echo htmlspecialchars($birthRecord['mother_occupation']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">-</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-6">
-                                        <strong>Citizenship:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['mother_citizenship']): ?>
-                                            <?php echo htmlspecialchars($birthRecord['mother_citizenship']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">Filipino</span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <strong>Religion:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['mother_religion']): ?>
-                                            <?php echo htmlspecialchars($birthRecord['mother_religion']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">-</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
+                    <?php if ($_SESSION['role'] === 'mother' && count($mothers) > 0): ?>
+                        <input type="hidden" name="mother_id" value="<?php echo $mothers[0]['id']; ?>">
+                        <div class="info-box flex items-center gap-4">
+                            <div class="w-12 h-12 bg-health-100 text-health-700 rounded-full flex items-center justify-center text-xl">
+                                <i class="fas fa-user-check"></i>
                             </div>
+                            <div>
+                                <p class="text-sm text-slate-500 font-medium">Registering a birth for yourself:</p>
+                                <p class="text-lg font-black text-slate-900"><?php echo htmlspecialchars($mothers[0]['first_name'] . ' ' . $mothers[0]['last_name']); ?></p>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="mother_id" class="form-label-premium">Select Mother <span class="text-rose-500">*</span></label>
+                                <?php if ($isEditMode && $birthRecord): ?>
+                                    <div class="relative">
+                                        <input type="text" class="form-input-premium bg-slate-50 text-slate-500 cursor-not-allowed pr-10" 
+                                               value="<?php echo htmlspecialchars($birthRecord['mother_first_name'] . ' ' . $birthRecord['mother_last_name']); ?>" 
+                                               readonly>
+                                        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                                            <i class="fas fa-lock"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="mother_id" value="<?php echo $birthRecord['mother_id']; ?>">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-2 px-1">
+                                        <i class="fas fa-info-circle me-1"></i> Mother cannot be changed in edit mode
+                                    </p>
+                                <?php else: ?>
+                                    <select class="form-input-premium appearance-none" id="mother_id" name="mother_id" required>
+                                        <option value="">Select Mother</option>
+                                        <?php foreach ($mothers as $mother): ?>
+                                        <option value="<?php echo $mother['id']; ?>" 
+                                            <?php echo (isset($_GET['mother_id']) && $_GET['mother_id'] == $mother['id']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="mother_id_warning">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> Please select a mother
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </section>
+
+                <!-- Mother's Information Display -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-address-card text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Mother's Profile Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Automatically synced with registration</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Full Name</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord): ?>
+                                        <?php echo htmlspecialchars($birthRecord['mother_first_name'] . ' ' . ($birthRecord['mother_middle_name'] ? $birthRecord['mother_middle_name'] . ' ' : '') . $birthRecord['mother_last_name']); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300 italic">Select mother to preview</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date of Birth</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['mother_birthdate']): ?>
+                                        <?php echo date('M j, Y', strtotime($birthRecord['mother_birthdate'])); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300">-</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Occupation</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['mother_occupation']): ?>
+                                        <?php echo htmlspecialchars($birthRecord['mother_occupation']); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300">-</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Citizenship</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['mother_citizenship']): ?>
+                                        <?php echo htmlspecialchars($birthRecord['mother_citizenship']); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300">Filipino</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Religion</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['mother_religion']): ?>
+                                        <?php echo htmlspecialchars($birthRecord['mother_religion']); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300">-</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                             <div class="alert alert-info">
                                 <i class="fas fa-info-circle"></i> 
                                 Mother's information is automatically retrieved from the mother's profile and cannot be edited here.
                             </div>
 
-                            <!-- Father's Information (Display Only) -->
-                            <div class="section-title">Father's Information</div>
-                            <div class="info-section">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <strong>Name:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['father_first_name']): ?>
-                                            <?php echo htmlspecialchars($birthRecord['father_first_name'] . ' ' . ($birthRecord['father_middle_name'] ? $birthRecord['father_middle_name'] . ' ' : '') . $birthRecord['father_last_name']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">Will be automatically retrieved</span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <strong>Birthdate:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['father_birthdate']): ?>
-                                            <?php echo date('F j, Y', strtotime($birthRecord['father_birthdate'])); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">-</span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <strong>Occupation:</strong> 
-                                        <?php if ($isEditMode && $birthRecord && $birthRecord['father_occupation']): ?>
-                                            <?php echo htmlspecialchars($birthRecord['father_occupation']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">-</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <?php if ($isEditMode && $birthRecord && $birthRecord['parents_marriage_date']): ?>
-                                <div class="row mt-2">
-                                    <div class="col-md-6">
-                                        <strong>Marriage Date:</strong> 
-                                        <?php echo date('F j, Y', strtotime($birthRecord['parents_marriage_date'])); ?>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <strong>Marriage Place:</strong> 
-                                        <?php echo htmlspecialchars($birthRecord['parents_marriage_place'] ?? '-'); ?>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> 
-                                Father's information is automatically retrieved from the husband/partner profile and cannot be edited here.
-                            </div>
-
-                            <!-- Baby's Information -->
-                            <div class="section-title">Baby's Information</div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="first_name" class="form-label required-field">First Name</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                                           value="<?= htmlspecialchars($birthRecord['first_name'] ?? $_POST['first_name'] ?? ''); ?>" required>
-                                    <div class="field-warning" id="first_name_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter baby's first name
-                                    </div>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="middle_name" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" id="middle_name" name="middle_name"
-                                           value="<?= htmlspecialchars($birthRecord['middle_name'] ?? $_POST['middle_name'] ?? ''); ?>" placeholder="Optional">
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="last_name" class="form-label required-field">Last Name</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name"
-                                           value="<?= htmlspecialchars($birthRecord['last_name'] ?? $_POST['last_name'] ?? ''); ?>" required>
-                                    <div class="field-warning" id="last_name_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter baby's last name
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3 form-group">
-                                    <label for="birth_date" class="form-label required-field">Birth Date</label>
-                                    <input type="date" class="form-control" id="birth_date" name="birth_date" 
-                                           value="<?= htmlspecialchars($birthRecord['birth_date'] ?? $_POST['birth_date'] ?? ''); ?>" required max="<?php echo date('Y-m-d'); ?>">
-                                    <div class="field-warning" id="birth_date_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please select birth date
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="birth_time" class="form-label required-field">Birth Time</label>
-                                    <input type="time" class="form-control" id="birth_time" name="birth_time" 
-                                           value="<?= htmlspecialchars($birthRecord['birth_time'] ?? $_POST['birth_time'] ?? ''); ?>" required>
-                                    <div class="field-warning" id="birth_time_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please select birth time
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="gender" class="form-label required-field">Gender</label>
-                                    <select class="form-select" id="gender" name="gender" required>
-                                        <option value="">Select Gender</option>
-                                        <option value="Male" <?= (($birthRecord['gender'] ?? $_POST['gender'] ?? '') == 'Male') ? 'selected' : ''; ?>>Male</option>
-                                        <option value="Female" <?= (($birthRecord['gender'] ?? $_POST['gender'] ?? '') == 'Female') ? 'selected' : ''; ?>>Female</option>
-                                    </select>
-                                    <div class="field-warning" id="gender_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please select baby's gender
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="birth_order" class="form-label">Birth Order</label>
-                                    <select class="form-select" id="birth_order" name="birth_order">
-                                        <option value="">Select Order</option>
-                                        <?php 
-                                        $birthOrders = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'];
-                                        foreach ($birthOrders as $order): 
-                                        ?>
-                                            <option value="<?php echo $order; ?>"
-                                                <?= (($birthRecord['birth_order'] ?? $_POST['birth_order'] ?? '') == $order) ? 'selected' : '' ?>>
-                                                <?php echo $order; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-3 form-group">
-                                    <label for="birth_weight" class="form-label">Birth Weight (kg)</label>
-                                    <input type="number" step="0.01" class="form-control" id="birth_weight" name="birth_weight" 
-                                           min="0.5" max="6.0" placeholder="e.g., 3.2" value="<?= htmlspecialchars($birthRecord['birth_weight'] ?? $_POST['birth_weight'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="birth_length" class="form-label">Birth Length (cm)</label>
-                                    <input type="number" step="0.1" class="form-control" id="birth_length" name="birth_length" 
-                                           min="30" max="60" placeholder="e.g., 50.5" value="<?= htmlspecialchars($birthRecord['birth_length'] ?? $_POST['birth_length'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="type_of_birth" class="form-label">Type of Birth</label>
-                                    <select class="form-select" id="type_of_birth" name="type_of_birth">
-                                        <option value="">Select Type</option>
-                                        <option value="Single" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Single') ? 'selected' : ''; ?>>Single</option>
-                                        <option value="Twin" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Twin') ? 'selected' : ''; ?>>Twin</option>
-                                        <option value="Triplet" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Triplet') ? 'selected' : ''; ?>>Triplet</option>
-                                        <option value="Multiple" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Multiple') ? 'selected' : ''; ?>>Multiple</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="delivery_type" class="form-label">Delivery Type</label>
-                                    <select class="form-select" id="delivery_type" name="delivery_type">
-                                        <option value="">Select Type</option>
-                                        <option value="Normal Spontaneous Delivery" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Normal Spontaneous Delivery') ? 'selected' : ''; ?>>Normal Spontaneous Delivery</option>
-                                        <option value="Cesarean Section" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Cesarean Section') ? 'selected' : ''; ?>>Cesarean Section</option>
-                                        <option value="Forceps Delivery" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Forceps Delivery') ? 'selected' : ''; ?>>Forceps Delivery</option>
-                                        <option value="Vacuum Extraction" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Vacuum Extraction') ? 'selected' : ''; ?>>Vacuum Extraction</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Birth Details -->
-                            <div class="section-title">Birth Details</div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="birth_attendant" class="form-label">Birth Attendant Name</label>
-                                    <input type="text" class="form-control" id="birth_attendant" name="birth_attendant" 
-                                           placeholder="e.g., Dr. Juan Dela Cruz" value="<?= htmlspecialchars($birthRecord['birth_attendant'] ?? $_POST['birth_attendant'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="birth_attendant_title" class="form-label">Attendant Title</label>
-                                    <select class="form-select" id="birth_attendant_title" name="birth_attendant_title">
-                                        <option value="">Select Title</option>
-                                        <option value="Doctor" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Doctor') ? 'selected' : ''; ?>>Doctor</option>
-                                        <option value="Midwife" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Midwife') ? 'selected' : ''; ?>>Midwife</option>
-                                        <option value="Nurse" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Nurse') ? 'selected' : ''; ?>>Nurse</option>
-                                        <option value="Traditional Birth Attendant" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Traditional Birth Attendant') ? 'selected' : ''; ?>>Traditional Birth Attendant</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="birth_place_type" class="form-label">Place of Birth Type</label>
-                                    <select class="form-select" id="birth_place_type" name="birth_place_type">
-                                        <option value="">Select Type</option>
-                                        <option value="Hospital" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Hospital') ? 'selected' : ''; ?>>Hospital</option>
-                                        <option value="Clinic" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Clinic') ? 'selected' : ''; ?>>Clinic</option>
-                                        <option value="Home" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Home') ? 'selected' : ''; ?>>Home</option>
-                                        <option value="Birthing Center" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Birthing Center') ? 'selected' : ''; ?>>Birthing Center</option>
-                                        <option value="Other" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Other') ? 'selected' : ''; ?>>Other</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="birth_place" class="form-label">Name of Birth Place</label>
-                                    <input type="text" class="form-control" id="birth_place" name="birth_place" 
-                                           placeholder="e.g., Kibenes General Hospital" value="<?= htmlspecialchars($birthRecord['birth_place'] ?? $_POST['birth_place'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="birth_address" class="form-label">Birth Address</label>
-                                    <input type="text" class="form-control" id="birth_address" name="birth_address" 
-                                           placeholder="Street Address" value="<?= htmlspecialchars($birthRecord['birth_address'] ?? $_POST['birth_address'] ?? ''); ?>">
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="birth_city" class="form-label">City/Municipality</label>
-                                    <input type="text" class="form-control" id="birth_city" name="birth_city" 
-                                           placeholder="City/Municipality" value="<?= htmlspecialchars($birthRecord['birth_city'] ?? $_POST['birth_city'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="birth_province" class="form-label">Province</label>
-                                    <input type="text" class="form-control" id="birth_province" name="birth_province" 
-                                           placeholder="Province" value="<?= htmlspecialchars($birthRecord['birth_province'] ?? $_POST['birth_province'] ?? ''); ?>">
-                                </div>
-                            </div>
-
-                            <!-- Informant Information -->
-                            <div class="section-title">Informant Information</div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="informant_name" class="form-label">Informant Name</label>
-                                    <input type="text" class="form-control" id="informant_name" name="informant_name" 
-                                           placeholder="Full Name" value="<?= htmlspecialchars($birthRecord['informant_name'] ?? $_POST['informant_name'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="informant_relationship" class="form-label">Relationship to Child</label>
-                                    <select class="form-select" id="informant_relationship" name="informant_relationship">
-                                        <option value="">Select Relationship</option>
-                                        <option value="Father" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Father') ? 'selected' : ''; ?>>Father</option>
-                                        <option value="Mother" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Mother') ? 'selected' : ''; ?>>Mother</option>
-                                        <option value="Grandparent" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Grandparent') ? 'selected' : ''; ?>>Grandparent</option>
-                                        <option value="Aunt/Uncle" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Aunt/Uncle') ? 'selected' : ''; ?>>Aunt/Uncle</option>
-                                        <option value="Other Relative" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Other Relative') ? 'selected' : ''; ?>>Other Relative</option>
-                                        <option value="Hospital Staff" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Hospital Staff') ? 'selected' : ''; ?>>Hospital Staff</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="informant_address" class="form-label">Informant Address</label>
-                                    <input type="text" class="form-control" id="informant_address" name="informant_address" 
-                                           placeholder="Complete Address" value="<?= htmlspecialchars($birthRecord['informant_address'] ?? $_POST['informant_address'] ?? ''); ?>">
-                                </div>
-                            </div>
-
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <button type="button" onclick="history.back()" class="btn btn-secondary me-md-2">Cancel</button>
-                                <button type="submit" class="btn btn-primary">
-                                    <?php echo $isEditMode ? 'Update Birth Record' : 'Register Birth'; ?>
-                                </button>
-                            </div>
-                        </form>
+                <!-- Father's Information Display -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-mars text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Husband/Partner's Profile Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Retrieved from verified family records</p>
+                        </div>
                     </div>
+
+                    <div class="info-box">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Full Name</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['father_first_name']): ?>
+                                        <?php echo htmlspecialchars($birthRecord['father_first_name'] . ' ' . ($birthRecord['father_middle_name'] ? $birthRecord['father_middle_name'] . ' ' : '') . $birthRecord['father_last_name']); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300 italic">Select mother to preview</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Date of Birth</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['father_birthdate']): ?>
+                                        <?php echo date('M j, Y', strtotime($birthRecord['father_birthdate'])); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300">-</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Occupation</p>
+                                <p class="text-sm font-bold text-slate-800">
+                                    <?php if ($isEditMode && $birthRecord && $birthRecord['father_occupation']): ?>
+                                        <?php echo htmlspecialchars($birthRecord['father_occupation']); ?>
+                                    <?php else: ?>
+                                        <span class="text-slate-300">-</span>
+                                    <?php endif; ?>
+                                </p>
+                            </div>
+                        </div>
+
+                        <?php if ($isEditMode && $birthRecord && $birthRecord['parents_marriage_date']): ?>
+                            <div class="mt-6 pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                <div class="space-y-1">
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marriage Date</p>
+                                    <p class="text-sm font-bold text-slate-800"><?php echo date('M j, Y', strtotime($birthRecord['parents_marriage_date'])); ?></p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Marriage Place</p>
+                                    <p class="text-sm font-bold text-slate-800"><?php echo htmlspecialchars($birthRecord['parents_marriage_place'] ?? '-'); ?></p>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </section>
+
+                <!-- Baby's Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-child text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Child's Primary Details</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Please provide accurate information for the birth certificate</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div>
+                            <label for="first_name" class="form-label-premium">First Name <span class="text-rose-500">*</span></label>
+                            <input type="text" class="form-input-premium" id="first_name" name="first_name" 
+                                   value="<?= htmlspecialchars($birthRecord['first_name'] ?? $_POST['first_name'] ?? ''); ?>" placeholder="Enter first name" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="first_name_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Please enter child's first name
+                            </div>
+                        </div>
+                        <div>
+                            <label for="middle_name" class="form-label-premium">Middle Name</label>
+                            <input type="text" class="form-input-premium" id="middle_name" name="middle_name"
+                                   value="<?= htmlspecialchars($birthRecord['middle_name'] ?? $_POST['middle_name'] ?? ''); ?>" placeholder="Enter middle name (optional)">
+                        </div>
+                        <div>
+                            <label for="last_name" class="form-label-premium">Last Name <span class="text-rose-500">*</span></label>
+                            <input type="text" class="form-input-premium" id="last_name" name="last_name"
+                                   value="<?= htmlspecialchars($birthRecord['last_name'] ?? $_POST['last_name'] ?? ''); ?>" placeholder="Enter last name" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="last_name_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Please enter child's last name
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div>
+                            <label for="birth_date" class="form-label-premium">Date of Birth <span class="text-rose-500">*</span></label>
+                            <input type="date" class="form-input-premium" id="birth_date" name="birth_date" 
+                                   value="<?= htmlspecialchars($birthRecord['birth_date'] ?? $_POST['birth_date'] ?? ''); ?>" required max="<?php echo date('Y-m-d'); ?>">
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="birth_date_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Please select birth date
+                            </div>
+                        </div>
+                        <div>
+                            <label for="birth_time" class="form-label-premium">Time of Birth <span class="text-rose-500">*</span></label>
+                            <input type="time" class="form-input-premium" id="birth_time" name="birth_time" 
+                                   value="<?= htmlspecialchars($birthRecord['birth_time'] ?? $_POST['birth_time'] ?? ''); ?>" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="birth_time_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Please select birth time
+                            </div>
+                        </div>
+                        <div>
+                            <label for="gender" class="form-label-premium">Gender <span class="text-rose-500">*</span></label>
+                            <select class="form-input-premium appearance-none" id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male" <?= (($birthRecord['gender'] ?? $_POST['gender'] ?? '') == 'Male') ? 'selected' : ''; ?>>Male</option>
+                                <option value="Female" <?= (($birthRecord['gender'] ?? $_POST['gender'] ?? '') == 'Female') ? 'selected' : ''; ?>>Female</option>
+                            </select>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="gender_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Please select gender
+                            </div>
+                        </div>
+                        <div>
+                            <label for="birth_order" class="form-label-premium">Birth Order</label>
+                            <select class="form-input-premium appearance-none" id="birth_order" name="birth_order">
+                                <option value="">Select Order</option>
+                                <?php 
+                                $birthOrders = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th'];
+                                foreach ($birthOrders as $order): 
+                                ?>
+                                    <option value="<?php echo $order; ?>"
+                                        <?= (($birthRecord['birth_order'] ?? $_POST['birth_order'] ?? '') == $order) ? 'selected' : '' ?>>
+                                        <?php echo $order; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div>
+                            <label for="birth_weight" class="form-label-premium">Weight (kg)</label>
+                            <input type="number" step="0.01" class="form-input-premium" id="birth_weight" name="birth_weight" 
+                                   min="0.5" max="6.0" placeholder="e.g., 3.2" value="<?= htmlspecialchars($birthRecord['birth_weight'] ?? $_POST['birth_weight'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="birth_length" class="form-label-premium">Length (cm)</label>
+                            <input type="number" step="0.1" class="form-input-premium" id="birth_length" name="birth_length" 
+                                   min="30" max="60" placeholder="e.g., 50.5" value="<?= htmlspecialchars($birthRecord['birth_length'] ?? $_POST['birth_length'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="type_of_birth" class="form-label-premium">Type of Birth</label>
+                            <select class="form-input-premium appearance-none" id="type_of_birth" name="type_of_birth">
+                                <option value="">Select Type</option>
+                                <option value="Single" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Single') ? 'selected' : ''; ?>>Single</option>
+                                <option value="Twin" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Twin') ? 'selected' : ''; ?>>Twin</option>
+                                <option value="Triplet" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Triplet') ? 'selected' : ''; ?>>Triplet</option>
+                                <option value="Multiple" <?= (($birthRecord['type_of_birth'] ?? $_POST['type_of_birth'] ?? '') == 'Multiple') ? 'selected' : ''; ?>>Multiple</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="delivery_type" class="form-label-premium">Mode of Delivery</label>
+                            <select class="form-input-premium appearance-none" id="delivery_type" name="delivery_type">
+                                <option value="">Select Type</option>
+                                <option value="Normal Spontaneous Delivery" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Normal Spontaneous Delivery') ? 'selected' : ''; ?>>Normal Spontaneous Delivery</option>
+                                <option value="Cesarean Section" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Cesarean Section') ? 'selected' : ''; ?>>Cesarean Section</option>
+                                <option value="Forceps Delivery" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Forceps Delivery') ? 'selected' : ''; ?>>Forceps Delivery</option>
+                                <option value="Vacuum Extraction" <?= (($birthRecord['delivery_type'] ?? $_POST['delivery_type'] ?? '') == 'Vacuum Extraction') ? 'selected' : ''; ?>>Vacuum Extraction</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Birth Details -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-hospital text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Birth Occurrence Details</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Location and medical attendant information</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label for="birth_attendant" class="form-label-premium">Birth Attendant Name</label>
+                            <input type="text" class="form-input-premium" id="birth_attendant" name="birth_attendant" 
+                                   placeholder="e.g., Dr. Juan Dela Cruz" value="<?= htmlspecialchars($birthRecord['birth_attendant'] ?? $_POST['birth_attendant'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="birth_attendant_title" class="form-label-premium">Attendant Title</label>
+                            <select class="form-input-premium appearance-none" id="birth_attendant_title" name="birth_attendant_title">
+                                <option value="">Select Title</option>
+                                <option value="Doctor" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Doctor') ? 'selected' : ''; ?>>Doctor</option>
+                                <option value="Midwife" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Midwife') ? 'selected' : ''; ?>>Midwife</option>
+                                <option value="Nurse" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Nurse') ? 'selected' : ''; ?>>Nurse</option>
+                                <option value="Traditional Birth Attendant" <?= (($birthRecord['birth_attendant_title'] ?? $_POST['birth_attendant_title'] ?? '') == 'Traditional Birth Attendant') ? 'selected' : ''; ?>>Traditional Birth Attendant</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label for="birth_place_type" class="form-label-premium">Place of Birth Type</label>
+                            <select class="form-input-premium appearance-none" id="birth_place_type" name="birth_place_type">
+                                <option value="">Select Type</option>
+                                <option value="Hospital" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Hospital') ? 'selected' : ''; ?>>Hospital</option>
+                                <option value="Clinic" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Clinic') ? 'selected' : ''; ?>>Clinic</option>
+                                <option value="Home" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Home') ? 'selected' : ''; ?>>Home</option>
+                                <option value="Birthing Center" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Birthing Center') ? 'selected' : ''; ?>>Birthing Center</option>
+                                <option value="Other" <?= (($birthRecord['birth_place_type'] ?? $_POST['birth_place_type'] ?? '') == 'Other') ? 'selected' : ''; ?>>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="birth_place" class="form-label-premium">Facility Name</label>
+                            <input type="text" class="form-input-premium" id="birth_place" name="birth_place" 
+                                   placeholder="e.g., Kibenes General Hospital" value="<?= htmlspecialchars($birthRecord['birth_place'] ?? $_POST['birth_place'] ?? ''); ?>">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 mb-8">
+                        <div>
+                            <label for="birth_address" class="form-label-premium">Complete Address</label>
+                            <input type="text" class="form-input-premium" id="birth_address" name="birth_address" 
+                                   placeholder="Street Address / Sitio" value="<?= htmlspecialchars($birthRecord['birth_address'] ?? $_POST['birth_address'] ?? ''); ?>">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="birth_city" class="form-label-premium">City/Municipality</label>
+                            <input type="text" class="form-input-premium" id="birth_city" name="birth_city" 
+                                   placeholder="e.g., Valencia City" value="<?= htmlspecialchars($birthRecord['birth_city'] ?? $_POST['birth_city'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="birth_province" class="form-label-premium">Province</label>
+                            <input type="text" class="form-input-premium" id="birth_province" name="birth_province" 
+                                   placeholder="e.g., Bukidnon" value="<?= htmlspecialchars($birthRecord['birth_province'] ?? $_POST['birth_province'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Informant Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-info-circle text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Informant Information</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Person providing this information</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label for="informant_name" class="form-label-premium">Informant's Full Name</label>
+                            <input type="text" class="form-input-premium" id="informant_name" name="informant_name" 
+                                   placeholder="Enter full name" value="<?= htmlspecialchars($birthRecord['informant_name'] ?? $_POST['informant_name'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="informant_relationship" class="form-label-premium">Relationship to Child</label>
+                            <select class="form-input-premium appearance-none" id="informant_relationship" name="informant_relationship">
+                                <option value="">Select Relationship</option>
+                                <option value="Father" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Father') ? 'selected' : ''; ?>>Father</option>
+                                <option value="Mother" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Mother') ? 'selected' : ''; ?>>Mother</option>
+                                <option value="Grandparent" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Grandparent') ? 'selected' : ''; ?>>Grandparent</option>
+                                <option value="Aunt/Uncle" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Aunt/Uncle') ? 'selected' : ''; ?>>Aunt/Uncle</option>
+                                <option value="Other Relative" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Other Relative') ? 'selected' : ''; ?>>Other Relative</option>
+                                <option value="Hospital Staff" <?= (($birthRecord['informant_relationship'] ?? $_POST['informant_relationship'] ?? '') == 'Hospital Staff') ? 'selected' : ''; ?>>Hospital Staff</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label for="informant_address" class="form-label-premium">Informant Address</label>
+                            <input type="text" class="form-input-premium" id="informant_address" name="informant_address" 
+                                   placeholder="Complete address of informant" value="<?= htmlspecialchars($birthRecord['informant_address'] ?? $_POST['informant_address'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8">
+                    <button type="button" onclick="history.back()" 
+                            class="w-full sm:w-auto px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200 transition-all active:scale-95">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="w-full sm:w-auto px-12 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-health-700 shadow-xl shadow-health-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-save shadow-sm"></i>
+                        <?php echo $isEditMode ? 'Update Birth Record' : 'Register Birth'; ?>
+                    </button>
                 </div>
-            </main>
+            </form>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -755,14 +808,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
 
                 if (!isValid) {
-                    e.preventDefault();
-                    // Scroll to first error
-                    const firstError = document.querySelector('.field-warning[style*="display: block"]');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                    // Show general alert
-                    alert('Please fix the errors in the form before submitting.');
+                     e.preventDefault();
+                     // Scroll to first error
+                     const firstError = document.querySelector('[id$="_warning"]:not(.hidden)');
+                     if (firstError) {
+                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                         // Add a subtle shake effect to the first invalid field
+                         const errorField = document.getElementById(firstError.id.replace('_warning', ''));
+                         if (errorField) {
+                             errorField.classList.add('animate-pulse');
+                             setTimeout(() => errorField.classList.remove('animate-pulse'), 1000);
+                         }
+                     }
                 }
             });
         }
@@ -796,13 +853,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function showWarning(fieldId, message) {
             const warning = document.getElementById(fieldId + '_warning');
             if (warning) {
-                warning.textContent = message;
-                warning.style.display = 'block';
+                // Update message if it's different (optional, allows dynamic messages)
+                if (warning.querySelector('span')) {
+                    warning.querySelector('span').textContent = message;
+                } else if (!warning.querySelector('i')) {
+                    warning.textContent = message;
+                }
+                
+                warning.classList.remove('hidden');
                 
                 // Highlight the field
                 const field = document.getElementById(fieldId);
                 if (field) {
-                    field.classList.add('is-invalid');
+                    field.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
                 }
             }
         }
@@ -814,12 +877,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             const warning = document.getElementById(fieldId + '_warning');
             if (warning) {
-                warning.style.display = 'none';
+                warning.classList.add('hidden');
                 
                 // Remove highlight from the field
                 const field = document.getElementById(fieldId);
                 if (field) {
-                    field.classList.remove('is-invalid');
+                    field.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
                 }
             }
         }

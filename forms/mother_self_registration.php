@@ -197,453 +197,519 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Mother Profile - Health Station System </title>
+    <title>Mother Profile Registration | Kibenes eBirth</title>
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS Components -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        health: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 200: '#bae6fd', 
+                            300: '#7dd3fc', 400: '#38bdf8', 500: '#0ea5e9', 
+                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e'
+                        }
+                    },
+                    fontFamily: { inter: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .section-title {
-            background: linear-gradient(135deg, #1a73e8 0%, #6a11cb 100%);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin: 20px 0 15px 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        .required-field::after {
-            content: " *";
-            color: #dc3545;
-        }
-        .form-control, .form-select {
-            border-radius: 6px;
-            border: 1.5px solid #e0e0e0;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
-        }
-        .husband-section {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid #28a745;
-        }
-        .field-warning {
-            font-size: 0.875rem;
-            color: #856404;
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 4px;
-            padding: 5px 10px;
-            margin-top: 5px;
-            display: none;
-        }
-        .is-invalid {
-            border-color: #dc3545 !important;
-            box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.15) !important;
-        }
-        .is-valid {
-            border-color: #198754 !important;
-        }
-        .warning-icon {
-            color: #856404;
-            margin-right: 5px;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-text {
-            font-size: 0.8rem;
-        }
-    </style>
 </head>
-<body>
+<body class="bg-health-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
     <?php include_once INCLUDE_PATH . 'header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         <?php include_once INCLUDE_PATH . 'sidebar.php'; ?>
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Register Mother Profile</h1>
+            <!-- Header Section -->
+            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                        <span class="w-12 h-12 rounded-2xl bg-health-600 flex items-center justify-center shadow-lg shadow-health-200">
+                            <i class="fas fa-id-card text-white text-xl"></i>
+                        </span>
+                        Register Mother Profile
+                    </h1>
+                    <p class="text-slate-500 font-medium flex items-center gap-2">
+                        <i class="fas fa-sparkles text-health-400"></i>
+                        Create your official health tracking profile
+                    </p>
                 </div>
-                
-                <?php if ($message): ?>
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>
-                    <?php echo $message; ?>
-                </div>
-                <?php endif; ?>
-                
-                <?php if ($error): ?>
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    <?php echo $error; ?>
-                </div>
-                <?php endif; ?>
+            </header>
 
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    You are creating your own mother profile. This information will be used for prenatal and postnatal care tracking.
-                    Fields marked with <span class="text-danger">*</span> are required.
+            <?php if ($message): ?>
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-4 text-emerald-700 font-bold animate-in fade-in slide-in-from-top-4 duration-500">
+                    <i class="fas fa-check-circle text-emerald-500 text-xl"></i>
+                    <div><?php echo $message; ?></div>
                 </div>
-                
-                <div class="card">
-                    <div class="card-body">
-                        <form method="POST" action="" id="motherRegistrationForm" novalidate>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+                <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-4 text-rose-700 font-bold animate-in fade-in slide-in-from-top-4 duration-500">
+                    <i class="fas fa-exclamation-circle text-rose-500 text-xl"></i>
+                    <div><?php echo $error; ?></div>
+                </div>
+            <?php endif; ?>
+
+            <div class="p-6 bg-health-600 rounded-[2rem] shadow-xl shadow-health-100 relative overflow-hidden group">
+                <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-500"></div>
+                <div class="relative flex items-start gap-4 text-white">
+                    <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-md">
+                        <i class="fas fa-info text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">Registration Overview</h3>
+                        <p class="text-white/80 text-sm leading-relaxed max-w-2xl">
+                            You are creating your own mother profile. This information will be used for prenatal and postnatal care tracking.
+                            Please ensure all details are accurate, especially medical dates.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="" id="motherRegistrationForm" class="space-y-8" novalidate>
                             <!-- Personal Information -->
-                            <div class="section-title">Personal Information</div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="first_name" class="form-label required-field">First Name</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" 
-                                           value="<?= htmlspecialchars($userData['first_name'] ?? $_POST['first_name'] ?? ''); ?>" required>
-                                    <div class="field-warning" id="first_name_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter your first name
-                                    </div>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="middle_name" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" id="middle_name" name="middle_name" 
-                                           value="<?= htmlspecialchars($userData['middle_name'] ?? $_POST['middle_name'] ?? ''); ?>" placeholder="Optional">
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="last_name" class="form-label required-field">Last Name</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" 
-                                           value="<?= htmlspecialchars($userData['last_name'] ?? $_POST['last_name'] ?? ''); ?>" required>
-                                    <div class="field-warning" id="last_name_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter your last name
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-3 form-group">
-                                    <label for="date_of_birth" class="form-label required-field">Date of Birth</label>
-                                    <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" 
-                                           value="<?= htmlspecialchars($_POST['date_of_birth'] ?? ''); ?>" required max="<?= date('Y-m-d'); ?>">
-                                    <div class="field-warning" id="date_of_birth_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please select your date of birth
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="civil_status" class="form-label required-field">Civil Status</label>
-                                    <select class="form-select" id="civil_status" name="civil_status" required>
-                                        <option value="">Select Status</option>
-                                        <option value="Single" <?= ($_POST['civil_status'] ?? '') == 'Single' ? 'selected' : ''; ?>>Single</option>
-                                        <option value="Married" <?= ($_POST['civil_status'] ?? '') == 'Married' ? 'selected' : ''; ?>>Married</option>
-                                        <option value="Divorced" <?= ($_POST['civil_status'] ?? '') == 'Divorced' ? 'selected' : ''; ?>>Divorced</option>
-                                        <option value="Widowed" <?= ($_POST['civil_status'] ?? '') == 'Widowed' ? 'selected' : ''; ?>>Widowed</option>
-                                        <option value="Separated" <?= ($_POST['civil_status'] ?? '') == 'Separated' ? 'selected' : ''; ?>>Separated</option>
-                                    </select>
-                                    <div class="field-warning" id="civil_status_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please select civil status
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="nationality" class="form-label">Nationality</label>
-                                    <input type="text" class="form-control" id="nationality" name="nationality" 
-                                           value="<?= htmlspecialchars($_POST['nationality'] ?? 'Filipino'); ?>" placeholder="Filipino">
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="religion" class="form-label">Religion</label>
-                                    <input type="text" class="form-control" id="religion" name="religion" 
-                                           value="<?= htmlspecialchars($_POST['religion'] ?? ''); ?>" placeholder="e.g., Roman Catholic">
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="education" class="form-label">Education</label>
-                                    <select class="form-select" id="education" name="education">
-                                        <option value="">Select Education</option>
-                                        <option value="No Formal Education" <?= ($_POST['education'] ?? '') == 'No Formal Education' ? 'selected' : ''; ?>>No Formal Education</option>
-                                        <option value="Elementary" <?= ($_POST['education'] ?? '') == 'Elementary' ? 'selected' : ''; ?>>Elementary</option>
-                                        <option value="High School" <?= ($_POST['education'] ?? '') == 'High School' ? 'selected' : ''; ?>>High School</option>
-                                        <option value="College" <?= ($_POST['education'] ?? '') == 'College' ? 'selected' : ''; ?>>College</option>
-                                        <option value="Vocational" <?= ($_POST['education'] ?? '') == 'Vocational' ? 'selected' : ''; ?>>Vocational</option>
-                                        <option value="Post Graduate" <?= ($_POST['education'] ?? '') == 'Post Graduate' ? 'selected' : ''; ?>>Post Graduate</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="occupation" class="form-label">Occupation</label>
-                                    <input type="text" class="form-control" id="occupation" name="occupation" 
-                                           value="<?= htmlspecialchars($_POST['occupation'] ?? ''); ?>" placeholder="e.g., Housewife, Teacher">
-                                </div>
-                            </div>
-                            
-                            <!-- Contact Information -->
-                            <div class="section-title">Contact Information</div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="phone" class="form-label required-field">Phone Number</label>
-                                    <input type="tel" class="form-control" id="phone" name="phone" 
-                                           value="<?= htmlspecialchars($userData['phone'] ?? $_POST['phone'] ?? ''); ?>" required placeholder="09XXXXXXXXX" pattern="[0-9]{11}">
-                                    <div class="field-warning" id="phone_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter a valid 11-digit phone number
-                                    </div>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="email" class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email" 
-                                           value="<?= htmlspecialchars($userData['email'] ?? $_POST['email'] ?? ''); ?>" placeholder="optional@email.com">
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="address" class="form-label required-field">Address</label>
-                                    <select class="form-select" id="address" name="address" required>
-                                        <option value="">Select Address</option>
-                                        <?php foreach ($addressOptions as $addressOption): ?>
-                                            <option value="<?= htmlspecialchars($addressOption); ?>" 
-                                                <?= ($_POST['address'] ?? '') == $addressOption ? 'selected' : ''; ?>>
-                                                <?= htmlspecialchars($addressOption); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div class="field-warning" id="address_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please select your address from the list
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Personal Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-user text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Personal Information</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Basic identity details</p>
+                        </div>
+                    </div>
 
-                            <!-- Emergency Contact -->
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="emergency_contact" class="form-label">Emergency Contact Person</label>
-                                    <input type="text" class="form-control" id="emergency_contact" name="emergency_contact" 
-                                           value="<?= htmlspecialchars($_POST['emergency_contact'] ?? ''); ?>" placeholder="Full name of emergency contact">
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="emergency_phone" class="form-label">Emergency Contact Phone</label>
-                                    <input type="tel" class="form-control" id="emergency_phone" name="emergency_phone" 
-                                           value="<?= htmlspecialchars($_POST['emergency_phone'] ?? ''); ?>" placeholder="09XXXXXXXXX" pattern="[0-9]{11}">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <label for="first_name" class="form-label-premium">First Name <span class="text-rose-500">*</span></label>
+                            <input type="text" name="first_name" id="first_name" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($userData['first_name'] ?? $_POST['first_name'] ?? ''); ?>" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="first_name_warning">
+                                Required field
+                            </div>
+                        </div>
+                        <div>
+                            <label for="middle_name" class="form-label-premium group flex items-center gap-2">
+                                Middle Name
+                                <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-black uppercase">Optional</span>
+                            </label>
+                            <input type="text" name="middle_name" id="middle_name" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($userData['middle_name'] ?? $_POST['middle_name'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="last_name" class="form-label-premium">Last Name <span class="text-rose-500">*</span></label>
+                            <input type="text" name="last_name" id="last_name" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($userData['last_name'] ?? $_POST['last_name'] ?? ''); ?>" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="last_name_warning">
+                                Required field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div>
+                            <label for="date_of_birth" class="form-label-premium">Date of Birth <span class="text-rose-500">*</span></label>
+                            <input type="date" name="date_of_birth" id="date_of_birth" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['date_of_birth'] ?? ''); ?>" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="date_of_birth_warning">
+                                Required field
+                            </div>
+                        </div>
+                        <div>
+                            <label for="civil_status" class="form-label-premium">Civil Status <span class="text-rose-500">*</span></label>
+                            <div class="relative group">
+                                <select name="civil_status" id="civil_status" class="form-input-premium appearance-none pr-10" required>
+                                    <option value="">Select Status</option>
+                                    <option value="Single" <?= ($_POST['civil_status'] ?? '') == 'Single' ? 'selected' : ''; ?>>Single</option>
+                                    <option value="Married" <?= ($_POST['civil_status'] ?? '') == 'Married' ? 'selected' : ''; ?>>Married</option>
+                                    <option value="Divorced" <?= ($_POST['civil_status'] ?? '') == 'Divorced' ? 'selected' : ''; ?>>Divorced</option>
+                                    <option value="Widowed" <?= ($_POST['civil_status'] ?? '') == 'Widowed' ? 'selected' : ''; ?>>Widowed</option>
+                                    <option value="Separated" <?= ($_POST['civil_status'] ?? '') == 'Separated' ? 'selected' : ''; ?>>Separated</option>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
                             </div>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="civil_status_warning">
+                                Required field
+                            </div>
+                        </div>
+                        <div>
+                            <label for="nationality" class="form-label-premium">Nationality</label>
+                            <input type="text" name="nationality" id="nationality" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['nationality'] ?? 'Filipino'); ?>">
+                        </div>
+                        <div>
+                            <label for="religion" class="form-label-premium">Religion</label>
+                            <input type="text" name="religion" id="religion" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['religion'] ?? ''); ?>" placeholder="Roman Catholic">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label for="education" class="form-label-premium">Highest Education</label>
+                            <div class="relative group">
+                                <select name="education" id="education" class="form-input-premium appearance-none pr-10">
+                                    <option value="">Select Level</option>
+                                    <option value="No Formal Education" <?= ($_POST['education'] ?? '') == 'No Formal Education' ? 'selected' : ''; ?>>No Formal Education</option>
+                                    <option value="Elementary" <?= ($_POST['education'] ?? '') == 'Elementary' ? 'selected' : ''; ?>>Elementary</option>
+                                    <option value="High School" <?= ($_POST['education'] ?? '') == 'High School' ? 'selected' : ''; ?>>High School</option>
+                                    <option value="College" <?= ($_POST['education'] ?? '') == 'College' ? 'selected' : ''; ?>>College</option>
+                                    <option value="Vocational" <?= ($_POST['education'] ?? '') == 'Vocational' ? 'selected' : ''; ?>>Vocational</option>
+                                    <option value="Post Graduate" <?= ($_POST['education'] ?? '') == 'Post Graduate' ? 'selected' : ''; ?>>Post Graduate</option>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="occupation" class="form-label-premium">Occupation</label>
+                            <input type="text" name="occupation" id="occupation" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['occupation'] ?? ''); ?>" placeholder="Housewife, Teacher, etc.">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-map-marked-alt text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Contact & Address</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Where we can reach you</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <label for="phone" class="form-label-premium">Phone Number <span class="text-rose-500">*</span></label>
+                            <input type="tel" name="phone" id="phone" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($userData['phone'] ?? $_POST['phone'] ?? ''); ?>" placeholder="09XXXXXXXXX" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="phone_warning">
+                                11-digit number required
+                            </div>
+                        </div>
+                        <div>
+                            <label for="email" class="form-label-premium">Email Address</label>
+                            <input type="email" name="email" id="email" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($userData['email'] ?? $_POST['email'] ?? ''); ?>" placeholder="name@example.com">
+                        </div>
+                        <div>
+                            <label for="address" class="form-label-premium">Current Address <span class="text-rose-500">*</span></label>
+                            <div class="relative group">
+                                <select name="address" id="address" class="form-input-premium appearance-none pr-10" required>
+                                    <option value="">Select Purok/Sitio</option>
+                                    <?php foreach ($addressOptions as $addressOption): ?>
+                                        <option value="<?= htmlspecialchars($addressOption); ?>" <?= ($_POST['address'] ?? '') == $addressOption ? 'selected' : ''; ?>>
+                                            <?= htmlspecialchars($addressOption); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="address_warning">
+                                Required field
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label for="emergency_contact" class="form-label-premium">Emergency Contact Person</label>
+                            <input type="text" name="emergency_contact" id="emergency_contact" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['emergency_contact'] ?? ''); ?>" placeholder="Full Name">
+                        </div>
+                        <div>
+                            <label for="emergency_phone" class="form-label-premium">Emergency Phone</label>
+                            <input type="tel" name="emergency_phone" id="emergency_phone" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['emergency_phone'] ?? ''); ?>" placeholder="09XXXXXXXXX">
+                        </div>
+                    </div>
+                </section>
                             
-                            <!-- Medical Information -->
-                            <div class="section-title">Medical Information</div>
-                            <div class="row">
-                                <div class="col-md-3 form-group">
-                                    <label for="blood_type" class="form-label">Blood Type</label>
-                                    <select class="form-select" id="blood_type" name="blood_type">
-                                        <option value="">Select Blood Type</option>
-                                        <option value="A+" <?= ($_POST['blood_type'] ?? '') == 'A+' ? 'selected' : ''; ?>>A+</option>
-                                        <option value="A-" <?= ($_POST['blood_type'] ?? '') == 'A-' ? 'selected' : ''; ?>>A-</option>
-                                        <option value="B+" <?= ($_POST['blood_type'] ?? '') == 'B+' ? 'selected' : ''; ?>>B+</option>
-                                        <option value="B-" <?= ($_POST['blood_type'] ?? '') == 'B-' ? 'selected' : ''; ?>>B-</option>
-                                        <option value="AB+" <?= ($_POST['blood_type'] ?? '') == 'AB+' ? 'selected' : ''; ?>>AB+</option>
-                                        <option value="AB-" <?= ($_POST['blood_type'] ?? '') == 'AB-' ? 'selected' : ''; ?>>AB-</option>
-                                        <option value="O+" <?= ($_POST['blood_type'] ?? '') == 'O+' ? 'selected' : ''; ?>>O+</option>
-                                        <option value="O-" <?= ($_POST['blood_type'] ?? '') == 'O-' ? 'selected' : ''; ?>>O-</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="rh_factor" class="form-label">RH Factor</label>
-                                    <select class="form-select" id="rh_factor" name="rh_factor">
-                                        <option value="">Select RH Factor</option>
-                                        <option value="Positive" <?= ($_POST['rh_factor'] ?? '') == 'Positive' ? 'selected' : ''; ?>>Positive</option>
-                                        <option value="Negative" <?= ($_POST['rh_factor'] ?? '') == 'Negative' ? 'selected' : ''; ?>>Negative</option>
-                                        <option value="Unknown" <?= ($_POST['rh_factor'] ?? '') == 'Unknown' ? 'selected' : ''; ?>>Unknown</option>
-                                    </select>
-                                </div>
-                            </div>
+                <!-- Medical Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-briefcase-medical text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Medical Information</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Primary health markers</p>
+                        </div>
+                    </div>
 
-                            <!-- Medical History -->
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="allergies" class="form-label">Allergies</label>
-                                    <textarea class="form-control" id="allergies" name="allergies" rows="2" placeholder="List any known allergies"><?= htmlspecialchars($_POST['allergies'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="medical_conditions" class="form-label">Medical Conditions</label>
-                                    <textarea class="form-control" id="medical_conditions" name="medical_conditions" rows="2" placeholder="e.g., Hypertension, Diabetes, Asthma"><?= htmlspecialchars($_POST['medical_conditions'] ?? ''); ?></textarea>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label for="blood_type" class="form-label-premium">Blood Type</label>
+                            <div class="relative group">
+                                <select name="blood_type" id="blood_type" class="form-input-premium appearance-none pr-10">
+                                    <option value="">Select Type</option>
+                                    <?php foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bt): ?>
+                                        <option value="<?= $bt; ?>" <?= ($_POST['blood_type'] ?? '') == $bt ? 'selected' : ''; ?>><?= $bt; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <label for="rh_factor" class="form-label-premium">RH Factor</label>
+                            <div class="relative group">
+                                <select name="rh_factor" id="rh_factor" class="form-input-premium appearance-none pr-10">
+                                    <option value="">Select RH</option>
+                                    <option value="Positive" <?= ($_POST['rh_factor'] ?? '') == 'Positive' ? 'selected' : ''; ?>>Positive</option>
+                                    <option value="Negative" <?= ($_POST['rh_factor'] ?? '') == 'Negative' ? 'selected' : ''; ?>>Negative</option>
+                                    <option value="Unknown" <?= ($_POST['rh_factor'] ?? '') == 'Unknown' ? 'selected' : ''; ?>>Unknown</option>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="previous_surgeries" class="form-label">Previous Surgeries</label>
-                                    <textarea class="form-control" id="previous_surgeries" name="previous_surgeries" rows="2" placeholder="List any previous surgeries"><?= htmlspecialchars($_POST['previous_surgeries'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="family_history" class="form-label">Family Medical History</label>
-                                    <textarea class="form-control" id="family_history" name="family_history" rows="2" placeholder="Family history of medical conditions"><?= htmlspecialchars($_POST['family_history'] ?? ''); ?></textarea>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="allergies" class="form-label-premium">Allergies</label>
+                                <textarea name="allergies" id="allergies" class="form-input-premium min-h-[100px]" placeholder="Food, drug, or environmental allergies..."><?= htmlspecialchars($_POST['allergies'] ?? ''); ?></textarea>
                             </div>
+                            <div>
+                                <label for="medical_conditions" class="form-label-premium">Medical Conditions</label>
+                                <textarea name="medical_conditions" id="medical_conditions" class="form-input-premium min-h-[100px]" placeholder="Hypertension, Diabetes, Asthma, etc..."><?= htmlspecialchars($_POST['medical_conditions'] ?? ''); ?></textarea>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="previous_surgeries" class="form-label-premium">Previous Surgeries</label>
+                                <textarea name="previous_surgeries" id="previous_surgeries" class="form-input-premium min-h-[100px]" placeholder="List surgeries and years if possible..."><?= htmlspecialchars($_POST['previous_surgeries'] ?? ''); ?></textarea>
+                            </div>
+                            <div>
+                                <label for="family_history" class="form-label-premium">Family Medical History</label>
+                                <textarea name="family_history" id="family_history" class="form-input-premium min-h-[100px]" placeholder="Genetic or familial health conditions..."><?= htmlspecialchars($_POST['family_history'] ?? ''); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                             
-                            <!-- Husband/Father Information -->
-                            <div class="section-title">Husband/Father Information</div>
-                            <div class="husband-section">
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_first_name" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="husband_first_name" name="husband_first_name" 
-                                               value="<?= htmlspecialchars($_POST['husband_first_name'] ?? ''); ?>" placeholder="Husband's first name">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_middle_name" class="form-label">Middle Name</label>
-                                        <input type="text" class="form-control" id="husband_middle_name" name="husband_middle_name" 
-                                               value="<?= htmlspecialchars($_POST['husband_middle_name'] ?? ''); ?>" placeholder="Optional">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_last_name" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="husband_last_name" name="husband_last_name" 
-                                               value="<?= htmlspecialchars($_POST['husband_last_name'] ?? ''); ?>" placeholder="Husband's last name">
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_date_of_birth" class="form-label">Date of Birth</label>
-                                        <input type="date" class="form-control" id="husband_date_of_birth" name="husband_date_of_birth" 
-                                               value="<?= htmlspecialchars($_POST['husband_date_of_birth'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_occupation" class="form-label">Occupation</label>
-                                        <input type="text" class="form-control" id="husband_occupation" name="husband_occupation" 
-                                               value="<?= htmlspecialchars($_POST['husband_occupation'] ?? ''); ?>" placeholder="Husband's occupation">
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_education" class="form-label">Education</label>
-                                        <select class="form-select" id="husband_education" name="husband_education">
-                                            <option value="">Select Education</option>
-                                            <option value="No Formal Education" <?= ($_POST['husband_education'] ?? '') == 'No Formal Education' ? 'selected' : ''; ?>>No Formal Education</option>
-                                            <option value="Elementary" <?= ($_POST['husband_education'] ?? '') == 'Elementary' ? 'selected' : ''; ?>>Elementary</option>
-                                            <option value="High School" <?= ($_POST['husband_education'] ?? '') == 'High School' ? 'selected' : ''; ?>>High School</option>
-                                            <option value="College" <?= ($_POST['husband_education'] ?? '') == 'College' ? 'selected' : ''; ?>>College</option>
-                                            <option value="Vocational" <?= ($_POST['husband_education'] ?? '') == 'Vocational' ? 'selected' : ''; ?>>Vocational</option>
-                                            <option value="Post Graduate" <?= ($_POST['husband_education'] ?? '') == 'Post Graduate' ? 'selected' : ''; ?>>Post Graduate</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_phone" class="form-label">Phone Number</label>
-                                        <input type="tel" class="form-control" id="husband_phone" name="husband_phone" 
-                                               value="<?= htmlspecialchars($_POST['husband_phone'] ?? ''); ?>" placeholder="09XXXXXXXXX" pattern="[0-9]{11}">
-                                    </div>
-                                </div>
+                <!-- Husband/Father Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-user-friends text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Husband / Partner Information</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Spouse or partner identification</p>
+                        </div>
+                    </div>
 
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_citizenship" class="form-label">Citizenship</label>
-                                        <input type="text" class="form-control" id="husband_citizenship" name="husband_citizenship" 
-                                               value="<?= htmlspecialchars($_POST['husband_citizenship'] ?? 'Filipino'); ?>" placeholder="Filipino">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_religion" class="form-label">Religion</label>
-                                        <input type="text" class="form-control" id="husband_religion" name="husband_religion" 
-                                               value="<?= htmlspecialchars($_POST['husband_religion'] ?? ''); ?>" placeholder="Husband's religion">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="marriage_date" class="form-label">Marriage Date</label>
-                                        <input type="date" class="form-control" id="marriage_date" name="marriage_date" 
-                                               value="<?= htmlspecialchars($_POST['marriage_date'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
-                                    </div>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <label for="husband_first_name" class="form-label-premium">Partner First Name</label>
+                            <input type="text" name="husband_first_name" id="husband_first_name" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_first_name'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="husband_middle_name" class="form-label-premium">Partner Middle Name</label>
+                            <input type="text" name="husband_middle_name" id="husband_middle_name" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_middle_name'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="husband_last_name" class="form-label-premium">Partner Last Name</label>
+                            <input type="text" name="husband_last_name" id="husband_last_name" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_last_name'] ?? ''); ?>">
+                        </div>
+                    </div>
 
-                                <div class="row">
-                                    <div class="col-md-12 form-group">
-                                        <label for="marriage_place" class="form-label">Marriage Place</label>
-                                        <input type="text" class="form-control" id="marriage_place" name="marriage_place" 
-                                               value="<?= htmlspecialchars($_POST['marriage_place'] ?? ''); ?>" placeholder="Place of marriage">
-                                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div>
+                            <label for="husband_date_of_birth" class="form-label-premium">Partner Birthday</label>
+                            <input type="date" name="husband_date_of_birth" id="husband_date_of_birth" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_date_of_birth'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="husband_occupation" class="form-label-premium">Partner Occupation</label>
+                            <input type="text" name="husband_occupation" id="husband_occupation" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_occupation'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="husband_education" class="form-label-premium">Partner Education</label>
+                            <div class="relative group">
+                                <select name="husband_education" id="husband_education" class="form-input-premium appearance-none pr-10">
+                                    <option value="">Select Level</option>
+                                    <?php foreach (['No Formal Education', 'Elementary', 'High School', 'College', 'Vocational', 'Post Graduate'] as $edu): ?>
+                                        <option value="<?= $edu; ?>" <?= ($_POST['husband_education'] ?? '') == $edu ? 'selected' : ''; ?>><?= $edu; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <label for="husband_phone" class="form-label-premium">Partner Phone</label>
+                            <input type="tel" name="husband_phone" id="husband_phone" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_phone'] ?? ''); ?>" placeholder="09XXXXXXXXX">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <label for="husband_citizenship" class="form-label-premium">Citizenship</label>
+                            <input type="text" name="husband_citizenship" id="husband_citizenship" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_citizenship'] ?? 'Filipino'); ?>">
+                        </div>
+                        <div>
+                            <label for="husband_religion" class="form-label-premium">Religion</label>
+                            <input type="text" name="husband_religion" id="husband_religion" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['husband_religion'] ?? ''); ?>">
+                        </div>
+                        <div>
+                            <label for="marriage_date" class="form-label-premium group flex items-center gap-2">
+                                Marriage Date
+                                <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-black uppercase">If Applicable</span>
+                            </label>
+                            <input type="date" name="marriage_date" id="marriage_date" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['marriage_date'] ?? ''); ?>">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="marriage_place" class="form-label-premium">Marriage Place</label>
+                        <input type="text" name="marriage_place" id="marriage_place" class="form-input-premium" 
+                               value="<?= htmlspecialchars($_POST['marriage_place'] ?? ''); ?>" placeholder="Municipality, Province">
+                    </div>
+                </section>
                             
-                            <!-- Obstetric History -->
-                            <div class="section-title">Pregnancy Information</div>
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="lmp" class="form-label required-field">Last Menstrual Period (LMP)</label>
-                                    <input type="date" class="form-control" id="lmp" name="lmp" 
-                                           value="<?= htmlspecialchars($_POST['lmp'] ?? ''); ?>" required max="<?= date('Y-m-d'); ?>">
-                                    <div class="field-warning" id="lmp_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Required to calculate due date
-                                    </div>
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="edc" class="form-label">Estimated Due Date (EDC)</label>
-                                    <input type="date" class="form-control" id="edc" name="edc" readonly
-                                           value="<?= htmlspecialchars($_POST['edc'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-4 form-group">
-                                    <label for="first_prenatal_visit" class="form-label">First Prenatal Visit</label>
-                                    <input type="date" class="form-control" id="first_prenatal_visit" name="first_prenatal_visit" 
-                                           value="<?= htmlspecialchars($_POST['first_prenatal_visit'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-3 form-group">
-                                    <label for="gravida" class="form-label required-field">Gravida</label>
-                                    <input type="number" class="form-control" id="gravida" name="gravida" 
-                                           value="<?= htmlspecialchars($_POST['gravida'] ?? '1'); ?>" min="1" required placeholder="Total pregnancies">
-                                    <div class="field-warning" id="gravida_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter total number of pregnancies
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="para" class="form-label required-field">Para</label>
-                                    <input type="number" class="form-control" id="para" name="para" 
-                                           value="<?= htmlspecialchars($_POST['para'] ?? '0'); ?>" min="0" required placeholder="Live births">
-                                    <div class="field-warning" id="para_warning">
-                                        <i class="fas fa-exclamation-triangle warning-icon"></i>
-                                        Please enter number of live births
-                                    </div>
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="abortions" class="form-label">Abortions</label>
-                                    <input type="number" class="form-control" id="abortions" name="abortions" 
-                                           value="<?= htmlspecialchars($_POST['abortions'] ?? '0'); ?>" min="0" placeholder="0">
-                                </div>
-                                <div class="col-md-3 form-group">
-                                    <label for="living_children" class="form-label">Living Children</label>
-                                    <input type="number" class="form-control" id="living_children" name="living_children" 
-                                           value="<?= htmlspecialchars($_POST['living_children'] ?? ''); ?>" min="0" placeholder="Current living children">
-                                </div>
-                            </div>
+                <!-- Obstetric History -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-baby-carriage text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Pregnancy Information</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Clinical obstetric tracking</p>
+                        </div>
+                    </div>
 
-                            <!-- Additional Obstetric Information -->
-                            <div class="row">
-                                <div class="col-md-6 form-group">
-                                    <label for="previous_complications" class="form-label">Previous Pregnancy Complications</label>
-                                    <textarea class="form-control" id="previous_complications" name="previous_complications" rows="2" placeholder="Complications in previous pregnancies"><?= htmlspecialchars($_POST['previous_complications'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="col-md-6 form-group">
-                                    <label for="contraceptive_use" class="form-label">Previous Contraceptive Use</label>
-                                    <textarea class="form-control" id="contraceptive_use" name="contraceptive_use" rows="2" placeholder="Previous contraceptive methods used"><?= htmlspecialchars($_POST['contraceptive_use'] ?? ''); ?></textarea>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <label for="lmp" class="form-label-premium">Last Menstrual Period <span class="text-rose-500">*</span></label>
+                            <input type="date" name="lmp" id="lmp" class="form-input-premium font-black text-health-700" 
+                                   value="<?= htmlspecialchars($_POST['lmp'] ?? ''); ?>" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="lmp_warning">
+                                Required field
                             </div>
+                        </div>
+                        <div>
+                            <label for="edc" class="form-label-premium text-emerald-700">Estimated Due Date</label>
+                            <input type="date" name="edc" id="edc" class="form-input-premium border-emerald-100 bg-emerald-50/30 font-black text-emerald-700" 
+                                   value="<?= htmlspecialchars($_POST['edc'] ?? ''); ?>" readonly>
+                        </div>
+                        <div>
+                            <label for="first_prenatal_visit" class="form-label-premium">First Prenatal Visit</label>
+                            <input type="date" name="first_prenatal_visit" id="first_prenatal_visit" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['first_prenatal_visit'] ?? ''); ?>">
+                        </div>
+                    </div>
 
-                            <!-- Current Pregnancy -->
-                            <div class="row">
-                                <div class="col-md-4 form-group">
-                                    <label for="planned_pregnancy" class="form-label">Planned Pregnancy</label>
-                                    <select class="form-select" id="planned_pregnancy" name="planned_pregnancy">
-                                        <option value="">Select</option>
-                                        <option value="Yes" <?= ($_POST['planned_pregnancy'] ?? '') == 'Yes' ? 'selected' : ''; ?>>Yes</option>
-                                        <option value="No" <?= ($_POST['planned_pregnancy'] ?? '') == 'No' ? 'selected' : ''; ?>>No</option>
-                                        <option value="Unsure" <?= ($_POST['planned_pregnancy'] ?? '') == 'Unsure' ? 'selected' : ''; ?>>Unsure</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-8 form-group">
-                                    <label for="referred_by" class="form-label">Referred By</label>
-                                    <input type="text" class="form-control" id="referred_by" name="referred_by" 
-                                           value="<?= htmlspecialchars($_POST['referred_by'] ?? ''); ?>" placeholder="Name of person or facility who referred you">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div>
+                            <label for="gravida" class="form-label-premium">Gravida <span class="text-rose-500">*</span></label>
+                            <input type="number" name="gravida" id="gravida" class="form-input-premium font-bold text-center" 
+                                   value="<?= htmlspecialchars($_POST['gravida'] ?? '1'); ?>" min="1" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="gravida_warning">
+                                Required
+                            </div>
+                        </div>
+                        <div>
+                            <label for="para" class="form-label-premium">Para <span class="text-rose-500">*</span></label>
+                            <input type="number" name="para" id="para" class="form-input-premium font-bold text-center" 
+                                   value="<?= htmlspecialchars($_POST['para'] ?? '0'); ?>" min="0" required>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="para_warning">
+                                Required
+                            </div>
+                        </div>
+                        <div>
+                            <label for="abortions" class="form-label-premium">Abortions</label>
+                            <input type="number" name="abortions" id="abortions" class="form-input-premium font-bold text-center" 
+                                   value="<?= htmlspecialchars($_POST['abortions'] ?? '0'); ?>" min="0">
+                        </div>
+                        <div>
+                            <label for="living_children" class="form-label-premium">Living Children</label>
+                            <input type="number" name="living_children" id="living_children" class="form-input-premium font-bold text-center" 
+                                   value="<?= htmlspecialchars($_POST['living_children'] ?? ''); ?>" min="0">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label for="previous_complications" class="form-label-premium text-rose-700">Previous Complications</label>
+                            <textarea name="previous_complications" id="previous_complications" class="form-input-premium border-rose-100 min-h-[100px]" 
+                                      placeholder="List any past pregnancy or labor issues..."><?= htmlspecialchars($_POST['previous_complications'] ?? ''); ?></textarea>
+                        </div>
+                        <div>
+                            <label for="contraceptive_use" class="form-label-premium">Contraceptive Use</label>
+                            <textarea name="contraceptive_use" id="contraceptive_use" class="form-input-premium min-h-[100px]" 
+                                      placeholder="History of contraceptive methods used..."><?= htmlspecialchars($_POST['contraceptive_use'] ?? ''); ?></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+                        <div>
+                            <label for="planned_pregnancy" class="form-label-premium">Planned Pregnancy</label>
+                            <div class="relative group">
+                                <select name="planned_pregnancy" id="planned_pregnancy" class="form-input-premium appearance-none pr-10">
+                                    <option value="">Select</option>
+                                    <option value="Yes" <?= ($_POST['planned_pregnancy'] ?? '') == 'Yes' ? 'selected' : ''; ?>>Yes</option>
+                                    <option value="No" <?= ($_POST['planned_pregnancy'] ?? '') == 'No' ? 'selected' : ''; ?>>No</option>
+                                    <option value="Unsure" <?= ($_POST['planned_pregnancy'] ?? '') == 'Unsure' ? 'selected' : ''; ?>>Unsure</option>
+                                </select>
+                                <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-health-500 transition-colors">
+                                    <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
                             </div>
-                            
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <button type="button" onclick="window.history.back()" class="btn btn-secondary me-md-2">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Create My Profile</button>
-                            </div>
+                        </div>
+                        <div>
+                            <label for="referred_by" class="form-label-premium">Referred By</label>
+                            <input type="text" name="referred_by" id="referred_by" class="form-input-premium" 
+                                   value="<?= htmlspecialchars($_POST['referred_by'] ?? ''); ?>" placeholder="Facility or Practitioner Name">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8 pb-12">
+                    <button type="button" onclick="window.history.back()" 
+                            class="w-full sm:w-auto px-10 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200 transition-all active:scale-95">
+                        Cancel Registration
+                    </button>
+                    <button type="submit" 
+                            class="w-full sm:w-auto px-16 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-health-700 shadow-xl shadow-health-200 transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fas fa-plus shadow-sm"></i>
+                        Create My Profile
+                    </button>
+                </div>
                         </form>
                     </div>
                 </div>
@@ -654,16 +720,13 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
     <script>
         // Calculate EDC based on LMP
         document.getElementById('lmp').addEventListener('change', function() {
-            const lmp = new Date(this.value);
-            if (!isNaN(lmp.getTime())) {
-                const edc = new Date(lmp);
-                edc.setDate(edc.getDate() + 280); // 40 weeks
-                document.getElementById('edc').value = edc.toISOString().split('T')[0];
-            }
-        });
-
-        // Set maximum dates to today
         document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('motherRegistrationForm');
+            const lmpInput = document.getElementById('lmp');
+            const edcInput = document.getElementById('edc');
+            const phoneInput = document.getElementById('phone');
+
+            // Set maximum dates to today
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('date_of_birth').max = today;
             document.getElementById('lmp').max = today;
@@ -671,141 +734,114 @@ $userData = $userStmt->fetch(PDO::FETCH_ASSOC);
             document.getElementById('husband_date_of_birth').max = today;
             document.getElementById('marriage_date').max = today;
 
-            // Auto-calculate EDC if LMP is already filled
-            const lmp = document.getElementById('lmp').value;
-            if (lmp) {
-                document.getElementById('lmp').dispatchEvent(new Event('change'));
-            }
-
-            // Add event listeners for validation
-            setupFieldValidation();
-        });
-
-        function setupFieldValidation() {
-            const form = document.getElementById('motherRegistrationForm');
-            const requiredFields = [
-                'first_name', 'last_name', 'date_of_birth', 'civil_status', 
-                'phone', 'address', 'lmp', 'gravida', 'para'
-            ];
-
-            // Add event listeners to all required fields
-            requiredFields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input) {
-                    input.addEventListener('blur', validateRequiredField);
-                    input.addEventListener('input', hideWarning);
+            // LMP to EDC Calculation (Naegele's Rule: +7 days, -3 months, +1 year)
+            lmpInput.addEventListener('change', function() {
+                if (this.value) {
+                    const lmpDate = new Date(this.value);
+                    const edcDate = new Date(lmpDate);
+                    edcDate.setDate(lmpDate.getDate() + 7);
+                    edcDate.setMonth(lmpDate.getMonth() - 3);
+                    edcDate.setFullYear(lmpDate.getFullYear() + 1);
+                    
+                    edcInput.value = edcDate.toISOString().split('T')[0];
+                    hideWarning('lmp');
                 }
             });
 
-            // Add validation for phone field
-            const phone = document.getElementById('phone');
-            if (phone) {
-                phone.addEventListener('blur', validatePhoneField);
-                phone.addEventListener('input', hideWarning);
+            // Auto-calculate EDC if LMP is already filled on load
+            if (lmpInput.value) {
+                lmpInput.dispatchEvent(new Event('change'));
             }
 
-            // Form submission validation
-            form.addEventListener('submit', function(e) {
-                let isValid = true;
-
-                // Validate all required fields
-                requiredFields.forEach(field => {
-                    if (!validateRequiredField({ target: document.getElementById(field) })) {
-                        isValid = false;
+            // Phone Validation (11 digits)
+            [phoneInput, document.getElementById('husband_phone'), document.getElementById('emergency_phone')].forEach(input => {
+                if (!input) return;
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '').substring(0, 11);
+                    if (this.id === 'phone' && this.value.length === 11) {
+                        hideWarning('phone');
                     }
                 });
+            });
 
-                // Validate phone field
-                if (phone && !validatePhoneField({ target: phone })) {
+            // Real-time validation for required fields
+            const requiredFields = ['first_name', 'last_name', 'date_of_birth', 'civil_status', 'phone', 'address', 'lmp', 'gravida', 'para'];
+            
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+
+                field.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                field.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        hideWarning(this.id);
+                    }
+                });
+            });
+
+            function validateField(field) {
+                let isValid = true;
+                if (field.value.trim() === '') {
+                    isValid = false;
+                } else if (field.id === 'phone' && field.value.length !== 11) {
                     isValid = false;
                 }
 
                 if (!isValid) {
+                    showWarning(field.id);
+                    return false;
+                }
+                hideWarning(field.id);
+                return true;
+            }
+
+            function showWarning(fieldId) {
+                const warning = document.getElementById(fieldId + '_warning');
+                const field = document.getElementById(fieldId);
+                if (warning) warning.classList.remove('hidden');
+                if (field) {
+                    field.classList.add('border-rose-500', 'ring-2', 'ring-rose-200');
+                    field.classList.add('animate-shake');
+                    setTimeout(() => field.classList.remove('animate-shake'), 500);
+                }
+            }
+
+            function hideWarning(fieldId) {
+                const warning = document.getElementById(fieldId + '_warning');
+                const field = document.getElementById(fieldId);
+                if (warning) warning.classList.add('hidden');
+                if (field) field.classList.remove('border-rose-500', 'ring-2', 'ring-rose-200');
+            }
+
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                requiredFields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field && !validateField(field)) {
+                        isValid = false;
+                    }
+                });
+                
+                if (!isValid) {
                     e.preventDefault();
-                    // Scroll to first error
-                    const firstError = document.querySelector('.field-warning[style*="display: block"]');
+                    
+                    // Find first error and scroll
+                    const firstError = document.querySelector('[id$="_warning"]:not(.hidden)');
                     if (firstError) {
                         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const errorField = document.getElementById(firstError.id.replace('_warning', ''));
+                        if (errorField) {
+                            errorField.classList.add('animate-pulse');
+                            setTimeout(() => errorField.classList.remove('animate-pulse'), 1000);
+                        }
                     }
-                    // Show general alert
-                    alert('Please fix the errors in the form before submitting.');
                 }
             });
-        }
-
-        function validateRequiredField(e) {
-            const field = e.target;
-            const fieldId = field.id;
-            const value = field.value.trim();
-
-            if (value === '') {
-                showWarning(fieldId, getFieldWarningMessage(fieldId));
-                return false;
-            }
-
-            hideWarning(fieldId);
-            return true;
-        }
-
-        function validatePhoneField(e) {
-            const field = e.target;
-            const fieldId = field.id;
-            const value = field.value.trim();
-
-            if (value !== '' && !/^[0-9]{11}$/.test(value)) {
-                showWarning(fieldId, 'Please enter a valid 11-digit phone number');
-                return false;
-            }
-
-            hideWarning(fieldId);
-            return true;
-        }
-
-        function getFieldWarningMessage(fieldId) {
-            const messages = {
-                'first_name': 'Please enter your first name',
-                'last_name': 'Please enter your last name',
-                'date_of_birth': 'Please select your date of birth',
-                'civil_status': 'Please select your civil status',
-                'phone': 'Please enter a valid 11-digit phone number',
-                'address': 'Please select your address from the list',
-                'lmp': 'Please select your last menstrual period date',
-                'gravida': 'Please enter number of pregnancies',
-                'para': 'Please enter number of live births'
-            };
-            return messages[fieldId] || 'This field is required';
-        }
-
-        function showWarning(fieldId, message) {
-            const warning = document.getElementById(fieldId + '_warning');
-            if (warning) {
-                warning.textContent = message;
-                warning.style.display = 'block';
-                
-                // Highlight the field
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.classList.add('is-invalid');
-                }
-            }
-        }
-
-        function hideWarning(fieldId) {
-            if (typeof fieldId === 'object') {
-                fieldId = fieldId.target.id;
-            }
-            
-            const warning = document.getElementById(fieldId + '_warning');
-            if (warning) {
-                warning.style.display = 'none';
-                
-                // Remove highlight from the field
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.classList.remove('is-invalid');
-                }
-            }
-        }
+        });
     </script>
 </body>
 </html>
