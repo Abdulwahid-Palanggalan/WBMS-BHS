@@ -289,52 +289,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Blood Pressure</span>
-                                <i class="fas fa-gauge-high text-health-600 opacity-20 text-2xl"></i>
-                            </div>
-                            <div class="flex items-baseline gap-2">
-                                <input type="text" class="w-full bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-health-600 text-3xl font-black text-health-700 p-0" 
-                                       id="blood_pressure" name="blood_pressure" placeholder="120/80" required
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="blood_pressure" class="form-label-premium">Blood Pressure <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input type="text" class="form-input-premium pr-12" id="blood_pressure" name="blood_pressure" placeholder="120/80" required
                                        value="<?php echo htmlspecialchars($recordData['blood_pressure'] ?? $_POST['blood_pressure'] ?? ''); ?>">
-                                <span class="text-slate-400 font-bold text-xs">mmHg</span>
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">mmHg</span>
                             </div>
-                            <div class="hidden p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="blood_pressure_warning">
-                                Required
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="blood_pressure_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required
                             </div>
                         </div>
 
-                        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Weight</span>
-                                <i class="fas fa-weight text-health-600 opacity-20 text-2xl"></i>
-                            </div>
-                            <div class="flex items-baseline gap-2">
-                                <input type="number" step="0.1" class="w-full bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-health-600 text-3xl font-black text-health-700 p-0" 
-                                       id="weight" name="weight" placeholder="58.0" required
+                        <div>
+                            <label for="weight" class="form-label-premium">Weight (kg) <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input type="number" step="0.1" class="form-input-premium pr-12" id="weight" name="weight" placeholder="58.0" required
                                        value="<?php echo htmlspecialchars($recordData['weight'] ?? $_POST['weight'] ?? ''); ?>">
-                                <span class="text-slate-400 font-bold text-xs">kg</span>
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">kg</span>
                             </div>
-                            <div class="hidden p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="weight_warning">
-                                Required
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="weight_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required
                             </div>
                         </div>
 
-                        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Temperature</span>
-                                <i class="fas fa-thermometer-half text-health-600 opacity-20 text-2xl"></i>
-                            </div>
-                            <div class="flex items-baseline gap-2">
-                                <input type="number" step="0.1" class="w-full bg-transparent border-0 border-b-2 border-slate-200 focus:ring-0 focus:border-health-600 text-3xl font-black text-health-700 p-0" 
-                                       id="temperature" name="temperature" placeholder="36.8" required
+                        <div>
+                            <label for="temperature" class="form-label-premium">Temperature (°C) <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input type="number" step="0.1" class="form-input-premium pr-12" id="temperature" name="temperature" placeholder="36.8" required
                                        value="<?php echo htmlspecialchars($recordData['temperature'] ?? $_POST['temperature'] ?? ''); ?>">
-                                <span class="text-slate-400 font-bold text-xs">°C</span>
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">°C</span>
                             </div>
-                            <div class="hidden p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="temperature_warning">
-                                Required
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="temperature_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required
                             </div>
                         </div>
                     </div>

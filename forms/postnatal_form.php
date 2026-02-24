@@ -360,31 +360,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                            <div class="p-6 bg-rose-50 rounded-3xl border border-rose-100 text-center group transition-all hover:shadow-md">
-                                <div class="text-[10px] font-black text-rose-400 uppercase tracking-widest mb-2">Blood Pressure</div>
-                                <input type="text" class="w-full bg-transparent text-center text-2xl font-black text-rose-700 placeholder:text-rose-200 focus:outline-none" 
-                                       id="blood_pressure" name="blood_pressure" placeholder="110/70" required
-                                       value="<?php echo htmlspecialchars($recordData['blood_pressure'] ?? $_POST['blood_pressure'] ?? ''); ?>">
-                                <div class="text-[10px] font-bold text-rose-400 mt-1 uppercase">mmHg</div>
-                                <div class="hidden mt-2 p-1 bg-white text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="blood_pressure_warning">Required</div>
+                            <div>
+                                <label for="blood_pressure" class="form-label-premium">Blood Pressure <span class="text-rose-500">*</span></label>
+                                <div class="relative">
+                                    <input type="text" class="form-input-premium pr-12" id="blood_pressure" name="blood_pressure" placeholder="110/70" required
+                                           value="<?php echo htmlspecialchars($recordData['blood_pressure'] ?? $_POST['blood_pressure'] ?? ''); ?>">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">mmHg</span>
+                                </div>
+                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="blood_pressure_warning">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Required
+                                </div>
                             </div>
 
-                            <div class="p-6 bg-emerald-50 rounded-3xl border border-emerald-100 text-center group transition-all hover:shadow-md">
-                                <div class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-2">Current Weight</div>
-                                <input type="number" step="0.1" class="w-full bg-transparent text-center text-2xl font-black text-emerald-700 placeholder:text-emerald-200 focus:outline-none" 
-                                       id="weight" name="weight" placeholder="00.0" required
-                                       value="<?php echo htmlspecialchars($recordData['weight'] ?? $_POST['weight'] ?? ''); ?>">
-                                <div class="text-[10px] font-bold text-emerald-400 mt-1 uppercase">Kilograms</div>
-                                <div class="hidden mt-2 p-1 bg-white text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="weight_warning">Required</div>
+                            <div>
+                                <label for="weight" class="form-label-premium">Weight (kg) <span class="text-rose-500">*</span></label>
+                                <div class="relative">
+                                    <input type="number" step="0.1" class="form-input-premium pr-12" id="weight" name="weight" placeholder="00.0" required
+                                           value="<?php echo htmlspecialchars($recordData['weight'] ?? $_POST['weight'] ?? ''); ?>">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">kg</span>
+                                </div>
+                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="weight_warning">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Required
+                                </div>
                             </div>
 
-                            <div class="p-6 bg-sky-50 rounded-3xl border border-sky-100 text-center group transition-all hover:shadow-md">
-                                <div class="text-[10px] font-black text-sky-400 uppercase tracking-widest mb-2">Temperature</div>
-                                <input type="number" step="0.1" class="w-full bg-transparent text-center text-2xl font-black text-sky-700 placeholder:text-sky-200 focus:outline-none" 
-                                       id="temperature" name="temperature" placeholder="36.5" required
-                                       value="<?php echo htmlspecialchars($recordData['temperature'] ?? $_POST['temperature'] ?? ''); ?>">
-                                <div class="text-[10px] font-bold text-sky-400 mt-1 uppercase">Celsius (°C)</div>
-                                <div class="hidden mt-2 p-1 bg-white text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="temperature_warning">Required</div>
+                            <div>
+                                <label for="temperature" class="form-label-premium">Temperature (°C) <span class="text-rose-500">*</span></label>
+                                <div class="relative">
+                                    <input type="number" step="0.1" class="form-input-premium pr-12" id="temperature" name="temperature" placeholder="36.5" required
+                                           value="<?php echo htmlspecialchars($recordData['temperature'] ?? $_POST['temperature'] ?? ''); ?>">
+                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">°C</span>
+                                </div>
+                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="temperature_warning">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> Required
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -481,8 +490,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         <div>
                             <label for="baby_weight" class="form-label-premium">Current Weight (kg)</label>
-                            <input type="number" step="0.01" class="form-input-premium" id="baby_weight" name="baby_weight" placeholder="Enter weight in kilograms..."
-                                   value="<?php echo htmlspecialchars($recordData['baby_weight'] ?? $_POST['baby_weight'] ?? ''); ?>">
+                            <div class="relative">
+                                <input type="number" step="0.01" class="form-input-premium pr-12" id="baby_weight" name="baby_weight" placeholder="e.g. 3.20"
+                                       value="<?php echo htmlspecialchars($recordData['baby_weight'] ?? $_POST['baby_weight'] ?? ''); ?>">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">kg</span>
+                            </div>
                         </div>
                         <div>
                             <label for="feeding_method" class="form-label-premium">Nutrition / Feeding</label>
