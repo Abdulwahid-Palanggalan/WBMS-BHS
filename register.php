@@ -102,393 +102,162 @@ ob_end_clean();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kibenes eBirth - Register</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Create Account - Barangay Kibenes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- SweetAlert CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 15px;
-        }
-        
-        .register-container {
-            max-width: 500px;
-            width: 100%;
-        }
-        
-        .register-card {
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border: none;
-            overflow: hidden;
-            background: white;
-        }
-        
-        .register-header {
-            background: linear-gradient(135deg, #1a73e8 0%, #6a11cb 100%);
-            color: white;
-            padding: 20px 15px;
-            text-align: center;
-        }
-        
-        .register-icon {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            line-height: 60px;
-        }
-        
-        .register-header h3 {
-            margin-bottom: 3px;
-            font-weight: 600;
-            font-size: 1.3rem;
-        }
-        
-        .register-header p {
-            margin-bottom: 0;
-            opacity: 0.9;
-            font-size: 0.85rem;
-        }
-        
-        .register-body {
-            padding: 20px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .form-control {
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1.5px solid #e0e0e0;
-            font-size: 0.9rem;
-        }
-        
-        .form-control:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
-        }
-        
-        .form-select {
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: 1.5px solid #e0e0e0;
-            font-size: 0.9rem;
-        }
-        
-        .form-select:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
-        }
-        
-        .btn-register {
-            background: linear-gradient(to right, #1a73e8, #6a11cb);
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-register:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(26, 115, 232, 0.3);
-            color: white;
-        }
-        
-        .alert {
-            border-radius: 8px;
-            border: none;
-            padding: 12px 15px;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-        }
-        
-        .alert-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border-left: 4px solid #10b981;
-        }
-        
-        .alert-danger {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-left: 4px solid #ef4444;
-        }
-        
-        .register-footer {
-            background-color: #f8f9fa;
-            padding: 12px 15px;
-            text-align: center;
-            border-top: 1px solid #e0e0e0;
-        }
-        
-        .register-footer a {
-            color: #1a73e8;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        
-        .register-footer a:hover {
-            color: #6a11cb;
-            text-decoration: underline;
-        }
-        
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        
-        .login-link a {
-            color: #1a73e8;
-            font-weight: 500;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .form-check {
-            margin-bottom: 15px;
-        }
-        
-        .form-check-label {
-            font-size: 0.85rem;
-        }
-        
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-        }
-        
-        .mb-3 {
-            margin-bottom: 15px !important;
-        }
-        
-        .password-strength {
-            font-size: 0.8rem;
-            margin-top: 5px;
-        }
-        
-        .success-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .field-warning {
-            color: #dc3545;
-            font-size: 0.75rem;
-            margin-top: 3px;
-            display: none;
-        }
-        
-        .security-note {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        
-        .optional-badge {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            margin-left: 5px;
-            color: #6c757d;
-        }
-        
-        /* SweetAlert Custom Styles */
-        .swal2-popup {
-            border-radius: 12px !important;
-            padding: 20px !important;
-        }
-        
-        .swal2-title {
-            color: #1a73e8 !important;
-            font-size: 1.5rem !important;
-            margin-bottom: 15px !important;
-        }
-        
-        .swal2-html-container {
-            font-size: 1rem !important;
-            line-height: 1.5 !important;
-        }
-        
-        .swal2-timer-progress-bar {
-            background: linear-gradient(to right, #1a73e8, #6a11cb) !important;
-        }
-        
-        .countdown-number {
-            font-size: 2.5rem !important;
-            font-weight: bold !important;
-            color: #1a73e8 !important;
-            margin: 10px 0 !important;
-        }
-        
-        .countdown-text {
-            font-size: 1rem !important;
-            color: #666 !important;
-            margin-bottom: 15px !important;
-        }
-    </style>
+    <?php include_once 'includes/tailwind_config.php'; ?>
 </head>
-<body>
-    <div class="register-container">
-        <div class="register-card">
-            <div class="register-header">
-                <div class="register-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
-                <h3>Create Account</h3>
-                <p>Health Station System</p>
+<body class="min-h-screen py-10 px-4 flex items-center justify-center bg-gradient-to-br from-health-50 via-white to-primary/10">
+    <div class="max-w-2xl w-full">
+        <!-- Brand Header -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-health-600 rounded-2xl shadow-lg shadow-health-200 mb-4 transform hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-user-plus text-white text-4xl"></i>
             </div>
-            
-            <div class="register-body">
-                <?php if (!empty($error)): ?>
-                    <div class="alert alert-danger fade-in">
-                        <i class="fas fa-exclamation-triangle success-icon"></i>
-                        <?php echo htmlspecialchars($error); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if (!empty($success)): ?>
-                    <!-- SweetAlert will show automatically, so hide normal success message -->
-                    <style>
-                        .alert-success {
-                            display: none !important;
-                        }
-                        #registrationForm {
-                            display: none !important;
-                        }
-                        .login-link {
-                            display: none !important;
-                        }
-                    </style>
-                <?php endif; ?>
-                
-                <form method="POST" action="" id="registrationForm">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label for="first_name" class="form-label">First Name *</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>" required>
-                            <div class="field-warning" id="first_name_warning">Please enter your first name</div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="middle_name" class="form-label">Middle Name</span></label>
-                            <input type="text" class="form-control" id="middle_name" name="middle_name" value="<?php echo htmlspecialchars($_POST['middle_name'] ?? ''); ?>">
-                            <div class="field-warning" id="middle_name_warning"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="last_name" class="form-label">Last Name *</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>" required>
-                            <div class="field-warning" id="last_name_warning">Please enter your last name</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username *</label>
-                        <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required>
-                        <div class="field-warning" id="username_warning">Please choose a username</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address *</label>
-                        <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
-                        <div class="field-warning" id="email_warning">Please enter a valid email address</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Phone Number <span class="optional-badge">Optional</span></label>
-                        <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
-                        <div class="field-warning" id="phone_warning">Please enter a valid phone number</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password *</label>
-                        <input type="password" class="form-control" id="password" name="password" required minlength="6">
-                        <div class="password-strength text-muted">Minimum 6 characters</div>
-                        <div class="field-warning" id="password_warning">Password must be at least 6 characters long</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Confirm Password *</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                        <div class="field-warning" id="confirm_password_warning">Passwords do not match</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="security_question" class="form-label">Security Question *</label>
-                        <select class="form-select" id="security_question" name="security_question" required>
-                            <option value="">Select a security question</option>
-                            <?php foreach ($security_questions as $key => $question): ?>
-                                <option value="<?php echo htmlspecialchars($key); ?>" <?php echo ($_POST['security_question'] ?? '') == $key ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($question); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <div class="field-warning" id="security_question_warning">Please select a security question</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="security_answer" class="form-label">Security Answer *</label>
-                        <input type="text" class="form-control" id="security_answer" name="security_answer" value="<?php echo htmlspecialchars($_POST['security_answer'] ?? ''); ?>" required>
-                        <div class="security-note">This will be used to verify your identity if you forget your password.</div>
-                        <div class="field-warning" id="security_answer_warning">Please provide an answer to your security question</div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="role" class="form-label">Register As *</label>
-                        <select class="form-select" id="role" name="role" required>
-                            <option value="mother" <?php echo ($_POST['role'] ?? '') === 'mother' ? 'selected' : ''; ?>>Mother</option>
-                            <option value="midwife" <?php echo ($_POST['role'] ?? '') === 'midwife' ? 'selected' : ''; ?>>Midwife</option>
-                            <option value="bhw" <?php echo ($_POST['role'] ?? '') === 'bhw' ? 'selected' : ''; ?>>Health Worker</option>
-                            <option value="bns" <?php echo ($_POST['role'] ?? '') === 'bns' ? 'selected' : ''; ?>>Nutrition Scholar</option>
-                        </select>
-                        <div class="field-warning" id="role_warning">Please select your role</div>
-                    </div>
-                    
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="terms" name="terms" <?php echo isset($_POST['terms']) ? 'checked' : ''; ?> required>
-                        <label class="form-check-label" for="terms">
-                            I agree to the Terms and Privacy Policy
-                        </label>
-                        <div class="field-warning" id="terms_warning">You must agree to the Terms and Privacy Policy</div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-register w-100 mt-3">Create Account</button>
-                </form>
-                
-                <div class="login-link">
-                    <p>Already have an account? <a href="login.php">Login here</a></p>
-                    <p><a href="forgot-password.php">Forgot your password?</a></p>
-                </div>
-            </div>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Health Station Registry</h1>
+            <p class="text-health-600 font-medium uppercase tracking-widest text-xs mt-1">Join Barangay Kibenes Information System</p>
         </div>
+
+        <div class="card-health p-8 md:p-12">
+            <div class="mb-10 text-center md:text-left">
+                <h2 class="text-2xl font-bold text-slate-800">Create your account</h2>
+                <p class="text-slate-500 text-sm mt-1">Please fill in the required details to register for the system.</p>
+            </div>
+
+            <?php if (!empty($error)): ?>
+                <div class="mb-8 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3 text-red-700 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <i class="fas fa-exclamation-circle mt-1"></i>
+                    <p class="text-sm font-medium"><?php echo htmlspecialchars($error); ?></p>
+                </div>
+            <?php endif; ?>
+
+            <form method="POST" action="" id="registrationForm" class="space-y-8">
+                <!-- Personal Information Section -->
+                <div>
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                        <i class="fas fa-user text-health-500"></i>
+                        Personal Information
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="space-y-1.5">
+                            <label for="first_name" class="text-sm font-semibold text-slate-700 ml-1">First Name <span class="text-medical-red">*</span></label>
+                            <input type="text" class="input-health" id="first_name" name="first_name" value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>" required placeholder="John">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="middle_name" class="text-sm font-semibold text-slate-700 ml-1">Middle Name</label>
+                            <input type="text" class="input-health" id="middle_name" name="middle_name" value="<?php echo htmlspecialchars($_POST['middle_name'] ?? ''); ?>" placeholder="Quincy">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="last_name" class="text-sm font-semibold text-slate-700 ml-1">Last Name <span class="text-medical-red">*</span></label>
+                            <input type="text" class="input-health" id="last_name" name="last_name" value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>" required placeholder="Doe">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Credentials Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-50">
+                    <div class="space-y-6">
+                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                            <i class="fas fa-id-card text-health-500"></i>
+                            Account Details
+                        </h3>
+                        <div class="space-y-1.5">
+                            <label for="username" class="text-sm font-semibold text-slate-700 ml-1">Username <span class="text-medical-red">*</span></label>
+                            <input type="text" class="input-health" id="username" name="username" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required placeholder="johndoe22">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="email" class="text-sm font-semibold text-slate-700 ml-1">Email Address <span class="text-medical-red">*</span></label>
+                            <input type="email" class="input-health" id="email" name="email" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required placeholder="john@example.com">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="phone" class="text-sm font-semibold text-slate-700 ml-1">Phone Number</label>
+                            <input type="tel" class="input-health" id="phone" name="phone" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>" placeholder="0912 345 6789">
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                            <i class="fas fa-lock text-health-500"></i>
+                            Security
+                        </h3>
+                        <div class="space-y-1.5">
+                            <label for="password" class="text-sm font-semibold text-slate-700 ml-1">Password <span class="text-medical-red">*</span></label>
+                            <input type="password" class="input-health" id="password" name="password" required minlength="6" placeholder="••••••••">
+                            <p class="text-[10px] text-slate-400 italic">Minimum 6 characters</p>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="confirm_password" class="text-sm font-semibold text-slate-700 ml-1">Confirm Password <span class="text-medical-red">*</span></label>
+                            <input type="password" class="input-health" id="confirm_password" name="confirm_password" required placeholder="••••••••">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="role" class="text-sm font-semibold text-slate-700 ml-1">Register As <span class="text-medical-red">*</span></label>
+                            <select class="input-health appearance-none" id="role" name="role" required>
+                                <option value="mother" <?php echo ($_POST['role'] ?? '') === 'mother' ? 'selected' : ''; ?>>Mother</option>
+                                <option value="midwife" <?php echo ($_POST['role'] ?? '') === 'midwife' ? 'selected' : ''; ?>>Midwife</option>
+                                <option value="bhw" <?php echo ($_POST['role'] ?? '') === 'bhw' ? 'selected' : ''; ?>>Health Worker (BHW)</option>
+                                <option value="bns" <?php echo ($_POST['role'] ?? '') === 'bns' ? 'selected' : ''; ?>>Nutrition Scholar (BNS)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Verification Section -->
+                <div class="pt-4 border-t border-slate-50">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                        <i class="fas fa-shield-halved text-health-500"></i>
+                        Identity Verification
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-1.5">
+                            <label for="security_question" class="text-sm font-semibold text-slate-700 ml-1">Security Question <span class="text-medical-red">*</span></label>
+                            <select class="input-health appearance-none" id="security_question" name="security_question" required>
+                                <option value="">Select a security question</option>
+                                <?php foreach ($security_questions as $key => $question): ?>
+                                    <option value="<?php echo htmlspecialchars($key); ?>" <?php echo ($_POST['security_question'] ?? '') == $key ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($question); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label for="security_answer" class="text-sm font-semibold text-slate-700 ml-1">Security Answer <span class="text-medical-red">*</span></label>
+                            <input type="text" class="input-health" id="security_answer" name="security_answer" value="<?php echo htmlspecialchars($_POST['security_answer'] ?? ''); ?>" required placeholder="Your secret answer">
+                            <p class="text-[10px] text-slate-400">Used for password recovery only.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agreements & Action -->
+                <div class="pt-10 flex flex-col items-center space-y-6">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" class="peer h-5 w-5 cursor-pointer appearance-none rounded border border-slate-200 transition-all checked:bg-health-600 checked:border-health-600 focus:outline-none" id="terms" name="terms" <?php echo isset($_POST['terms']) ? 'checked' : ''; ?> required>
+                            <span class="absolute text-white transition-opacity opacity-0 pointer-events-none top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 peer-checked:opacity-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                            </span>
+                        </div>
+                        <span class="text-sm text-slate-600 selection:bg-transparent tracking-tight">
+                            I agree to the <a href="#" class="text-health-600 font-bold hover:underline">Terms of Service</a> and <a href="#" class="text-health-600 font-bold hover:underline">Privacy Policy</a>
+                        </span>
+                    </label>
+
+                    <button type="submit" class="w-full md:w-80 btn-health py-4 text-base shadow-xl shadow-health-100 flex items-center justify-center gap-3 group">
+                        <i class="fas fa-file-signature transition-transform group-hover:scale-110"></i>
+                        <span>Register Account</span>
+                    </button>
+                    
+                    <div class="pt-4 text-sm text-slate-500 font-medium">
+                        Already have an account? 
+                        <a href="login.php" class="text-health-600 font-black hover:underline transition-all">Log in here</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <p class="text-center mt-12 text-slate-400 text-xs font-semibold uppercase tracking-[0.2em]">
+            &copy; <?php echo date('Y'); ?> Barangay Kibenes Health Station
+        </p>
     </div>
 
     <!-- SweetAlert2 JS -->
@@ -496,277 +265,80 @@ ob_end_clean();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Only run form validation if form exists
+        // Form Validation Logic
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('registrationForm');
             if (!form) return;
             
-            const fields = [
-                'first_name', 'last_name', 'username', 'email', 'password', 
-                'confirm_password', 'security_question', 'security_answer', 'role'
-            ];
-            
-            // Add event listeners to all fields
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input) {
-                    input.addEventListener('blur', validateField);
-                    input.addEventListener('input', hideWarning);
-                }
-            });
-            
-            // Validate terms checkbox
-            const terms = document.getElementById('terms');
-            if (terms) {
-                terms.addEventListener('change', function() {
-                    hideWarning('terms');
-                });
-            }
-            
-            // Form submission validation
             form.addEventListener('submit', function(e) {
-                let isValid = true;
-                
-                // Validate all fields
-                fields.forEach(field => {
-                    if (!validateField({ target: document.getElementById(field) })) {
-                        isValid = false;
-                    }
-                });
-                
-                // Validate terms
-                if (!terms.checked) {
-                    showWarning('terms', 'You must agree to the Terms and Privacy Policy');
-                    isValid = false;
-                }
-                
-                // Validate password match
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirm_password').value;
+                
                 if (password !== confirmPassword) {
-                    showWarning('confirm_password', 'Passwords do not match');
-                    isValid = false;
-                }
-                
-                if (!isValid) {
                     e.preventDefault();
-                    // Scroll to first error
-                    const firstError = document.querySelector('.field-warning[style*="display: block"]');
-                    if (firstError) {
-                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-            });
-            
-            function validateField(e) {
-                const field = e.target;
-                const fieldId = field.id;
-                const value = field.value.trim();
-                
-                switch(fieldId) {
-                    case 'first_name':
-                    case 'last_name':
-                        if (value === '') {
-                            showWarning(fieldId, 'This field is required');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'username':
-                        if (value === '') {
-                            showWarning(fieldId, 'Please choose a username');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'email':
-                        if (value === '' || !isValidEmail(value)) {
-                            showWarning(fieldId, 'Please enter a valid email address');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'phone':
-                        if (value !== '' && !isValidPhone(value)) {
-                            showWarning(fieldId, 'Please enter a valid phone number');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'password':
-                        if (value.length < 6) {
-                            showWarning(fieldId, 'Password must be at least 6 characters long');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'confirm_password':
-                        const password = document.getElementById('password').value;
-                        if (value !== password) {
-                            showWarning(fieldId, 'Passwords do not match');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'security_question':
-                        if (value === '') {
-                            showWarning(fieldId, 'Please select a security question');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'security_answer':
-                        if (value === '') {
-                            showWarning(fieldId, 'Please provide an answer to your security question');
-                            return false;
-                        }
-                        break;
-                        
-                    case 'role':
-                        if (value === '') {
-                            showWarning(fieldId, 'Please select your role');
-                            return false;
-                        }
-                        break;
-                }
-                
-                hideWarning(fieldId);
-                return true;
-            }
-            
-            function showWarning(fieldId, message) {
-                const warning = document.getElementById(fieldId + '_warning');
-                if (warning) {
-                    warning.textContent = message;
-                    warning.style.display = 'block';
-                    
-                    // Highlight the field
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.style.borderColor = '#dc3545';
-                        field.style.boxShadow = '0 0 0 2px rgba(220, 53, 69, 0.15)';
-                    }
-                }
-            }
-            
-            function hideWarning(fieldId) {
-                if (typeof fieldId === 'object') {
-                    fieldId = fieldId.target.id;
-                }
-                
-                const warning = document.getElementById(fieldId + '_warning');
-                if (warning) {
-                    warning.style.display = 'none';
-                    
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.style.borderColor = '#e0e0e0';
-                        field.style.boxShadow = 'none';
-                    }
-                }
-            }
-            
-            function isValidEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-            
-            function isValidPhone(phone) {
-                const phoneRegex = /^[\+]?[0-9\s\-\(\)]{10,}$/;
-                return phoneRegex.test(phone);
-            }
-            
-            // Real-time password match indicator
-            document.getElementById('confirm_password').addEventListener('input', function() {
-                const password = document.getElementById('password').value;
-                const confirmPassword = this.value;
-                
-                if (confirmPassword && password !== confirmPassword) {
-                    this.style.borderColor = '#dc3545';
-                    this.style.boxShadow = '0 0 0 2px rgba(220, 53, 69, 0.15)';
-                } else if (confirmPassword) {
-                    this.style.borderColor = '#198754';
-                    this.style.boxShadow = '0 0 0 2px rgba(25, 135, 84, 0.15)';
-                } else {
-                    this.style.borderColor = '#e0e0e0';
-                    this.style.boxShadow = 'none';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Passwords do not match!',
+                        confirmButtonColor: '#0D9488'
+                    });
                 }
             });
         });
-        
-       <?php if (!empty($success)): ?>
-document.addEventListener('DOMContentLoaded', function() {
-    let timeLeft = 5;
-    let timerInterval;
-    
-    Swal.fire({
-        title: 'Registration Successful!',
-        html: `
-            <div style="text-align: center; font-size: 14px;">
-                <i class="fas fa-check-circle" style="font-size: 40px; color: #28a745; margin-bottom: 10px;"></i>
-                <p style="margin-bottom: 5px; color: #2c3e50;">
-                    <strong>Account Created Successfully!</strong>
-                </p>
-                <p style="color: #666; margin-bottom: 10px; font-size: 13px;">
-                    Account pending admin approval.<br>
-                    Redirecting in <strong style="font-size: 18px; color: #1a73e8;" id="swal-countdown">${timeLeft}</strong> seconds...
-                </p>
-            </div>
-        `,
-        icon: 'success',
-        showConfirmButton: false,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        width: 350,
-        padding: '15px',
-        backdrop: true,
-        timer: 5000,
-        timerProgressBar: true,
-        didOpen: () => {
-            const countdownEl = Swal.getHtmlContainer().querySelector('#swal-countdown');
-            
-            // Start countdown timer
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                if (countdownEl) {
-                    countdownEl.textContent = timeLeft;
-                }
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                }
-            }, 1000);
-        },
-        willClose: () => {
-            clearInterval(timerInterval);
-            window.location.href = 'login.php';
-        }
-    });
-    
-    // Add manual close button after 1 second
-    setTimeout(() => {
-        const swalContainer = document.querySelector('.swal2-popup');
-        if (swalContainer) {
-            const closeBtn = document.createElement('button');
-            closeBtn.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i>Login Now';
-            closeBtn.className = 'btn btn-primary btn-sm';
-            closeBtn.style.marginTop = '10px';
-            closeBtn.style.padding = '5px 15px';
-            closeBtn.style.fontSize = '12px';
-            closeBtn.onclick = function() {
-                Swal.close();
-                window.location.href = 'login.php';
-            };
-            
-            const htmlContainer = Swal.getHtmlContainer();
-            if (htmlContainer) {
-                htmlContainer.appendChild(closeBtn);
-            }
-        }
-    }, 1000);
-});
 
-<?php endif; ?>
-</script>
+        <?php if (!empty($success)): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            let timeLeft = 5;
+            let timerInterval;
+            
+            Swal.fire({
+                title: 'Success!',
+                html: `
+                    <div class="text-center py-4">
+                        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-800 mb-2">Account Created!</h4>
+                        <p class="text-sm text-slate-600 mb-6">Your account is pending admin approval.</p>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Redirecting in</p>
+                            <p class="text-2xl font-black text-health-600" id="swal-countdown">${timeLeft}</p>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Seconds</p>
+                        </div>
+                    </div>
+                `,
+                icon: undefined,
+                showConfirmButton: true,
+                confirmButtonText: '<i class="fas fa-sign-in-alt me-2"></i>Go to Login',
+                confirmButtonColor: '#0D9488',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                width: 400,
+                padding: '2rem',
+                timer: 5000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'rounded-[2rem] border-none shadow-2xl',
+                    confirmButton: 'rounded-xl px-10 py-3 text-sm font-bold uppercase tracking-widest shadow-lg shadow-health-100'
+                },
+                didOpen: () => {
+                    const countdownEl = Swal.getHtmlContainer().querySelector('#swal-countdown');
+                    timerInterval = setInterval(() => {
+                        timeLeft--;
+                        if (countdownEl) countdownEl.textContent = timeLeft;
+                    }, 1000);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                    window.location.href = 'login.php';
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'login.php';
+                }
+            });
+        });
+        <?php endif; ?>
+    </script>
 </body>
 </html>

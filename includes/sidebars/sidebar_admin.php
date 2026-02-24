@@ -4,7 +4,8 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
 ?>
 
 <!-- Admin Branding Section -->
-<div class="mb-8 px-2 flex items-center gap-3">
+<div id="sidebarMenu" class="sidebar-inner">
+    <div class="mb-8 px-2 flex items-center gap-3">
     <div class="w-10 h-10 bg-health-600 rounded-xl flex items-center justify-center text-white shadow-soft">
         <i class="fas fa-user-shield"></i>
     </div>
