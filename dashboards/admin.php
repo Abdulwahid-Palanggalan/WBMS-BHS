@@ -104,383 +104,347 @@ $baseUrl = $GLOBALS['base_url'];
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Health Station System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --primary: #1a73e8;
-            --primary-light: #e8f0fe;
-            --secondary: #34a853;
-            --accent: #fbbc05;
-            --light: #f8f9fa;
-            --dark: #202124;
-        }
-        
-        /* Dashboard Header */
-        .dashboard-header {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary);
-        }
-        
-        /* Charts Section */
-        .charts-section {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-        
-        .chart-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary);
-        }
-        
-        /* Quick Access Cards */
-        .quick-access-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            height: 100%;
-        }
-        
-        .quick-access-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            color: inherit;
-            text-decoration: none;
-        }
-        
-        .quick-access-card i {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-        
-        /* Different colors for each quick access card */
-        .quick-access-card:nth-child(1) i { color: #9c27b0; } /* Prenatal */
-        .quick-access-card:nth-child(2) i { color: #00bcd4; } /* Postnatal */
-        .quick-access-card:nth-child(3) i { color: var(--secondary); } /* Mothers */
-        .quick-access-card:nth-child(4) i { color: var(--accent); } /* Babies */
-        .quick-access-card:nth-child(5) i { color: var(--primary); } /* Users */
-        .quick-access-card:nth-child(6) i { color: #ff6b6b; } /* Pregnant */
-        .quick-access-card:nth-child(7) i { color: #6c757d; } /* Activities */
-        .quick-access-card:nth-child(8) i { color: #17a2b8; } /* User Management */
-        
-        .quick-access-card .count {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-        
-        .quick-access-card .label {
-            color: #6c757d;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-        
-        /* Content Sections */
-        .content-section {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-        
-        .section-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .section-header h5 {
-            margin: 0;
-            font-weight: 600;
-        }
-        
-        .section-header i {
-            margin-right: 0.5rem;
-        }
-        
-        .section-body {
-            padding: 1.5rem;
-        }
-        
-        /* Activity Feed */
-        .activity-feed {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .activity-item {
-            display: flex;
-            align-items: start;
-            padding: 1rem 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary-light);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            flex-shrink: 0;
-        }
-        
-        .activity-content {
-            flex: 1;
-        }
-        
-        .activity-text {
-            margin: 0;
-            color: var(--dark);
-            font-size: 0.9rem;
-        }
-        
-        .activity-time {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-        
-        /* View All Button */
-        .btn-view-all {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.375rem 0.75rem;
-            font-size: 0.875rem;
-        }
-        
-        .btn-view-all:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            color: white;
-        }
-        
-        /* Responsive Overrides */
-        @media (max-width: 768px) {
-            .quick-access-card {
-                padding: 1rem;
-            }
-            
-            .quick-access-card i {
-                font-size: 2rem;
-            }
-            
-            .quick-access-card .count {
-                font-size: 1.5rem;
-            }
-        }
-
-    </style>
+    <?php include_once $rootPath . '/includes/tailwind_config.php'; ?>
 </head>
-<body>
+<body class="bg-slate-50 min-h-full">
     <?php include_once $rootPath . '/includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once $rootPath . '/includes/sidebar.php'; ?>
-            
-            <main class="main-content">
-                <!-- Dashboard Header -->
-                <div class="dashboard-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="h3 mb-1">Admin Dashboard</h1>
-                            <p class="text-muted mb-0">Welcome back! Here's an overview of your system.</p>
-                        </div>
-                        <div class="col-auto">
-                            <div class="btn-group">
-                            </div>
-                        </div>
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once $rootPath . '/includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8">
+            <!-- Dashboard Welcome Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-900 group flex items-center gap-2">
+                        <i class="fas fa-hand-holding-heart text-health-600"></i>
+                        Dashboard Overview
+                    </h1>
+                    <p class="text-slate-500 text-sm mt-1">Hello, Admin. Here is what's happening at Barangay Kibenes today.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-sm flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider"><?php echo date('F d, Y'); ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="card-health p-6 flex items-center gap-4 group hover:border-health-200 transition-all cursor-default">
+                    <div class="w-12 h-12 bg-health-50 text-health-600 rounded-xl flex items-center justify-center text-xl group-hover:bg-health-600 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest leading-tight">Total Users</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1"><?php echo $usersCount; ?></h3>
+                    </div>
+                </div>
+                
+                <div class="card-health p-6 flex items-center gap-4 group hover:border-health-200 transition-all cursor-default">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest leading-tight">Registered Mothers</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1"><?php echo $mothersCount; ?></h3>
                     </div>
                 </div>
 
-                <!-- Charts Section -->
-                <div class="charts-section">
-                    <h4 class="mb-4"><i class="fas fa-chart-bar me-2"></i>System Overview</h4>
-                    
-                    <div class="row">
-                        <!-- Records Overview Chart -->
-                        <div class="col-lg-8">
-                            <h6 class="mb-3">Records Distribution</h6>
-                            <div class="chart-container">
-                                <canvas id="recordsChart"></canvas>
-                            </div>
-                        </div>
-                        
-                        <!-- User Distribution Chart -->
-                        <div class="col-lg-4">
-                            <h6 class="mb-3">User Distribution</h6>
-                            <div class="chart-container">
-                                <canvas id="userDistributionChart"></canvas>
-                            </div>
-                        </div>
+                <div class="card-health p-6 flex items-center gap-4 group hover:border-health-200 transition-all cursor-default">
+                    <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-xl group-hover:bg-sky-600 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest leading-tight">Birth Records</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1"><?php echo $birthsCount; ?></h3>
                     </div>
                 </div>
 
-                <!-- Quick Access Grid -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header border-0 bg-transparent py-4">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-th-large me-2 text-primary"></i>Quick Actions</h5>
+                <div class="card-health p-6 flex items-center gap-4 group hover:border-health-200 transition-all cursor-default">
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl group-hover:bg-rose-600 group-hover:text-white transition-all duration-300">
+                        <i class="fas fa-user-clock"></i>
                     </div>
-                    <div class="card-body pt-0">
-                        <div class="row g-3">
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/prenatal_records.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-heartbeat text-primary fa-2x mb-2"></i>
-                                    <span class="fw-bold">Prenatal</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/postnatal_records.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-baby-carriage text-success fa-2x mb-2"></i>
-                                    <span class="fw-bold">Postnatal</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/mothers_list.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-female text-info fa-2x mb-2"></i>
-                                    <span class="fw-bold">Mothers</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/forms/birth_registration.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-baby text-warning fa-2x mb-2"></i>
-                                    <span class="fw-bold">Birth Reg</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/user_management.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-users-cog text-primary fa-2x mb-2"></i>
-                                    <span class="fw-bold">Users</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/pregnant_women.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-calendar-check text-danger fa-2x mb-2"></i>
-                                    <span class="fw-bold">Pregnancy</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/reports.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-chart-line text-secondary fa-2x mb-2"></i>
-                                    <span class="fw-bold">Reports</span>
-                                </a>
-                            </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6">
-                                <a href="<?php echo $baseUrl; ?>/activity_logs.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
-                                    <i class="fas fa-history text-dark fa-2x mb-2"></i>
-                                    <span class="fw-bold">Logs</span>
-                                </a>
-                            </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest leading-tight">Pending Users</p>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-1"><?php echo $pendingUsers; ?></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <!-- Records Distribution Chart -->
+                <div class="xl:col-span-2 card-health p-6 pb-2">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">Records Overview</h3>
+                            <p class="text-xs text-slate-400 mt-0.5 font-medium uppercase tracking-wider">Health Data Distribution</p>
                         </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 bg-health-600 rounded-full"></span>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Live Stats</span>
+                        </div>
+                    </div>
+                    <div class="h-[300px] w-full">
+                        <canvas id="recordsChart"></canvas>
                     </div>
                 </div>
 
+                <!-- User Type Distribution Pie Chart -->
+                <div class="card-health p-6">
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-slate-800">Personnel Roles</h3>
+                        <p class="text-xs text-slate-400 mt-0.5 font-medium uppercase tracking-wider">User Distribution by Role</p>
+                    </div>
+                    <div class="h-[250px] w-full flex items-center justify-center">
+                        <canvas id="userDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Recent Activities Section -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="content-section">
-                            <div class="section-header">
-                                <h5><i class="fas fa-history me-2"></i>Recent Activities</h5>
-                                <a href="<?php echo $baseUrl; ?>/activity_logs.php" class="btn btn-view-all">
-                                    <i class="fas fa-list me-1"></i>View All Activities
-                                </a>
+            <!-- Quick Actions Grid -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fas fa-bolt text-amber-400 text-sm"></i>
+                        Quick Access
+                    </h3>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+                    <?php
+                    $actions = [
+                        ['url' => 'prenatal_records.php', 'icon' => 'fa-heart-pulse', 'color' => 'bg-emerald-50 text-emerald-600', 'label' => 'Prenatal'],
+                        ['url' => 'postnatal_records.php', 'icon' => 'fa-child-reaching', 'color' => 'bg-sky-50 text-sky-600', 'label' => 'Postnatal'],
+                        ['url' => 'mothers_list.php', 'icon' => 'fa-female', 'color' => 'bg-indigo-50 text-indigo-600', 'label' => 'Mothers List'],
+                        ['url' => 'forms/birth_registration.php', 'icon' => 'fa-baby-carriage', 'color' => 'bg-amber-50 text-amber-600', 'label' => 'Birth Reg'],
+                        ['url' => 'user_management.php', 'icon' => 'fa-users-gear', 'color' => 'bg-purple-50 text-purple-600', 'label' => 'Users'],
+                        ['url' => 'pregnant_women.php', 'icon' => 'fa-person-pregnant', 'color' => 'bg-rose-50 text-rose-600', 'label' => 'Pregnant'],
+                        ['url' => 'reports.php', 'icon' => 'fa-chart-mixed', 'color' => 'bg-slate-100 text-slate-600', 'label' => 'Reports'],
+                        ['url' => 'activity_logs.php', 'icon' => 'fa-history', 'color' => 'bg-blue-50 text-blue-600', 'label' => 'Logs'],
+                    ];
+                    foreach ($actions as $action): ?>
+                        <a href="<?php echo $baseUrl; ?>/<?php echo $action['url']; ?>" class="group p-4 bg-white border border-slate-100 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-health-500 hover:shadow-xl hover:shadow-health-100/20 transition-all duration-300">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg <?php echo $action['color']; ?> group-hover:scale-110 transition-transform">
+                                <i class="fas <?php echo $action['icon']; ?>"></i>
                             </div>
-                            <div class="section-body">
-                                <?php
-                                // Get recent activities
-                                $activities = $pdo->query("
-                                    SELECT a.activity, a.timestamp, u.username, u.role
-                                    FROM system_activities a 
-                                    LEFT JOIN users u ON a.user_id = u.id 
-                                    ORDER BY a.timestamp DESC 
-                                    LIMIT 8
-                                ")->fetchAll(PDO::FETCH_ASSOC);
-                                ?>
-                                
-                                <div class="activity-feed">
-                                    <?php if (!empty($activities)): ?>
-                                        <?php foreach ($activities as $activity): ?>
-                                        <div class="activity-item">
-                                            <div class="activity-icon" style="background: <?php 
-                                                echo $activity['role'] == 'admin' ? '#e8f5e8' : 
-                                                     ($activity['role'] == 'midwife' ? '#e3f2fd' : '#fff3cd'); 
-                                            ?>; color: <?php 
-                                                echo $activity['role'] == 'admin' ? '#34a853' : 
-                                                     ($activity['role'] == 'midwife' ? '#1a73e8' : '#fbbc05'); 
-                                            ?>;">
-                                                <i class="fas <?php 
-                                                    echo $activity['role'] == 'admin' ? 'fa-user-shield' : 
-                                                         ($activity['role'] == 'midwife' ? 'fa-user-nurse' : 'fa-user'); 
-                                                ?>"></i>
-                                            </div>
-                                            <div class="activity-content">
-                                                <p class="activity-text"><?php echo $activity['activity']; ?></p>
-                                                <div class="activity-time">
-                                                    <i class="fas fa-clock me-1"></i>
-                                                    <?php echo !empty($activity['timestamp']) ? date('M j, Y g:i A', strtotime($activity['timestamp'])) : 'N/A'; ?>
-                                                    <?php if (isset($activity['username'])): ?>
-                                                        <span class="badge bg-secondary ms-2"><?php echo $activity['username']; ?> (<?php echo $activity['role']; ?>)</span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
+                            <span class="text-xs font-bold text-slate-600 group-hover:text-slate-900 whitespace-nowrap"><?php echo $action['label']; ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Recent Activities & Stats Table -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <!-- Activity Feed -->
+                <div class="card-health border-0">
+                    <div class="px-6 py-4 bg-slate-900 flex items-center justify-between">
+                        <h5 class="text-white font-bold flex items-center gap-2">
+                            <i class="fas fa-timeline text-health-500"></i>
+                            Recent Activities
+                        </h5>
+                        <a href="<?php echo $baseUrl; ?>/activity_logs.php" class="text-[10px] font-bold text-slate-300 uppercase tracking-widest hover:text-white transition-colors">
+                            View All History
+                        </a>
+                    </div>
+                    <div class="divide-y divide-slate-100 max-h-[500px] overflow-y-auto elegant-scrollbar">
+                        <?php
+                        $activities = $pdo->query("
+                            SELECT a.activity, a.timestamp, u.username, u.role
+                            FROM system_activities a 
+                            LEFT JOIN users u ON a.user_id = u.id 
+                            ORDER BY a.timestamp DESC 
+                            LIMIT 10
+                        ")->fetchAll(PDO::FETCH_ASSOC);
+
+                        if (!empty($activities)):
+                            foreach ($activities as $activity): ?>
+                                <div class="p-5 flex items-start gap-4 hover:bg-slate-50 transition-colors">
+                                    <div class="mt-1 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 <?php 
+                                        echo $activity['role'] == 'admin' ? 'bg-emerald-100 text-emerald-600' : 
+                                            ($activity['role'] == 'midwife' ? 'bg-sky-100 text-sky-600' : 'bg-amber-100 text-amber-600'); 
+                                    ?>">
+                                        <i class="fas <?php 
+                                            echo $activity['role'] == 'admin' ? 'fa-user-shield' : 
+                                                ($activity['role'] == 'midwife' ? 'fa-user-nurse' : 'fa-user'); 
+                                        ?> text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-slate-800 font-medium"><?php echo $activity['activity']; ?></p>
+                                        <div class="flex items-center gap-3 mt-1.5">
+                                            <span class="text-[10px] font-bold text-slate-400 flex items-center gap-1">
+                                                <i class="far fa-clock"></i>
+                                                <?php echo !empty($activity['timestamp']) ? date('M j, g:i A', strtotime($activity['timestamp'])) : 'N/A'; ?>
+                                            </span>
+                                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider <?php 
+                                                echo $activity['role'] == 'admin' ? 'bg-emerald-50 text-emerald-700' : 
+                                                    ($activity['role'] == 'midwife' ? 'bg-sky-50 text-sky-700' : 'bg-amber-50 text-amber-700'); 
+                                            ?>">
+                                                By <?php echo $activity['username'] ?? 'System'; ?>
+                                            </span>
                                         </div>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <div class="text-center text-muted py-4">
-                                            <i class="fas fa-info-circle fa-2x mb-3 d-block"></i>
-                                            No recent activities found
-                                        </div>
-                                    <?php endif; ?>
+                                    </div>
                                 </div>
+                            <?php endforeach;
+                        else: ?>
+                            <div class="p-10 text-center space-y-3 text-slate-400">
+                                <i class="fas fa-inbox text-3xl opacity-20"></i>
+                                <p class="text-xs font-medium uppercase tracking-widest">No activities recorded</p>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
-            </main>
-        </div>
+
+                <!-- Pregnant Women Summary -->
+                <div class="card-health">
+                    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                        <h5 class="text-slate-800 font-bold flex items-center gap-2">
+                            <i class="fas fa-person-pregnant text-rose-500"></i>
+                            Pregnant Women (Active)
+                        </h5>
+                        <span class="px-2 py-1 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-md uppercase tracking-wider">
+                            <?php echo $pregnantWomenCount; ?> Total
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mother Name</th>
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Last Visit</th>
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <?php if (!empty($pregnantWomen)): ?>
+                                    <?php foreach ($pregnantWomen as $woman): ?>
+                                        <tr class="hover:bg-slate-50 transition-colors">
+                                            <td class="px-6 py-4">
+                                                <div class="text-sm font-semibold text-slate-800"><?php echo htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']); ?></div>
+                                                <div class="text-[10px] text-slate-400"><?php echo htmlspecialchars($woman['phone'] ?? 'No contact'); ?></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-xs text-slate-600">
+                                                <?php echo date('M d, Y', strtotime($woman['last_prenatal_visit'])); ?>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <?php if ($woman['days_since_visit'] > 30): ?>
+                                                    <span class="px-2 py-0.5 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-full uppercase tracking-wider">Overdue</span>
+                                                <?php else: ?>
+                                                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-full uppercase tracking-wider">Regular</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-10 text-center text-slate-400 italic text-sm">
+                                            No active pregnancy records found.
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-4 border-t border-slate-100 text-center">
+                        <a href="<?php echo $baseUrl; ?>/pregnant_women.php" class="text-xs font-bold text-health-600 hover:text-health-700 uppercase tracking-widest">View Full Registry</a>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <!-- JavaScript & Chart Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Records Distribution Chart
+            const recordsCtx = document.getElementById('recordsChart').getContext('2d');
+            new Chart(recordsCtx, {
+                type: 'bar',
+                data: {
+                    labels: [<?php echo implode(', ', array_map(function($r) { return "'" . $r['type'] . "'"; }, $recordsByType)); ?>],
+                    datasets: [{
+                        label: 'Internal Records',
+                        data: [<?php echo implode(', ', array_column($recordsByType, 'count')); ?>],
+                        backgroundColor: '#0D9488', // health-600
+                        borderRadius: 8,
+                        hoverBackgroundColor: '#0f766e',
+                        barThickness: 32
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0f172a',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            cornerRadius: 8,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            border: { display: false }
+                        },
+                        x: {
+                            grid: { display: false },
+                            border: { display: false },
+                            ticks: { 
+                                font: { weight: '600' },
+                                color: '#64748b'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Personel Distribution Chart
+            const userCtx = document.getElementById('userDistributionChart').getContext('2d');
+            new Chart(userCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [<?php echo implode(', ', array_map(function($u) { return "'" . ucfirst($u['role']) . "'"; }, $userTypes)); ?>],
+                    datasets: [{
+                        data: [<?php echo implode(', ', array_column($userTypes, 'count')); ?>],
+                        backgroundColor: ['#0D9488', '#0284C7', '#7C3AED', '#F59E0B', '#EF4444'],
+                        borderWidth: 0,
+                        hoverOffset: 12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11, weight: '600' }, color: '#64748b' } }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .shadow-soft { box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.1), 0 4px 6px -2px rgba(13, 148, 136, 0.05); }
+        .elegant-scrollbar::-webkit-scrollbar { width: 5px; }
+        .elegant-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .elegant-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .elegant-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+    </style>
+</body>
+</html>
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>

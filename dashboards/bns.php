@@ -419,607 +419,417 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BNS Dashboard - Health Station System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>BNS Dashboard - Nutrition Monitoring</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .dashboard-header {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary);
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.25rem;
-            border-left: 4px solid;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            text-align: center;
-            height: 100%;
-            transition: transform 0.3s ease;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-card.pregnant { border-left-color: #3498db; }
-        .stat-card.infants { border-left-color: #9b59b6; }
-        .stat-card.underweight-mothers { border-left-color: #f39c12; }
-        .stat-card.underweight-infants { border-left-color: #e74c3c; }
-        
-        .stat-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.15rem;
-            margin: 0 auto 0.75rem auto;
-        }
-        
-        .stat-card.pregnant .stat-icon { background: #e3f2fd; color: #3498db; }
-        .stat-card.infants .stat-icon { background: #f3e5f5; color: #9b59b6; }
-        .stat-card.underweight-mothers .stat-icon { background: #fff3cd; color: #f39c12; }
-        .stat-card.underweight-infants .stat-icon { background: #fdedec; color: #e74c3c; }
-        
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-            color: #2c3e50;
-        }
-        
-        .stat-label {
-            color: #6c757d;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        
-        .section-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-        }
-        
-        .section-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .section-header h5 {
-            margin: 0;
-            font-weight: 600;
-        }
-        
-        .section-body {
-            padding: 1.5rem;
-        }
-        
-        .search-box {
-            width: 100%;
-            max-width: 300px;
-        }
-        
-        @media (max-width: 576px) {
-            .search-box {
-                max-width: 100%;
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .stat-card-bns {
+                @apply bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300;
             }
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
+            .table-modern-bns th {
+                @apply px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50;
             }
-        }
-        
-        .search-box .input-group {
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .search-box .form-control {
-            border: 1px solid #e0e0e0;
-            border-right: none;
-        }
-        
-        .search-box .btn {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-left: none;
-            color: #6c757d;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            font-weight: 600;
-            color: #2c3e50;
-            white-space: nowrap;
-        }
-        
-        .weight-increase {
-            color: #27ae60;
-            font-weight: 600;
-        }
-        
-        .weight-decrease {
-            color: #e74c3c;
-            font-weight: 600;
-        }
-        
-        .weight-stable {
-            color: #7f8c8d;
-            font-weight: 600;
-        }
-        
-        /* Tab improvements for mobile */
-        .nav-tabs {
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .nav-tabs .nav-item {
-            white-space: nowrap;
-        }
-        
-        .nav-tabs .nav-link {
-            padding: 10px 15px;
-            font-size: 0.9rem;
-        }
-        
-        .nav-tabs .nav-link.active {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            border: none;
-            font-weight: 600;
-        }
-        
-        .nav-tabs .nav-link {
-            color: #495057;
-            font-weight: 500;
-        }
-        
-        .trimester-1 { background-color: #e8f5e8 !important; }
-        .trimester-2 { background-color: #fff3cd !important; }
-        .trimester-3 { background-color: #f8d7da !important; }
-
-        @media (max-width: 768px) {
-            .stat-number {
-                font-size: 1.25rem;
+            .table-modern-bns td {
+                @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-50;
             }
-            .stat-label {
-                font-size: 0.75rem;
+            .tab-btn-bns {
+                @apply px-8 py-3 text-[10px] font-black uppercase tracking-widest border-b-2 transition-all duration-300;
             }
+            .tab-btn-active {
+                @apply border-indigo-600 text-indigo-700 bg-indigo-50/50;
+            }
+            .tab-btn-inactive {
+                @apply border-transparent text-slate-400 hover:text-slate-600 hover:bg-slate-50;
+            }
+            .trimester-1 { @apply bg-emerald-50/30; }
+            .trimester-2 { @apply bg-amber-50/30; }
+            .trimester-3 { @apply bg-rose-50/30; }
         }
-
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-full">
     <?php include_once __DIR__ . '/../includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
-            
-            <main class="main-content">
-                <!-- Dashboard Header -->
-                <div class="dashboard-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="h3 mb-2">Nutrition Scholar Dashboard</h1>
-                            <p class="mb-0 opacity-75">Welcome, <?php echo $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?> • Focused on Weight Monitoring and Nutrition Tracking</p>
-                        </div>
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8">
+            <!-- Dashboard Header -->
+            <header class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
+                        <h1 class="text-2xl font-black text-slate-900 tracking-tight">BNS Dashboard</h1>
                     </div>
-                </div>
-
-                <!-- Nutrition Statistics -->
-                <div class="row mb-4">
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-card pregnant">
-                            <div class="stat-icon">
-                                <i class="fas fa-female"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $pregnantWomen; ?></div>
-                            <div class="stat-label">Pregnant Women</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-card infants">
-                            <div class="stat-icon">
-                                <i class="fas fa-baby"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $infants; ?></div>
-                            <div class="stat-label">Infants (0-6 months)</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-card underweight-mothers">
-                            <div class="stat-icon">
-                                <i class="fas fa-weight"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $underweightMothers; ?></div>
-                            <div class="stat-label">Underweight Mothers</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6 mb-3">
-                        <div class="stat-card underweight-infants">
-                            <div class="stat-icon">
-                                <i class="fas fa-baby-carriage"></i>
-                            </div>
-                            <div class="stat-number"><?php echo $underweightInfants; ?></div>
-                            <div class="stat-label">Underweight Infants</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation Tabs -->
-                <ul class="nav nav-tabs mb-4" id="nutritionTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pregnant-tab" data-bs-toggle="tab" data-bs-target="#pregnant" type="button" role="tab">
-                            <i class="fas fa-female me-2"></i>Pregnant Women (<?php echo count($pregnantWomenList); ?>)
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="mothers-tab" data-bs-toggle="tab" data-bs-target="#mothers" type="button" role="tab">
-                            <i class="fas fa-weight me-2"></i>Mothers Weight (<?php echo count($mothersWeight); ?>)
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="infants-tab" data-bs-toggle="tab" data-bs-target="#infants" type="button" role="tab">
-                            <i class="fas fa-baby me-2"></i>Infants Weight (<?php echo count($infantsWeight); ?>)
-                        </button>
-                    </li>
-                </ul>
-
-                <!-- Tab Content -->
-                <div class="tab-content" id="nutritionTabsContent">
-                    
-                    <!-- Pregnant Women Tab -->
-                    <div class="tab-pane fade show active" id="pregnant" role="tabpanel">
-                        <div class="section-card">
-                            <div class="section-header">
-                                <h5><i class="fas fa-female me-2"></i>Pregnant Women List</h5>
-                                <form method="GET" class="search-box">
-                                    <div class="input-group">
-                                        <input type="text" name="pregnant_search" class="form-control" placeholder="Search pregnant women..." value="<?php echo htmlspecialchars($pregnantSearch); ?>">
-                                        <button class="btn" type="submit">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="section-body">
-                                <?php if (!empty($pregnantWomenList)): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Age</th>
-                                                    <th>Contact</th>
-                                                    <th>Address</th>
-                                                    <th>Gestational Age</th>
-                                                    <th>Current Weight</th>
-                                                    <th>Blood Pressure</th>
-                                                    <th>Total Visits</th>
-                                                    <th>Last Visit</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($pregnantWomenList as $woman): 
-                                                    $gestationalAge = $woman['gestational_age'];
-                                                    $trimester = $gestationalAge <= 12 ? '1st' : ($gestationalAge <= 28 ? '2nd' : '3rd');
-                                                    $trimesterClass = $gestationalAge <= 12 ? 'trimester-1' : ($gestationalAge <= 28 ? 'trimester-2' : 'trimester-3');
-                                                    $isUnderweight = $woman['current_weight'] < 50;
-                                                    $daysSinceVisit = date_diff(date_create($woman['last_visit']), date_create('today'))->days;
-                                                ?>
-                                                <tr class="<?php echo $trimesterClass; ?>">
-                                                    <td>
-                                                        <strong><?php echo htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']); ?></strong>
-                                                    </td>
-                                                    <td><?php echo $woman['age']; ?> years</td>
-                                                    <td><?php echo htmlspecialchars($woman['phone']); ?></td>
-                                                    <td><?php echo htmlspecialchars($woman['address']); ?></td>
-                                                    <td>
-                                                        <span class="badge badge-info">
-                                                            <?php echo $gestationalAge; ?> weeks
-                                                        </span>
-                                                        <br>
-                                                        <small class="text-muted"><?php echo $trimester; ?> Trimester</small>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $woman['current_weight']; ?> kg
-                                                        <?php if ($isUnderweight): ?>
-                                                            <span class="badge badge-warning ms-1">Underweight</span>
-                                                        <?php else: ?>
-                                                            <span class="badge badge-success ms-1">Normal</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo $woman['blood_pressure'] ?? 'N/A'; ?>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-primary"><?php echo $woman['total_visits']; ?> visits</span>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo date('M j, Y', strtotime($woman['last_visit'])); ?>
-                                                        <br>
-                                                        <small class="text-muted">
-                                                            <?php echo $daysSinceVisit; ?> days ago
-                                                        </small>
-                                                    </td>
-                                                    <td>
-                                                        <?php if ($daysSinceVisit > 30): ?>
-                                                            <span class="badge badge-danger">Overdue</span>
-                                                        <?php elseif ($daysSinceVisit > 14): ?>
-                                                            <span class="badge badge-warning">Due Soon</span>
-                                                        <?php else: ?>
-                                                            <span class="badge badge-success">Active</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="empty-state">
-                                        <i class="fas fa-female"></i>
-                                        <h5>No Pregnant Women Found</h5>
-                                        <p class="text-muted">
-                                            <?php echo !empty($pregnantSearch) ? 
-                                                'No pregnant women found matching your search.' : 
-                                                'No pregnant women with recent visits found.'; ?>
-                                        </p>
-                                        <?php if (!empty($pregnantSearch)): ?>
-                                            <a href="?pregnant_search=" class="btn btn-primary mt-2">Clear Search</a>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mothers Weight Tab -->
-                    <div class="tab-pane fade" id="mothers" role="tabpanel">
-                        <div class="section-card">
-                            <div class="section-header">
-                                <h5><i class="fas fa-weight me-2"></i>Mothers Weight Monitoring</h5>
-                                <form method="GET" class="search-box">
-                                    <div class="input-group">
-                                        <input type="text" name="mothers_search" class="form-control" placeholder="Search mothers..." value="<?php echo htmlspecialchars($mothersSearch); ?>">
-                                        <button class="btn" type="submit">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="section-body">
-                                <?php if (!empty($mothersWeight)): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Age</th>
-                                                    <th>Current Weight</th>
-                                                    <th>Weight Trend</th>
-                                                    <th>Status</th>
-                                                    <th>Last Checkup</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($mothersWeight as $mother): 
-                                                    $trend = $mother['current_weight'] - $mother['previous_weight'];
-                                                    $trendClass = $trend > 0 ? 'weight-increase' : ($trend < 0 ? 'weight-decrease' : 'weight-stable');
-                                                    $trendIcon = $trend > 0 ? 'fa-arrow-up' : ($trend < 0 ? 'fa-arrow-down' : 'fa-minus');
-                                                    $isUnderweight = $mother['current_weight'] < 50;
-                                                ?>
-                                                <tr>
-                                                    <td>
-                                                        <strong><?php echo htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?></strong>
-                                                    </td>
-                                                    <td><?php echo $mother['age']; ?> years</td>
-                                                    <td>
-                                                        <?php echo $mother['current_weight']; ?> kg
-                                                        <?php if ($isUnderweight): ?>
-                                                            <span class="badge badge-underweight ms-1">Underweight</span>
-                                                        <?php else: ?>
-                                                            <span class="badge badge-normal ms-1">Normal</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td class="<?php echo $trendClass; ?>">
-                                                        <i class="fas <?php echo $trendIcon; ?> me-1"></i>
-                                                        <?php echo abs($trend); ?> kg
-                                                    </td>
-                                                    <td>
-                                                        <?php if ($trend > 0): ?>
-                                                            <span class="badge badge-success">Improving</span>
-                                                        <?php elseif ($trend < 0): ?>
-                                                            <span class="badge badge-danger">Declining</span>
-                                                        <?php else: ?>
-                                                            <span class="badge badge-warning">Stable</span>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo date('M j, Y', strtotime($mother['last_checkup'])); ?>
-                                                        <br>
-                                                        <small class="text-muted">
-                                                            <?php echo date_diff(date_create($mother['last_checkup']), date_create('today'))->days; ?> days ago
-                                                        </small>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="empty-state">
-                                        <i class="fas fa-weight"></i>
-                                        <h5>No Weight Data Found</h5>
-                                        <p class="text-muted">
-                                            <?php echo !empty($mothersSearch) ? 
-                                                'No mothers found matching your search.' : 
-                                                'No mothers with sufficient weight records found.'; ?>
-                                        </p>
-                                        <?php if (!empty($mothersSearch)): ?>
-                                            <a href="?mothers_search=" class="btn btn-primary mt-2">Clear Search</a>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-
-                   <!-- Infants Weight Tab -->
-<div class="tab-pane fade" id="infants" role="tabpanel">
-    <div class="section-card">
-        <div class="section-header">
-            <h5><i class="fas fa-baby me-2"></i>Infants Weight Monitoring</h5>
-            <form method="GET" class="search-box">
-                <div class="input-group">
-                    <input type="text" name="infants_search" class="form-control" placeholder="Search infants..." value="<?php echo htmlspecialchars($infantsSearch); ?>">
-                    <button class="btn" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div class="section-body">
-            <?php if (!empty($infantsWeight)): ?>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Baby's Name</th>
-                                <th>Age</th>
-                                <th>Mother's Name</th>
-                                <th>Birth Weight</th>
-                                <th>Current Weight</th>
-                                <th>Weight Gain</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($infantsWeight as $infant): 
-                                // Use isset() to avoid undefined index errors
-                                $currentWeight = isset($infant['current_weight']) ? $infant['current_weight'] : 0;
-                                $birthWeight = isset($infant['birth_weight']) ? $infant['birth_weight'] : 0;
-                                $weightGain = $currentWeight - $birthWeight;
-                                $isUnderweight = $currentWeight < 2.5;
-                                $weightGainClass = $weightGain > 0 ? 'weight-increase' : ($weightGain < 0 ? 'weight-decrease' : 'weight-stable');
-                                
-                                // FIXED: Use age_in_months instead of age
-                                $ageInMonths = isset($infant['age_in_months']) ? $infant['age_in_months'] : 0;
-                                $expectedMinWeight = $birthWeight + ($ageInMonths * 0.7);
-                                $isBelowExpected = $currentWeight < $expectedMinWeight;
-                            ?>
-                            <tr>
-                                <td>
-                                    <strong><?php echo htmlspecialchars((isset($infant['first_name']) ? $infant['first_name'] : '') . ' ' . (isset($infant['last_name']) ? $infant['last_name'] : '')); ?></strong>
-                                </td>
-                                <td>
-                                    <!-- FIXED LINE 947: Use age_in_months -->
-                                    <?php echo $ageInMonths; ?> months
-                                </td>
-                                <td><?php echo htmlspecialchars((isset($infant['mother_first_name']) ? $infant['mother_first_name'] : '') . ' ' . (isset($infant['mother_last_name']) ? $infant['mother_last_name'] : '')); ?></td>
-                                <td><?php echo number_format($birthWeight, 1); ?> kg</td>
-                                <td>
-                                    <?php echo number_format($currentWeight, 1); ?> kg
-                                    <?php if ($isUnderweight): ?>
-                                        <span class="badge badge-underweight ms-1">Underweight</span>
-                                    <?php elseif ($isBelowExpected): ?>
-                                        <span class="badge badge-warning ms-1">Slow Gain</span>
-                                    <?php else: ?>
-                                        <span class="badge badge-normal ms-1">Normal</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="<?php echo $weightGainClass; ?>">
-                                    <i class="fas <?php echo $weightGain > 0 ? 'fa-arrow-up' : ($weightGain < 0 ? 'fa-arrow-down' : 'fa-minus'); ?> me-1"></i>
-                                    <?php echo number_format($weightGain, 1); ?> kg
-                                </td>
-                                <td>
-                                    <?php if ($weightGain > 0.5): ?>
-                                        <span class="badge badge-success">Good Gain</span>
-                                    <?php elseif ($weightGain > 0): ?>
-                                        <span class="badge badge-warning">Slow Gain</span>
-                                    <?php else: ?>
-                                        <span class="badge badge-danger">No Gain</span>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="empty-state">
-                    <i class="fas fa-baby"></i>
-                    <h5>No Weight Data Found</h5>
-                    <p class="text-muted">
-                        <?php echo !empty($infantsSearch) ? 
-                            'No infants found matching your search.' : 
-                            'No infants found in the system.'; ?>
+                    <p class="text-slate-500 text-sm font-medium">
+                        Welcome back, <span class="text-slate-900 font-bold"><?= $_SESSION['first_name'] . ' ' . $_SESSION['last_name']; ?></span> 
+                        <span class="mx-2 text-slate-300">•</span> 
+                        <?= date('l, F j, Y'); ?>
                     </p>
-                    <?php if (!empty($infantsSearch)): ?>
-                        <a href="?infants_search=" class="btn btn-primary mt-2">Clear Search</a>
+                    <div class="inline-flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100 mt-2">
+                        <i class="fas fa-apple-whole text-indigo-600 text-[10px]"></i>
+                        <span class="text-[10px] font-black text-indigo-700 uppercase tracking-tighter">Nutrition scholar mode active</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Nutrition Index</p>
+                        <p class="text-sm font-black text-emerald-600">STABLE</p>
+                    </div>
+                    <div class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-slate-200">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Statistics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Pregnant Women -->
+                <div class="stat-card-bns border-l-4 border-indigo-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Monitoring</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-slate-900"><?= $pregnantWomen; ?></h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Pregnant Women</p>
+                </div>
+
+                <!-- Infants -->
+                <div class="stat-card-bns border-l-4 border-purple-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic">Active</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-slate-900"><?= $infants; ?></h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Infants (0-12m)</p>
+                </div>
+
+                <!-- Underweight Mothers -->
+                <div class="stat-card-bns border-l-4 border-amber-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-weight-scale"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-amber-600 underline underline-offset-4 decoration-2">Priority</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-slate-900"><?= $underweightMothers; ?></h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Underweight Mothers</p>
+                </div>
+
+                <!-- Underweight Infants -->
+                <div class="stat-card-bns border-l-4 border-rose-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-baby-carriage"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-rose-600 underline underline-offset-4 decoration-2">Critical</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-slate-900"><?= $underweightInfants; ?></h3>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Underweight Infants</p>
+                </div>
+            </div>
+
+            <!-- Tabbed Monitoring Interface -->
+            <section class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                <div class="px-8 py-6 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex bg-slate-50 p-1 rounded-2xl border border-slate-100 self-start md:self-center">
+                        <button onclick="switchTab('pregnant')" id="btn-pregnant" class="tab-btn-bns tab-btn-active rounded-xl">
+                            <i class="fas fa-female me-2"></i>Cases (<?= count($pregnantWomenList); ?>)
+                        </button>
+                        <button onclick="switchTab('mothers')" id="btn-mothers" class="tab-btn-bns tab-btn-inactive rounded-xl">
+                            <i class="fas fa-weight me-2"></i>Mothers (<?= count($mothersWeight); ?>)
+                        </button>
+                        <button onclick="switchTab('infants')" id="btn-infants" class="tab-btn-bns tab-btn-inactive rounded-xl">
+                            <i class="fas fa-baby me-2"></i>Infants (<?= count($infantsWeight); ?>)
+                        </button>
+                    </div>
+
+                    <!-- Contextual Search Forms (only 1 shown at a time) -->
+                    <div id="search-container">
+                        <form id="search-pregnant" method="GET" class="flex gap-2">
+                            <input type="text" name="pregnant_search" placeholder="Search pregnant registry..." value="<?= htmlspecialchars($pregnantSearch); ?>" class="bg-slate-50 border-none text-xs font-bold rounded-xl px-4 py-3 w-64 focus:ring-2 focus:ring-indigo-500 transition-all">
+                            <button class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-colors">
+                                <i class="fas fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                        <form id="search-mothers" method="GET" class="hidden flex gap-2">
+                            <input type="text" name="mothers_search" placeholder="Search mother weights..." value="<?= htmlspecialchars($mothersSearch); ?>" class="bg-slate-50 border-none text-xs font-bold rounded-xl px-4 py-3 w-64 focus:ring-2 focus:ring-indigo-500 transition-all">
+                            <button class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-colors">
+                                <i class="fas fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                        <form id="search-infants" method="GET" class="hidden flex gap-2">
+                            <input type="text" name="infants_search" placeholder="Search infant weights..." value="<?= htmlspecialchars($infantsSearch); ?>" class="bg-slate-50 border-none text-xs font-bold rounded-xl px-4 py-3 w-64 focus:ring-2 focus:ring-indigo-500 transition-all">
+                            <button class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-colors">
+                                <i class="fas fa-magnifying-glass"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Pregnant Cases Tab -->
+                <div id="tab-pregnant-content" class="overflow-x-auto p-4 tab-content-area">
+                    <?php if (!empty($pregnantWomenList)): ?>
+                        <table class="w-full table-modern-bns border-collapse">
+                            <thead>
+                                <tr>
+                                    <th>Patient Profile</th>
+                                    <th>Due Status</th>
+                                    <th>Metrics</th>
+                                    <th>Registry Details</th>
+                                    <th>Health Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pregnantWomenList as $woman): 
+                                    $gestationalAge = $woman['gestational_age'];
+                                    $trimester = $gestationalAge <= 12 ? '1st' : ($gestationalAge <= 28 ? '2nd' : '3rd');
+                                    $rowClass = $gestationalAge <= 12 ? 'trimester-1' : ($gestationalAge <= 28 ? 'trimester-2' : 'trimester-3');
+                                    $isUnderweight = $woman['current_weight'] < 50;
+                                    $daysSinceVisit = date_diff(date_create($woman['last_visit']), date_create('today'))->days;
+                                ?>
+                                <tr class="<?= $rowClass; ?> hover:bg-white/50 transition-colors group">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                                                <?= strtoupper(substr($woman['first_name'], 0, 1)); ?>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-slate-800 tracking-tight transition-colors group-hover:text-indigo-700"><?= htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']); ?></span>
+                                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic"><?= $woman['age']; ?>y • <?= htmlspecialchars($woman['phone']); ?></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-black <?= $daysSinceVisit > 30 ? 'text-rose-600 animate-pulse' : 'text-slate-400' ?> uppercase tracking-tighter italic">Last Visit: <?= date('M d', strtotime($woman['last_visit'])); ?></span>
+                                            <span class="font-bold text-slate-700 text-xs"><?= $daysSinceVisit; ?> Days Ago</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-xs space-y-1">
+                                            <span class="flex items-center gap-2">
+                                                <i class="fas fa-weight-scale text-slate-300"></i>
+                                                <strong class="<?= $isUnderweight ? 'text-rose-600' : 'text-emerald-600' ?>"><?= $woman['current_weight']; ?> KG</strong>
+                                            </span>
+                                            <span class="flex items-center gap-2">
+                                                <i class="fas fa-gauge-high text-slate-300"></i>
+                                                <strong class="text-slate-700"><?= $woman['blood_pressure']; ?> BP</strong>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col gap-1">
+                                            <span class="bg-indigo-50 text-indigo-700 text-[9px] font-black px-2 py-1 rounded border border-indigo-100 uppercase tracking-widest w-fit">Week <?= $gestationalAge; ?></span>
+                                            <span class="bg-slate-100 text-slate-600 text-[9px] font-black px-2 py-1 rounded border border-slate-200 uppercase tracking-widest w-fit"><?= $trimester; ?> TRIMESTER</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if ($daysSinceVisit > 30): ?>
+                                            <span class="bg-rose-50 text-rose-600 text-[9px] font-black px-3 py-1.5 rounded-full border border-rose-100 uppercase tracking-widest italic shadow-sm">Overdue Monitoring</span>
+                                        <?php else: ?>
+                                            <span class="bg-emerald-50 text-emerald-600 text-[9px] font-black px-3 py-1.5 rounded-full border border-emerald-100 uppercase tracking-widest italic shadow-sm">Compliant</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center py-24 opacity-30">
+                            <i class="fas fa-female text-7xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest italic">No pregnant records found in registry</p>
+                        </div>
                     <?php endif; ?>
                 </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-                    </div>
+
+                <!-- Mothers Weight monitoring Tab -->
+                <div id="tab-mothers-content" class="overflow-x-auto p-4 tab-content-area hidden">
+                    <?php if (!empty($mothersWeight)): ?>
+                        <table class="w-full table-modern-bns border-collapse">
+                            <thead>
+                                <tr>
+                                    <th>Mother Name</th>
+                                    <th>Body Metrics</th>
+                                    <th>Trend Analytics</th>
+                                    <th>Nutritional Status</th>
+                                    <th>Checkup Vigilance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($mothersWeight as $mother): 
+                                    $trend = $mother['current_weight'] - $mother['previous_weight'];
+                                    $isUnderweight = $mother['current_weight'] < 50;
+                                ?>
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center font-black text-sm shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                                                <?= strtoupper(substr($mother['first_name'], 0, 1)); ?>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-slate-800 tracking-tight group-hover:text-indigo-700"><?= htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?></span>
+                                                <span class="text-[10px] font-bold text-slate-400 italic"><?= $mother['age']; ?>y • <?= $mother['record_type']; ?> Case</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-xs">
+                                            <span class="font-black text-slate-800"><?= $mother['current_weight']; ?> KG</span>
+                                            <span class="text-[10px] text-slate-400 italic">Prev: <?= $mother['previous_weight']; ?> KG</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center <?= $trend >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' ?>">
+                                                <i class="fas <?= $trend >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' ?> text-xs"></i>
+                                            </div>
+                                            <span class="text-xs font-black <?= $trend >= 0 ? 'text-emerald-600' : 'text-rose-600' ?>"><?= abs(number_format($trend, 1)); ?> KG Diff</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if ($isUnderweight): ?>
+                                            <span class="bg-amber-50 text-amber-700 text-[9px] font-black px-3 py-1.5 rounded-full border border-amber-100 uppercase tracking-widest italic">Underweight Alert</span>
+                                        <?php else: ?>
+                                            <span class="bg-emerald-50 text-emerald-600 text-[9px] font-black px-3 py-1.5 rounded-full border border-emerald-100 uppercase tracking-widest italic">Normal Parameters</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col">
+                                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Updated Registry</span>
+                                            <span class="text-xs font-bold text-slate-700"><?= date('M d, Y', strtotime($mother['last_checkup'])); ?></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center py-24 opacity-30">
+                            <i class="fas fa-weight text-7xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest italic">No mother weight data detected</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
-            </main>
-        </div>
+
+                <!-- Infants Weight Tab -->
+                <div id="tab-infants-content" class="overflow-x-auto p-4 tab-content-area hidden">
+                    <?php if (!empty($infantsWeight)): ?>
+                        <table class="w-full table-modern-bns border-collapse">
+                            <thead>
+                                <tr>
+                                    <th>Child Profile</th>
+                                    <th>Maternal Link</th>
+                                    <th>Vital Analytics</th>
+                                    <th>Weight Gain Path</th>
+                                    <th>Nutrition Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($infantsWeight as $infant): 
+                                    $currentWeight = isset($infant['current_weight']) ? $infant['current_weight'] : 0;
+                                    $birthWeight = isset($infant['birth_weight']) ? $infant['birth_weight'] : 0;
+                                    $weightGain = $currentWeight - $birthWeight;
+                                    $ageInMonths = isset($infant['age_in_months']) ? $infant['age_in_months'] : 0;
+                                    $expectedMinWeight = $birthWeight + ($ageInMonths * 0.7);
+                                    $isBelowExpected = $currentWeight < $expectedMinWeight;
+                                    $isUnderweight = $currentWeight < 2.5;
+                                ?>
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td>
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center font-black text-xs shadow-sm group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+                                                <i class="fas fa-baby"></i>
+                                            </div>
+                                            <div class="flex flex-col">
+                                                <span class="font-bold text-slate-800 tracking-tight group-hover:text-purple-700"><?= htmlspecialchars($infant['first_name'] . ' ' . $infant['last_name']); ?></span>
+                                                <span class="text-[10px] font-black text-indigo-500 uppercase tracking-widest italic"><?= $ageInMonths; ?> Months Old</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-xs font-bold text-slate-600 italic">M: <?= htmlspecialchars($infant['mother_first_name'] . ' ' . $infant['mother_last_name']); ?></span>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col text-xs">
+                                            <span class="font-black text-slate-800"><?= number_format($currentWeight, 2); ?> KG Now</span>
+                                            <span class="text-[10px] text-slate-400 italic">Born: <?= number_format($birthWeight, 2); ?> KG</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full flex items-center justify-center <?= $weightGain >= 0.5 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' ?>">
+                                                <i class="fas <?= $weightGain >= 0.5 ? 'fa-arrow-trend-up' : 'fa-triangle-exclamation' ?> text-xs"></i>
+                                            </div>
+                                            <span class="text-xs font-black <?= $weightGain >= 0.5 ? 'text-emerald-600' : 'text-rose-600' ?>">+<?= number_format($weightGain, 1); ?> KG GAIN</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if ($isUnderweight): ?>
+                                            <span class="bg-rose-50 text-rose-600 text-[9px] font-black px-3 py-1.5 rounded-full border border-rose-100 uppercase tracking-widest italic shadow-sm">Critical Underweight</span>
+                                        <?php elseif ($isBelowExpected): ?>
+                                            <span class="bg-amber-50 text-amber-700 text-[9px] font-black px-3 py-1.5 rounded-full border border-amber-100 uppercase tracking-widest italic shadow-sm">Slow Growth Progress</span>
+                                        <?php else: ?>
+                                            <span class="bg-emerald-50 text-emerald-600 text-[9px] font-black px-3 py-1.5 rounded-full border border-emerald-100 uppercase tracking-widest italic shadow-sm">Optimal Nutrition</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div class="flex flex-col items-center justify-center py-24 opacity-30">
+                            <i class="fas fa-baby-carriage text-7xl mb-4"></i>
+                            <p class="font-black text-sm uppercase tracking-widest italic">No pediatric nutritional data</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </main>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Layout & Interactivity Script -->
     <script>
-        // Auto-refresh every 10 minutes to keep weight data updated
-        setTimeout(function() {
+        function switchTab(tab) {
+            // Content visibility
+            document.querySelectorAll('.tab-content-area').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tab + '-content').classList.remove('hidden');
+
+            // Tab button styles
+            document.querySelectorAll('.tab-btn-bns').forEach(el => {
+                el.classList.remove('tab-btn-active');
+                el.classList.add('tab-btn-inactive');
+            });
+            document.getElementById('btn-' + tab).classList.remove('tab-btn-inactive');
+            document.getElementById('btn-' + tab).classList.add('tab-btn-active');
+
+            // Search form visibility
+            document.querySelectorAll('#search-container form').forEach(el => el.classList.add('hidden'));
+            document.getElementById('search-' + tab).classList.remove('hidden');
+        }
+
+        // Auto-refresh for Data Sync (Every 10 Minutes)
+        setTimeout(() => {
             window.location.reload();
         }, 600000);
 
-        // Initialize tooltips
-        document.addEventListener('DOMContentLoaded', function() {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-
-        // Clear search when input is emptied
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInputs = document.querySelectorAll('input[name="mothers_search"], input[name="infants_search"], input[name="pregnant_search"]');
-            
-            searchInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    if (this.value === '') {
-                        this.form.submit();
-                    }
-                });
+        // Smart Search Submission on clear
+        document.querySelectorAll('#search-container input').forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value === '') {
+                    this.form.submit();
+                }
             });
         });
     </script>
