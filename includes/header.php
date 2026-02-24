@@ -18,7 +18,7 @@ if (!function_exists('isLoggedIn')) {
 <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to right, #1a73e8, #6a11cb);">
     <div class="container-fluid">
         <!-- Sidebar Toggler for Mobile -->
-        <button class="btn btn-link text-white d-lg-none me-2 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="btn btn-link text-white d-lg-none me-2 p-0" type="button" id="sidebarToggleBtn" aria-label="Toggle navigation">
             <i class="fas fa-bars fa-lg"></i>
         </button>
 
@@ -62,6 +62,10 @@ if (!function_exists('isLoggedIn')) {
     </div>
 </nav>
 
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
 <!-- SweetAlert Script for Logout Confirmation -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -98,4 +102,31 @@ function confirmLogout(event) {
         }
     });
 }
+
+// Sidebar toggle (mobile)
+document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('sidebarToggleBtn');
+    const sidebar   = document.getElementById('sidebarMenu');
+    const overlay   = document.getElementById('sidebarOverlay');
+
+    function openSidebar() {
+        if (sidebar)  sidebar.classList.add('show');
+        if (overlay)  overlay.classList.add('show');
+    }
+
+    function closeSidebar() {
+        if (sidebar)  sidebar.classList.remove('show');
+        if (overlay)  overlay.classList.remove('show');
+    }
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+            sidebar && sidebar.classList.contains('show') ? closeSidebar() : openSidebar();
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+});
 </script>

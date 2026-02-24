@@ -75,11 +75,32 @@ body {
     padding: 0.75rem 1rem;
 }
 
-/* Sidebar Styling */
+/* =====================
+   Sidebar – Fixed Panel
+   ===================== */
 .sidebar {
+    position: fixed;
+    top: 56px;
+    /* below the navbar */
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    z-index: 1040;
+    overflow-y: auto;
     background-color: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
-    min-height: calc(100vh - 72px);
+    transition: transform 0.3s ease;
+    padding-top: 0.5rem;
+}
+
+/* Hide scrollbar but keep functionality */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
 }
 
 .sidebar .nav-link {
@@ -106,19 +127,42 @@ body {
     width: 20px;
 }
 
-/* Layout */
+/* Layout – offset for fixed sidebar */
 .main-content {
+    margin-left: 240px;
     padding: 2rem;
+    min-height: calc(100vh - 56px);
+    transition: margin-left 0.3s ease;
 }
 
-/* Sidebar behavior for different screens */
+/* Responsive <=991px – sidebar slides off-screen */
 @media (max-width: 991.98px) {
     .sidebar {
-        z-index: 1050;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
     }
 
     .main-content {
+        margin-left: 0;
         padding: 1rem;
+        padding-top: 5rem;
+        /* room for navbar */
+    }
+
+    /* Overlay behind sidebar on mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1039;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
     }
 
     .navbar-brand {
