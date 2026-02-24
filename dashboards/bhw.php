@@ -338,7 +338,7 @@ $totalPregnant = count($pregnantWomen);
         <div class="row">
             <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
             
-            <main class="main-content">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <!-- Dashboard Header with Sitio Info -->
                 <div class="dashboard-header">
                     <div class="row align-items-center">

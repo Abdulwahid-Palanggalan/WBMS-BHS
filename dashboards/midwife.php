@@ -121,7 +121,7 @@ $upcomingAppointments = $pdo->query("
         <div class="row">
             <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
             
-            <main class="main-content">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div id="dashboard-view">
                     
                     <!-- SOS ALERT CENTER (Bento Overlay) -->

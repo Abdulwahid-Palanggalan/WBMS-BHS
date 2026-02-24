@@ -325,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row">
             <?php include_once INCLUDE_PATH . 'sidebar.php'; ?>
 
-            <main class="main-content">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2"><?php echo $isEditMode ? 'Edit Birth Record' : 'Birth Registration'; ?></h1>
                     <?php if ($isEditMode && $birthRecord): ?>
