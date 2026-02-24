@@ -178,11 +178,10 @@ $baseUrl = $GLOBALS['base_url'];
 <body>
     <?php include_once $rootPath . '/includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once $rootPath . '/includes/sidebar.php'; ?>
-            
-            <main class="main-content">
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once $rootPath . '/includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
                 <!-- Dashboard Header -->
                 <div class="dashboard-header">
                     <div class="row align-items-center">
@@ -306,7 +305,6 @@ $baseUrl = $GLOBALS['base_url'];
                     </div>
                 </div>
             </main>
-        </div>
     </div>
 
     <!-- JavaScript -->
