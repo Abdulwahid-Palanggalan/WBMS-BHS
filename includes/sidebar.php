@@ -36,7 +36,7 @@ if (in_array($userRole, $availableRoles) && file_exists($sidebarFile)) {
     // Use simple fallback sidebar
     ?>
     <!-- FALLBACK SIDEBAR -->
-    <div class="sidebar d-lg-block bg-light collapse" id="sidebarMenu">
+    <div class="sidebar col-md-3 col-lg-2 d-lg-block bg-light collapse" id="sidebarMenu">
         <div class="position-sticky pt-3">
             <div class="sidebar-header text-center p-3 border-bottom">
                 <h6>KIBENES eBIRTH</h6>
