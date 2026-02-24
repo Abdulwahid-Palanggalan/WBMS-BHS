@@ -1338,111 +1338,22 @@ function generateDOMPDFHTML() {
                     <h2 class="text-xl font-black text-slate-900 uppercase tracking-tight"><?= $reportTitle ?></h2>
                     <div class="flex-1 h-px bg-slate-100"></div>
                 </div>
-                                        
-                                    <!-- BNS Reports -->
-                                    <?php elseif ($userRole === 'bns'): ?>
-                                        <option value="monthly" <?php echo $reportType === 'monthly' ? 'selected' : ''; ?>>Monthly BNS Report</option>
-                                    <?php endif; ?>
-                                </select>
-                            </div>
-                            
-                            <!-- BHW and BNS Month Selector -->
-                            <?php if (($userRole === 'bhw' && $reportType === 'monthly') || ($userRole === 'bns' && $reportType === 'monthly')): ?>
-                            <div class="col-md-3">
-                                <label for="report_month" class="form-label">Report Month</label>
-                                <input type="month" class="form-control" id="report_month" name="report_month" 
-                                       value="<?php echo $reportMonth; ?>" max="<?php echo date('Y-m'); ?>">
-                            </div>
-                            <?php else: ?>
-                            <!-- Time Period for other reports -->
-                            <div class="col-md-3">
-                                <label for="time_period" class="form-label">Time Period</label>
-                                <select class="form-select" id="time_period" name="time_period">
-                                    <option value="this-month" <?php echo $timePeriod === 'this-month' ? 'selected' : ''; ?>>This Month</option>
-                                    <option value="last-month" <?php echo $timePeriod === 'last-month' ? 'selected' : ''; ?>>Last Month</option>
-                                    <option value="this-quarter" <?php echo $timePeriod === 'this-quarter' ? 'selected' : ''; ?>>This Quarter</option>
-                                    <option value="this-year" <?php echo $timePeriod === 'this-year' ? 'selected' : ''; ?>>This Year</option>
-                                    <option value="custom" <?php echo $timePeriod === 'custom' ? 'selected' : ''; ?>>Custom Range</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2" id="start_date_container" style="<?php echo $timePeriod !== 'custom' ? 'display: none;' : ''; ?>">
-                                <label for="start_date" class="form-label">Start Date</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date" value="<?php echo $startDate; ?>">
-                            </div>
-                            <div class="col-md-2" id="end_date_container" style="<?php echo $timePeriod !== 'custom' ? 'display: none;' : ''; ?>">
-                                <label for="end_date" class="form-label">End Date</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date" value="<?php echo $endDate; ?>">
-                            </div>
-                            <?php endif; ?>
-                            
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="fas fa-search"></i> Generate
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <?php if (!empty($reportData) || !empty($summaryStats) || ($userRole === 'bhw' && $reportType === 'monthly') || ($userRole === 'bns' && $reportType === 'monthly') || ($userRole === 'midwife' && $reportType === 'prenatal_postnatal_combined') || ($userRole === 'midwife' && $reportType === 'birth_registration' && !empty($birthRecords))): ?>
-            <div class="action-buttons no-print">
-                <div class="d-flex justify-content-center gap-3">
-                    <a href="?<?php echo http_build_query(array_merge($_GET, ['download_pdf' => 1])); ?>" class="btn btn-danger btn-lg">
-                        <i class="fas fa-file-pdf me-2"></i> Download PDF
-                    </a>
-                    <button type="button" class="btn btn-outline-primary btn-lg" onclick="window.print()">
-                        <i class="fas fa-print me-2"></i> Print Report
-                    </button>
-                </div>
-            </div>
-            <?php endif; ?>
 
             <!-- Admin Reports -->
             <?php if ($userRole === 'admin'): ?>
-                <?php if ($reportType === 'activity'): ?>
-                    <!-- Admin Activity Logs Report -->
-                    <div class="card" id="print-area">
-                        <!-- PRINT HEADER WITH LOGOS -->
-                        <div class="print-header d-none d-print-block">
-                            <div class="print-logo-left">
-                                <img src="images/doh-logo.png" alt="DOH Logo">
-                            </div>
-                            <div class="print-header-center">
-                                <h4>SYSTEM ACTIVITY LOGS REPORT</h4>
-                                <p>BARANGAY HEALTH STATION - KIBENES</p>
-                                <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                                <div class="report-period">
-                                    Period: <?php echo date('M j, Y', strtotime($startDate)); ?> to <?php echo date('M j, Y', strtotime($endDate)); ?>
-                                </div>
-                            </div>
-                            <div class="print-logo-right">
-                                <img src="images/brgy-logo.png" alt="Barangay Logo">
-                            </div>
-                        </div>
-                        
-                        <!-- SCREEN HEADER -->
-                        <div class="report-header no-print">
-                            <div class="logo-container">
-                                <img src="images/doh-logo.png" alt="DOH Logo">
-                            </div>
-                            <div class="header-center">
-                                <h4>SYSTEM ACTIVITY LOGS REPORT</h4>
-                                <p>BARANGAY HEALTH STATION - KIBENES</p>
-                                <p>KIBENES, CARMEN, NORTH COTABATO</p>
-                                <div class="report-period">
-                                    Period: <?php echo date('M j, Y', strtotime($startDate)); ?> to <?php echo date('M j, Y', strtotime($endDate)); ?>
-                                </div>
-                            </div>
-                            <div class="logo-container text-end">
-                                <img src="images/brgy-logo.png" alt="Barangay Logo">
-                            </div>
-                        </div>
-                        
-                <?php if ($userRole === 'admin' && $reportType === 'activity'): ?>
+                <?php if ($reportType === 'activity' && !empty($reportData)): ?>
                     <!-- Admin Activity Logs -->
                     <div id="print-area" class="space-y-8">
+                        <!-- Printable Header -->
+                        <div class="hidden print:flex justify-between items-center border-b-2 border-slate-900 pb-6 mb-8">
+                            <img src="images/doh-logo.png" class="h-20 w-auto" alt="DOH">
+                            <div class="text-center">
+                                <h4 class="text-xl font-black uppercase tracking-tight">System Activity Logs Report</h4>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase">Barangay Health Station - Kibenes</p>
+                                <div class="text-[10px] font-black mt-1 uppercase tracking-widest">Period: <?= date('M j, Y', strtotime($startDate)) ?> - <?= date('M j, Y', strtotime($endDate)) ?></div>
+                            </div>
+                            <img src="images/brgy-logo.png" class="h-20 w-auto" alt="Barangay">
+                        </div>
                         <?php if (!empty($summaryStats)): ?>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div class="bg-gradient-to-br from-indigo-600 to-indigo-700 p-6 rounded-3xl text-white shadow-lg shadow-indigo-100">
@@ -1508,13 +1419,10 @@ function generateDOMPDFHTML() {
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
-                    </div>
-                <?php endif; ?>
 
             <!-- Midwife Reports -->
             <?php elseif ($userRole === 'midwife'): ?>
-                <?php if ($userRole === 'midwife'): ?>
-                    <?php if ($reportType === 'prenatal_postnatal_combined'): ?>
+                <?php if ($reportType === 'prenatal_postnatal_combined'): ?>
                         <div id="print-area" class="space-y-8">
                             <!-- Printable Header -->
                             <div class="hidden print:flex justify-between items-center border-b-2 border-slate-900 pb-6 mb-8">
@@ -1967,7 +1875,6 @@ function generateDOMPDFHTML() {
                         </div>
                     </div>
                 </div>
-            <?php endif; ?>
             <?php endif; ?>
 
         </main>
