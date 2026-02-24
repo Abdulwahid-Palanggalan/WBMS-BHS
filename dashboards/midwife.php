@@ -248,9 +248,9 @@ $upcomingAppointments = $pdo->query("
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                <div class="grid grid-cols-1 gap-8">
                     <!-- Delivery Trends Chart -->
-                    <div class="xl:col-span-8 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group">
                         <div class="absolute top-0 right-0 w-64 h-64 bg-health-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-0"></div>
                         
                         <div class="relative z-10 flex flex-col h-full">
@@ -270,57 +270,34 @@ $upcomingAppointments = $pdo->query("
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Quick Navigation Control -->
-                    <div class="xl:col-span-4 bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl shadow-slate-300 flex flex-col justify-between group">
-                        <div class="mb-8">
-                            <h3 class="text-white text-lg font-bold mb-1">Quick Clinical Actions</h3>
-                            <p class="text-slate-400 text-xs font-medium italic">Direct access to patient charting and records.</p>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-3">
-                            <a href="<?= $baseUrl ?>/forms/prenatal_form.php" class="bg-white/10 hover:bg-health-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
-                                <div class="w-10 h-10 bg-health-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-health-400 group-hover/item:text-white transition-colors">
-                                    <i class="fas fa-heartbeat"></i>
+                <!-- Quick Access Grid -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fas fa-bolt text-amber-400 text-sm"></i>
+                            Quick Access
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <?php
+                        $actions = [
+                            ['url' => 'prenatal_records.php', 'icon' => 'fa-heart-pulse', 'color' => 'bg-emerald-50 text-emerald-600', 'label' => 'Prenatal'],
+                            ['url' => 'postnatal_records.php', 'icon' => 'fa-child-reaching', 'color' => 'bg-sky-50 text-sky-600', 'label' => 'Postnatal'],
+                            ['url' => 'mothers_list.php', 'icon' => 'fa-female', 'color' => 'bg-indigo-50 text-indigo-600', 'label' => 'Mothers List'],
+                            ['url' => 'forms/birth_registration.php', 'icon' => 'fa-baby-carriage', 'color' => 'bg-amber-50 text-amber-600', 'label' => 'Birth Reg'],
+                            ['url' => 'pregnant_women.php', 'icon' => 'fa-person-pregnant', 'color' => 'bg-rose-50 text-rose-600', 'label' => 'Pregnant'],
+                            ['url' => 'reports.php', 'icon' => 'fa-chart-mixed', 'color' => 'bg-slate-100 text-slate-600', 'label' => 'Reports'],
+                        ];
+                        foreach ($actions as $action): ?>
+                            <a href="<?php echo $baseUrl; ?>/<?php echo $action['url']; ?>" class="group p-4 bg-white border border-slate-100 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-health-500 hover:shadow-xl hover:shadow-health-100/20 transition-all duration-300">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg <?php echo $action['color']; ?> group-hover:scale-110 transition-transform">
+                                    <i class="fas <?php echo $action['icon']; ?>"></i>
                                 </div>
-                                <span class="text-[10px] font-black text-white uppercase tracking-widest">Prenatal</span>
+                                <span class="text-xs font-bold text-slate-600 group-hover:text-slate-900 whitespace-nowrap"><?php echo $action['label']; ?></span>
                             </a>
-                            <a href="<?= $baseUrl ?>/forms/postnatal_form.php" class="bg-white/10 hover:bg-sky-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
-                                <div class="w-10 h-10 bg-sky-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-sky-400 group-hover/item:text-white transition-colors">
-                                    <i class="fas fa-baby-carriage"></i>
-                                </div>
-                                <span class="text-[10px] font-black text-white uppercase tracking-widest">Postnatal</span>
-                            </a>
-                            <a href="<?= $baseUrl ?>/forms/mother_registration.php" class="bg-white/10 hover:bg-amber-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
-                                <div class="w-10 h-10 bg-amber-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-amber-400 group-hover/item:text-white transition-colors">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <span class="text-[10px] font-black text-white uppercase tracking-widest">Register</span>
-                            </a>
-                            <a href="<?= $baseUrl ?>/forms/birth_registration.php" class="bg-white/10 hover:bg-emerald-600 p-4 rounded-3xl transition-all duration-300 flex flex-col items-center gap-3 group/item border border-white/5">
-                                <div class="w-10 h-10 bg-emerald-600/20 group-hover/item:bg-white/20 rounded-2xl flex items-center justify-center text-emerald-400 group-hover/item:text-white transition-colors">
-                                    <i class="fas fa-baby"></i>
-                                </div>
-                                <span class="text-[10px] font-black text-white uppercase tracking-widest">Birth</span>
-                            </a>
-                        </div>
-
-                        <div class="mt-8 flex flex-col gap-2">
-                            <a href="<?= $baseUrl ?>/immunization_records.php" class="bg-white/5 hover:bg-white/10 p-4 rounded-2xl flex items-center justify-between group/pill transition-all">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-syringe text-rose-500"></i>
-                                    <span class="text-[11px] font-bold text-white uppercase tracking-widest">Immunization Center</span>
-                                </div>
-                                <i class="fas fa-arrow-right text-slate-600 group-hover/pill:text-white transition-colors text-xs"></i>
-                            </a>
-                            <a href="<?= $baseUrl ?>/library.php" class="bg-white/5 hover:bg-white/10 p-4 rounded-2xl flex items-center justify-between group/pill transition-all">
-                                <div class="flex items-center gap-3">
-                                    <i class="fas fa-book-medical text-sky-500"></i>
-                                    <span class="text-[11px] font-bold text-white uppercase tracking-widest">Health Resources</span>
-                                </div>
-                                <i class="fas fa-arrow-right text-slate-600 group-hover/pill:text-white transition-colors text-xs"></i>
-                            </a>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
