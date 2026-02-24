@@ -11,7 +11,7 @@ $sidebarFile = $sidebarDir . 'sidebar_' . $userRole . '.php';
 
 // Sidebar Container (Hidden on mobile by default)
 ?>
-<aside class="sidebar fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]">
+<aside class="sidebar fixed inset-y-0 left-0 z-[60] w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]">
     <div class="h-full overflow-y-auto py-6 px-4">
         <?php
         if (in_array($userRole, $availableRoles) && file_exists($sidebarFile)) {
