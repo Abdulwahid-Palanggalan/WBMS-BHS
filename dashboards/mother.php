@@ -137,7 +137,7 @@ if (!$motherData) {
         <div class="row">
             <?php include_once __DIR__ . '/../includes/sidebar.php'; ?>
             
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <main class="main-content">
                 <!-- Registration Alert -->
                 <?php if ($showRegistrationPrompt): ?>
                 <div class="alert alert-primary border-0 shadow-sm rounded-xl p-4 mb-4">

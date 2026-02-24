@@ -182,7 +182,7 @@ $baseUrl = $GLOBALS['base_url'];
         <div class="row">
             <?php include_once $rootPath . '/includes/sidebar.php'; ?>
             
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <main class="main-content">
                 <!-- Dashboard Header -->
                 <div class="dashboard-header">
                     <div class="row align-items-center">
