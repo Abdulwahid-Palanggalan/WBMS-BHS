@@ -108,11 +108,10 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php include_once 'includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once 'includes/sidebar.php'; ?>
-            
-            <main class="main-content">
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once 'includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Immunization Records</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
@@ -241,7 +240,6 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </main>
-        </div>
     </div>
 
     <!-- History Modal -->

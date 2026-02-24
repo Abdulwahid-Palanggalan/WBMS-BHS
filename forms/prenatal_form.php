@@ -228,11 +228,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php include_once '../includes/header.php'; ?>
     
-    <div class="container-fluid">
-        <div class="row">
-            <?php include_once '../includes/sidebar.php'; ?>
-            
-            <main class="main-content">
+    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+        <?php include_once '../includes/sidebar.php'; ?>
+        
+        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2"><?php echo $editMode ? 'Edit' : 'New'; ?> Prenatal Care Record</h1>
                     <?php if ($editMode): ?>
@@ -475,7 +474,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </main>
-        </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
