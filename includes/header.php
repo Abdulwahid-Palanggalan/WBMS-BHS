@@ -18,18 +18,18 @@ if (!function_exists('isLoggedIn')) {
 <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to right, #1a73e8, #6a11cb);">
     <div class="container-fluid">
         <!-- Sidebar Toggler for Mobile -->
-        <button class="btn btn-link text-white d-md-none me-2 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="btn btn-link text-white d-lg-none me-2 p-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fas fa-bars fa-lg"></i>
         </button>
 
-        <a class="navbar-brand" href="<?php echo $GLOBALS['base_url']; ?>/dashboard.php">
+        <a class="navbar-brand me-auto me-lg-4" href="<?php echo $GLOBALS['base_url']; ?>/dashboard.php">
             <i class="fas fa-hospital me-2"></i>
             <span class="d-none d-sm-inline">Health Station System</span>
             <span class="d-inline d-sm-none">BHS</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="fas fa-ellipsis-v text-white"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">

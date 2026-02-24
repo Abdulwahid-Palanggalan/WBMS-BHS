@@ -172,44 +172,45 @@ $upcomingAppointments = $pdo->query("
                     </div>
 
                     <!-- Bento Stat Grid -->
-                    <div class="row g-4 mb-4">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--primary) !important;">
+                    <div class="row g-3 g-md-4 mb-4">
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--primary) !important;">
                                 <div class="stats-icon" style="background: var(--primary-light); color: var(--primary);">
                                     <i class="fas fa-female"></i>
                                 </div>
                                 <span class="stats-number"><?= $activePregnancies; ?></span>
-                                <span class="stats-label">Active Pregnancies</span>
+                                <span class="stats-label text-truncate d-block">Active Pregnancies</span>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--accent) !important;">
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--accent) !important;">
                                 <div class="stats-icon" style="background: #ecfdf5; color: var(--accent);">
                                     <i class="fas fa-baby"></i>
                                 </div>
                                 <span class="stats-number"><?= $birthsThisMonth; ?></span>
-                                <span class="stats-label">Births This Month</span>
+                                <span class="stats-label text-truncate d-block">Births This Month</span>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--warning) !important;">
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--warning) !important;">
                                 <div class="stats-icon" style="background: #fffbeb; color: var(--warning);">
                                     <i class="fas fa-calendar-check"></i>
                                 </div>
                                 <span class="stats-number"><?= $dueThisWeek; ?></span>
-                                <span class="stats-label">Due This Week</span>
+                                <span class="stats-label text-truncate d-block">Due This Week</span>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--secondary) !important;">
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--secondary) !important;">
                                 <div class="stats-icon" style="background: #f0f9ff; color: var(--secondary);">
                                     <i class="fas fa-baby-carriage"></i>
                                 </div>
                                 <span class="stats-number"><?= $postnatalDue; ?></span>
-                                <span class="stats-label">Postnatal Follow-ups</span>
+                                <span class="stats-label text-truncate d-block">Postnatal Follow-ups</span>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="row g-4 mb-4">
                         <!-- Chart Section (Bento Large) -->
@@ -235,38 +236,38 @@ $upcomingAppointments = $pdo->query("
                                 </div>
                                 <div class="card-body pt-0">
                                     <div class="row g-2">
-                                        <div class="col-6">
-                                            <a href="../forms/prenatal_form.php" class="btn btn-light w-100 py-3 border text-start">
+                                        <div class="col-sm-4 col-6">
+                                            <a href="../forms/prenatal_form.php" class="btn btn-light w-100 py-3 border text-start h-100">
                                                 <i class="fas fa-heartbeat text-primary mb-2 d-block"></i>
                                                 <span class="small fw-bold">Prenatal</span>
                                             </a>
                                         </div>
-                                        <div class="col-6">
-                                            <a href="../forms/postnatal_form.php" class="btn btn-light w-100 py-3 border text-start">
+                                        <div class="col-sm-4 col-6">
+                                            <a href="../forms/postnatal_form.php" class="btn btn-light w-100 py-3 border text-start h-100">
                                                 <i class="fas fa-baby-carriage text-success mb-2 d-block"></i>
                                                 <span class="small fw-bold">Postnatal</span>
                                             </a>
                                         </div>
-                                        <div class="col-6">
-                                            <a href="../forms/mother_registration.php" class="btn btn-light w-100 py-3 border text-start">
+                                        <div class="col-sm-4 col-6">
+                                            <a href="../forms/mother_registration.php" class="btn btn-light w-100 py-3 border text-start h-100">
                                                 <i class="fas fa-user-plus text-warning mb-2 d-block"></i>
                                                 <span class="small fw-bold">Reg Mother</span>
                                             </a>
                                         </div>
-                                        <div class="col-6">
-                                            <a href="../forms/birth_registration.php" class="btn btn-light w-100 py-3 border text-start">
+                                        <div class="col-sm-4 col-6">
+                                            <a href="../forms/birth_registration.php" class="btn btn-light w-100 py-3 border text-start h-100">
                                                 <i class="fas fa-baby text-info mb-2 d-block"></i>
                                                 <span class="small fw-bold">Reg Birth</span>
                                             </a>
                                         </div>
-                                        <div class="col-6">
-                                            <a href="../immunization_records.php" class="btn btn-light w-100 py-3 border text-start">
+                                        <div class="col-sm-4 col-6">
+                                            <a href="../immunization_records.php" class="btn btn-light w-100 py-3 border text-start h-100">
                                                 <i class="fas fa-syringe text-danger mb-2 d-block"></i>
                                                 <span class="small fw-bold">Vaccines</span>
                                             </a>
                                         </div>
-                                        <div class="col-6">
-                                            <a href="../library.php" class="btn btn-light w-100 py-3 border text-start">
+                                        <div class="col-sm-4 col-6">
+                                            <a href="../library.php" class="btn btn-light w-100 py-3 border text-start h-100">
                                                 <i class="fas fa-book-medical text-primary mb-2 d-block"></i>
                                                 <span class="small fw-bold">Library</span>
                                             </a>
@@ -275,6 +276,7 @@ $upcomingAppointments = $pdo->query("
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="row g-4 mb-4">
@@ -285,15 +287,15 @@ $upcomingAppointments = $pdo->query("
                                     <h5 class="mb-0 fw-bold">Upcoming Appointments</h5>
                                 </div>
                                 <div class="card-body pt-0">
-                                    <div class="row g-3">
+                                    <div class="row g-2 g-md-3">
                                         <?php if (!empty($upcomingAppointments)): ?>
                                             <?php foreach ($upcomingAppointments as $app): ?>
-                                                <div class="col-md-3">
-                                                    <div class="p-3 bg-light rounded-3 border-start border-4 border-primary">
+                                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                                    <div class="p-3 bg-light rounded-3 border-start border-4 border-primary h-100">
                                                         <div class="d-flex justify-content-between align-items-center mb-1">
-                                                            <span class="fw-bold"><?= htmlspecialchars($app['first_name'] . ' ' . $app['last_name']); ?></span>
+                                                            <span class="fw-bold text-truncate"><?= htmlspecialchars($app['first_name'] . ' ' . $app['last_name']); ?></span>
                                                         </div>
-                                                        <small class="text-primary fw-medium"><?= date('M d', strtotime($app['visit_date'])); ?></small>
+                                                        <small class="text-primary fw-medium"><?= date('M d, Y', strtotime($app['visit_date'])); ?></small>
                                                     </div>
                                                 </div>
                                             <?php endforeach; ?>
@@ -303,6 +305,7 @@ $upcomingAppointments = $pdo->query("
                                             </div>
                                         <?php endif; ?>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

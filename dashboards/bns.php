@@ -440,7 +440,7 @@ try {
         .stat-card {
             background: white;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border-left: 4px solid;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             text-align: center;
@@ -458,14 +458,14 @@ try {
         .stat-card.underweight-infants { border-left-color: #e74c3c; }
         
         .stat-icon {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            margin: 0 auto 1rem auto;
+            font-size: 1.15rem;
+            margin: 0 auto 0.75rem auto;
         }
         
         .stat-card.pregnant .stat-icon { background: #e3f2fd; color: #3498db; }
@@ -474,7 +474,7 @@ try {
         .stat-card.underweight-infants .stat-icon { background: #fdedec; color: #e74c3c; }
         
         .stat-number {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
             color: #2c3e50;
@@ -483,7 +483,7 @@ try {
         .stat-label {
             color: #6c757d;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         
         .section-card {
@@ -501,6 +501,8 @@ try {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .section-header h5 {
@@ -513,7 +515,18 @@ try {
         }
         
         .search-box {
+            width: 100%;
             max-width: 300px;
+        }
+        
+        @media (max-width: 576px) {
+            .search-box {
+                max-width: 100%;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
         
         .search-box .input-group {
@@ -538,6 +551,7 @@ try {
             border-bottom: 2px solid #dee2e6;
             font-weight: 600;
             color: #2c3e50;
+            white-space: nowrap;
         }
         
         .weight-increase {
@@ -555,59 +569,24 @@ try {
             font-weight: 600;
         }
         
-        .badge-underweight {
-            background: #e74c3c;
-            color: white;
+        /* Tab improvements for mobile */
+        .nav-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 1px solid #dee2e6;
         }
         
-        .badge-normal {
-            background: #27ae60;
-            color: white;
+        .nav-tabs .nav-item {
+            white-space: nowrap;
         }
         
-        .badge-warning {
-            background: #f39c12;
-            color: white;
+        .nav-tabs .nav-link {
+            padding: 10px 15px;
+            font-size: 0.9rem;
         }
         
-        .badge-success {
-            background: #2ecc71;
-            color: white;
-        }
-        
-        .badge-danger {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .badge-info {
-            background: #3498db;
-            color: white;
-        }
-        
-        .badge-primary {
-            background: #2980b9;
-            color: white;
-        }
-        
-        .action-btn {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #6c757d;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        
-       .nav-tabs .nav-link.active {
+        .nav-tabs .nav-link.active {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             border: none;
@@ -622,6 +601,16 @@ try {
         .trimester-1 { background-color: #e8f5e8 !important; }
         .trimester-2 { background-color: #fff3cd !important; }
         .trimester-3 { background-color: #f8d7da !important; }
+
+        @media (max-width: 768px) {
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            .stat-label {
+                font-size: 0.75rem;
+            }
+        }
+
     </style>
 </head>
 <body>
