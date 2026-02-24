@@ -637,83 +637,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </section>
                             
-                            <!-- Husband/Father Information -->
-                            <div class="section-title">Husband/Father Information</div>
-                            <div class="husband-section">
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_first_name" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="husband_first_name" name="husband_first_name" 
-                                               value="<?= htmlspecialchars($husbandData['first_name'] ?? $_POST['husband_first_name'] ?? ''); ?>" placeholder="Husband's first name">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_middle_name" class="form-label">Middle Name</label>
-                                        <input type="text" class="form-control" id="husband_middle_name" name="husband_middle_name" 
-                                               value="<?= htmlspecialchars($husbandData['middle_name'] ?? $_POST['husband_middle_name'] ?? ''); ?>" placeholder="Optional">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_last_name" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="husband_last_name" name="husband_last_name" 
-                                               value="<?= htmlspecialchars($husbandData['last_name'] ?? $_POST['husband_last_name'] ?? ''); ?>" placeholder="Husband's last name">
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_date_of_birth" class="form-label">Date of Birth</label>
-                                        <input type="date" class="form-control" id="husband_date_of_birth" name="husband_date_of_birth" 
-                                               value="<?= htmlspecialchars($husbandData['date_of_birth'] ?? $_POST['husband_date_of_birth'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_occupation" class="form-label">Occupation</label>
-                                        <input type="text" class="form-control" id="husband_occupation" name="husband_occupation" 
-                                               value="<?= htmlspecialchars($husbandData['occupation'] ?? $_POST['husband_occupation'] ?? ''); ?>" placeholder="Husband's occupation">
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_education" class="form-label">Education</label>
-                                        <select class="form-select" id="husband_education" name="husband_education">
-                                            <option value="">Select Education</option>
-                                            <option value="No Formal Education" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'No Formal Education') ? 'selected' : ''; ?>>No Formal Education</option>
-                                            <option value="Elementary" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'Elementary') ? 'selected' : ''; ?>>Elementary</option>
-                                            <option value="High School" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'High School') ? 'selected' : ''; ?>>High School</option>
-                                            <option value="College" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'College') ? 'selected' : ''; ?>>College</option>
-                                            <option value="Vocational" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'Vocational') ? 'selected' : ''; ?>>Vocational</option>
-                                            <option value="Post Graduate" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'Post Graduate') ? 'selected' : ''; ?>>Post Graduate</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="husband_phone" class="form-label">Phone Number</label>
-                                        <input type="tel" class="form-control" id="husband_phone" name="husband_phone" 
-                                               value="<?= htmlspecialchars($husbandData['phone'] ?? $_POST['husband_phone'] ?? ''); ?>" placeholder="09XXXXXXXXX" pattern="[0-9]{11}">
-                                    </div>
-                                </div>
+                <!-- Husband/Father Information -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-mars text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Husband/Partner's Profile Data</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Retrieved from verified family records</p>
+                        </div>
+                    </div>
 
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_citizenship" class="form-label">Citizenship</label>
-                                        <input type="text" class="form-control" id="husband_citizenship" name="husband_citizenship" 
-                                               value="<?= htmlspecialchars($husbandData['citizenship'] ?? $_POST['husband_citizenship'] ?? 'Filipino'); ?>" placeholder="Filipino">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="husband_religion" class="form-label">Religion</label>
-                                        <input type="text" class="form-control" id="husband_religion" name="husband_religion" 
-                                               value="<?= htmlspecialchars($husbandData['religion'] ?? $_POST['husband_religion'] ?? ''); ?>" placeholder="e.g., Roman Catholic">
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="marriage_date" class="form-label">Marriage Date</label>
-                                        <input type="date" class="form-control" id="marriage_date" name="marriage_date" 
-                                               value="<?= htmlspecialchars($husbandData['marriage_date'] ?? $_POST['marriage_date'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
-                                    </div>
-                                </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div>
+                            <label for="husband_first_name" class="form-label-premium">First Name</label>
+                            <input type="text" class="form-input-premium" id="husband_first_name" name="husband_first_name" 
+                                   value="<?= htmlspecialchars($husbandData['first_name'] ?? $_POST['husband_first_name'] ?? ''); ?>" placeholder="Husband's first name">
+                        </div>
+                        <div>
+                            <label for="husband_middle_name" class="form-label-premium">Middle Name</label>
+                            <input type="text" class="form-input-premium" id="husband_middle_name" name="husband_middle_name" 
+                                   value="<?= htmlspecialchars($husbandData['middle_name'] ?? $_POST['husband_middle_name'] ?? ''); ?>" placeholder="Optional">
+                        </div>
+                        <div>
+                            <label for="husband_last_name" class="form-label-premium">Last Name</label>
+                            <input type="text" class="form-input-premium" id="husband_last_name" name="husband_last_name" 
+                                   value="<?= htmlspecialchars($husbandData['last_name'] ?? $_POST['last_name'] ?? ''); ?>" placeholder="Husband's last name">
+                        </div>
+                    </div>
 
-                                <div class="row">
-                                    <div class="col-md-12 form-group">
-                                        <label for="marriage_place" class="form-label">Marriage Place</label>
-                                        <input type="text" class="form-control" id="marriage_place" name="marriage_place" 
-                                               value="<?= htmlspecialchars($husbandData['marriage_place'] ?? $_POST['marriage_place'] ?? ''); ?>" placeholder="Place of marriage">
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div>
+                            <label for="husband_date_of_birth" class="form-label-premium">Date of Birth</label>
+                            <input type="date" class="form-input-premium" id="husband_date_of_birth" name="husband_date_of_birth" 
+                                   value="<?= htmlspecialchars($husbandData['date_of_birth'] ?? $_POST['husband_date_of_birth'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
+                        </div>
+                        <div>
+                            <label for="husband_occupation" class="form-label-premium">Occupation</label>
+                            <input type="text" class="form-input-premium" id="husband_occupation" name="husband_occupation" 
+                                   value="<?= htmlspecialchars($husbandData['occupation'] ?? $_POST['husband_occupation'] ?? ''); ?>" placeholder="Husband's occupation">
+                        </div>
+                        <div>
+                            <label for="husband_education" class="form-label-premium">Education</label>
+                            <select class="form-input-premium appearance-none" id="husband_education" name="husband_education">
+                                <option value="">Select Education</option>
+                                <option value="No Formal Education" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'No Formal Education') ? 'selected' : ''; ?>>No Formal Education</option>
+                                <option value="Elementary" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'Elementary') ? 'selected' : ''; ?>>Elementary</option>
+                                <option value="High School" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'High School') ? 'selected' : ''; ?>>High School</option>
+                                <option value="College" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'College') ? 'selected' : ''; ?>>College</option>
+                                <option value="Vocational" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'Vocational') ? 'selected' : ''; ?>>Vocational</option>
+                                <option value="Post Graduate" <?= (($husbandData['education'] ?? $_POST['husband_education'] ?? '') == 'Post Graduate') ? 'selected' : ''; ?>>Post Graduate</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="husband_phone" class="form-label-premium">Phone Number</label>
+                            <input type="tel" class="form-input-premium" id="husband_phone" name="husband_phone" 
+                                   value="<?= htmlspecialchars($husbandData['phone'] ?? $_POST['husband_phone'] ?? ''); ?>" placeholder="09XXXXXXXXX" pattern="[0-9]{11}">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div>
+                            <label for="husband_citizenship" class="form-label-premium">Citizenship</label>
+                            <input type="text" class="form-input-premium" id="husband_citizenship" name="husband_citizenship" 
+                                   value="<?= htmlspecialchars($husbandData['citizenship'] ?? $_POST['husband_citizenship'] ?? 'Filipino'); ?>" placeholder="Filipino">
+                        </div>
+                        <div>
+                            <label for="husband_religion" class="form-label-premium">Religion</label>
+                            <input type="text" class="form-input-premium" id="husband_religion" name="husband_religion" 
+                                   value="<?= htmlspecialchars($husbandData['religion'] ?? $_POST['husband_religion'] ?? ''); ?>" placeholder="e.g., Roman Catholic">
+                        </div>
+                        <div>
+                            <label for="marriage_date" class="form-label-premium">Marriage Date</label>
+                            <input type="date" class="form-input-premium" id="marriage_date" name="marriage_date" 
+                                   value="<?= htmlspecialchars($husbandData['marriage_date'] ?? $_POST['marriage_date'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="marriage_place" class="form-label-premium">Marriage Place</label>
+                        <input type="text" class="form-input-premium" id="marriage_place" name="marriage_place" 
+                               value="<?= htmlspecialchars($husbandData['marriage_place'] ?? $_POST['marriage_place'] ?? ''); ?>" placeholder="Place of marriage">
+                    </div>
+                </section>
                             
                 <!-- Pregnancy Information -->
                 <section class="card-premium">
