@@ -519,7 +519,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
                             <label for="phone" class="form-label-premium">Phone Number <span class="text-rose-500">*</span></label>
                             <input type="tel" class="form-input-premium" id="phone" name="phone" 
@@ -533,6 +533,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="email" class="form-input-premium" id="email" name="email" 
                                    value="<?= htmlspecialchars($motherData['email'] ?? $_POST['email'] ?? ''); ?>" placeholder="optional@email.com">
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 mb-8">
                         <div>
                             <label for="address" class="form-label-premium">Permanent Address <span class="text-rose-500">*</span></label>
                             <select class="form-input-premium appearance-none" id="address" name="address" required>
@@ -576,7 +579,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8 border-b border-slate-100 pb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-slate-100 pb-8">
                         <div>
                             <label for="blood_type" class="form-label-premium">Blood Type</label>
                             <select class="form-input-premium appearance-none" id="blood_type" name="blood_type">
@@ -602,37 +605,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 border-b border-slate-100 pb-8">
-                        <div class="space-y-6">
-                            <div>
-                                <label for="allergies" class="form-label-premium">Clinical Allergies</label>
-                                <textarea class="form-input-premium min-h-[100px] resize-none py-3" id="allergies" name="allergies" placeholder="List any known allergies..."><?= htmlspecialchars($medicalData['allergies'] ?? $_POST['allergies'] ?? ''); ?></textarea>
-                            </div>
-                            <div>
-                                <label for="medical_conditions" class="form-label-premium">Existing Medical Conditions</label>
-                                <textarea class="form-input-premium min-h-[100px] resize-none py-3" id="medical_conditions" name="medical_conditions" placeholder="e.g., Hypertension, Diabetes, Asthma..."><?= htmlspecialchars($medicalData['medical_conditions'] ?? $_POST['medical_conditions'] ?? ''); ?></textarea>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-slate-100 pb-8">
+                        <div>
+                            <label for="allergies" class="form-label-premium">Allergies</label>
+                            <textarea class="form-input-premium min-h-[100px] py-3" id="allergies" name="allergies" placeholder="Note any food or drug allergies..."><?= htmlspecialchars($medicalData['allergies'] ?? $_POST['allergies'] ?? ''); ?></textarea>
                         </div>
-                        <div class="space-y-6">
-                            <div>
-                                <label for="previous_surgeries" class="form-label-premium">Surgical History</label>
-                                <textarea class="form-input-premium min-h-[100px] resize-none py-3" id="previous_surgeries" name="previous_surgeries" placeholder="List any previous operations..."><?= htmlspecialchars($medicalData['previous_surgeries'] ?? $_POST['previous_surgeries'] ?? ''); ?></textarea>
-                            </div>
-                            <div>
-                                <label for="family_history" class="form-label-premium">Family Health Background</label>
-                                <textarea class="form-input-premium min-h-[100px] resize-none py-3" id="family_history" name="family_history" placeholder="Inherited conditions or family history..."><?= htmlspecialchars($medicalData['family_history'] ?? $_POST['family_history'] ?? ''); ?></textarea>
-                            </div>
+                        <div>
+                            <label for="medical_conditions" class="form-label-premium">Existing Medical Conditions</label>
+                            <textarea class="form-input-premium min-h-[100px] py-3" id="medical_conditions" name="medical_conditions" placeholder="e.g., Hypertension, Diabetes..."><?= htmlspecialchars($medicalData['medical_conditions'] ?? $_POST['medical_conditions'] ?? ''); ?></textarea>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-slate-100 pb-8">
                         <div>
-                            <label for="contraceptive_use" class="form-label-premium">Obstetrical History: Contraceptive Use</label>
-                            <textarea class="form-input-premium min-h-[100px] resize-none py-3" id="contraceptive_use" name="contraceptive_use" placeholder="Methods used prior to this pregnancy..."><?= htmlspecialchars($medicalData['contraceptive_use'] ?? $_POST['contraceptive_use'] ?? ''); ?></textarea>
+                            <label for="previous_surgeries" class="form-label-premium">Previous Surgeries</label>
+                            <textarea class="form-input-premium min-h-[100px] py-3" id="previous_surgeries" name="previous_surgeries" placeholder="List any previous operations..."><?= htmlspecialchars($medicalData['previous_surgeries'] ?? $_POST['previous_surgeries'] ?? ''); ?></textarea>
+                        </div>
+                        <div>
+                            <label for="family_history" class="form-label-premium">Family Medical History</label>
+                            <textarea class="form-input-premium min-h-[100px] py-3" id="family_history" name="family_history" placeholder="Hereditary diseases in the family..."><?= htmlspecialchars($medicalData['family_history'] ?? $_POST['family_history'] ?? ''); ?></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="contraceptive_use" class="form-label-premium">Previous Contraceptive Use</label>
+                            <textarea class="form-input-premium min-h-[100px] py-3" id="contraceptive_use" name="contraceptive_use" placeholder="List methods used previously..."><?= htmlspecialchars($medicalData['contraceptive_use'] ?? $_POST['contraceptive_use'] ?? ''); ?></textarea>
                         </div>
                         <div>
                             <label for="previous_complications" class="form-label-premium">Previous Pregnancy Complications</label>
-                            <textarea class="form-input-premium min-h-[100px] resize-none py-3" id="previous_complications" name="previous_complications" placeholder="Any issues in earlier gestations..."><?= htmlspecialchars($medicalData['previous_complications'] ?? $_POST['previous_complications'] ?? ''); ?></textarea>
+                            <textarea class="form-input-premium min-h-[100px] py-3" id="previous_complications" name="previous_complications" placeholder="Note any issues in past pregnancies..."><?= htmlspecialchars($medicalData['previous_complications'] ?? $_POST['previous_complications'] ?? ''); ?></textarea>
                         </div>
                     </div>
                 </section>
@@ -667,7 +669,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
                             <label for="husband_date_of_birth" class="form-label-premium">Date of Birth</label>
                             <input type="date" class="form-input-premium" id="husband_date_of_birth" name="husband_date_of_birth" 
@@ -678,6 +680,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" class="form-input-premium" id="husband_occupation" name="husband_occupation" 
                                    value="<?= htmlspecialchars($husbandData['occupation'] ?? $_POST['husband_occupation'] ?? ''); ?>" placeholder="Husband's occupation">
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
                             <label for="husband_education" class="form-label-premium">Education</label>
                             <select class="form-input-premium appearance-none" id="husband_education" name="husband_education">
@@ -697,7 +702,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
                             <label for="husband_citizenship" class="form-label-premium">Citizenship</label>
                             <input type="text" class="form-input-premium" id="husband_citizenship" name="husband_citizenship" 
@@ -708,17 +713,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" class="form-input-premium" id="husband_religion" name="husband_religion" 
                                    value="<?= htmlspecialchars($husbandData['religion'] ?? $_POST['husband_religion'] ?? ''); ?>" placeholder="e.g., Roman Catholic">
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="marriage_date" class="form-label-premium">Marriage Date</label>
                             <input type="date" class="form-input-premium" id="marriage_date" name="marriage_date" 
                                    value="<?= htmlspecialchars($husbandData['marriage_date'] ?? $_POST['marriage_date'] ?? ''); ?>" max="<?= date('Y-m-d'); ?>">
                         </div>
-                    </div>
-
-                    <div>
-                        <label for="marriage_place" class="form-label-premium">Marriage Place</label>
-                        <input type="text" class="form-input-premium" id="marriage_place" name="marriage_place" 
-                               value="<?= htmlspecialchars($husbandData['marriage_place'] ?? $_POST['marriage_place'] ?? ''); ?>" placeholder="Place of marriage">
+                        <div>
+                            <label for="marriage_place" class="form-label-premium">Marriage Place</label>
+                            <input type="text" class="form-input-premium" id="marriage_place" name="marriage_place" 
+                                   value="<?= htmlspecialchars($husbandData['marriage_place'] ?? $_POST['marriage_place'] ?? ''); ?>" placeholder="Place of marriage">
+                        </div>
                     </div>
                 </section>
                             
@@ -755,7 +762,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8 border-b border-slate-100 pb-8">
                         <div>
                             <label for="gravida" class="form-label-premium">Gravida <span class="text-rose-500">*</span></label>
                             <input type="number" class="form-input-premium" id="gravida" name="gravida" 
@@ -790,7 +797,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <select class="form-input-premium appearance-none" id="planned_pregnancy" name="planned_pregnancy">
                                 <option value="">Select Option</option>
                                 <option value="Yes" <?= (($pregnancyData['planned_pregnancy'] ?? $_POST['planned_pregnancy'] ?? '') == 'Yes') ? 'selected' : ''; ?>>Yes</option>
-                                <option value="No" <?= (($pregnancyData['planned_pregnancy'] ?? $_POST['planned_pregnancy'] ?? '') == 'No') ? 'selected' : ''; ?>>No</option>
+                                <option value="No" <?= (($pregnancyData['planned_pregnancy'] ?? $_POST['planned_pregnancy'] ?? '') == 'No' ) ? 'selected' : ''; ?>>No</option>
                                 <option value="Unsure" <?= (($pregnancyData['planned_pregnancy'] ?? $_POST['planned_pregnancy'] ?? '') == 'Unsure') ? 'selected' : ''; ?>>Unsure</option>
                             </select>
                         </div>

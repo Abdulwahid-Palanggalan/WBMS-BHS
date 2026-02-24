@@ -340,15 +340,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 border-b border-slate-100 pb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 border-b border-slate-100 pb-8">
                         <div>
-                            <label for="hb_level" class="form-label-premium">Hemoglobin (Hb)</label>
+                            <label for="hemoglobin" class="form-label-premium">Hemoglobin</label>
                             <div class="relative">
-                                <input type="number" step="0.1" class="form-input-premium pr-12" id="hb_level" name="hb_level" placeholder="12.0"
-                                       value="<?php echo htmlspecialchars($recordData['hb_level'] ?? $_POST['hb_level'] ?? ''); ?>">
+                                <input type="number" step="0.1" class="form-input-premium pr-12" id="hemoglobin" name="hemoglobin" placeholder="12.5"
+                                       value="<?php echo htmlspecialchars($recordData['hemoglobin'] ?? $_POST['hemoglobin'] ?? ''); ?>">
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">g/dL</span>
                             </div>
                             <p class="mt-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider">Ref Range: 11.5 - 16.0</p>
+                        </div>
+                        <div>
+                            <label for="blood_sugar" class="form-label-premium">Blood Sugar</label>
+                            <div class="relative">
+                                <input type="number" step="0.1" class="form-input-premium pr-12" id="blood_sugar" name="blood_sugar" placeholder="95"
+                                       value="<?php echo htmlspecialchars($recordData['blood_sugar'] ?? $_POST['blood_sugar'] ?? ''); ?>">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">mg/dL</span>
+                            </div>
                         </div>
                         <div>
                             <label for="blood_group" class="form-label-premium">Blood Group</label>
@@ -367,14 +375,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <option value="Positive" <?php echo (($recordData['rhesus_factor'] ?? '') == 'Positive' || ($_POST['rhesus_factor'] ?? '') == 'Positive') ? 'selected' : ''; ?>>Positive</option>
                                 <option value="Negative" <?php echo (($recordData['rhesus_factor'] ?? '') == 'Negative' || ($_POST['rhesus_factor'] ?? '') == 'Negative') ? 'selected' : ''; ?>>Negative</option>
                             </select>
-                        </div>
-                        <div>
-                            <label for="blood_sugar" class="form-label-premium">Blood Sugar</label>
-                            <div class="relative">
-                                <input type="number" step="0.1" class="form-input-premium pr-12" id="blood_sugar" name="blood_sugar" placeholder="95"
-                                       value="<?php echo htmlspecialchars($recordData['blood_sugar'] ?? $_POST['blood_sugar'] ?? ''); ?>">
-                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">mg/dL</span>
-                            </div>
                         </div>
                     </div>
 
@@ -432,7 +432,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-slate-100 pb-8">
                         <div>
                             <label for="complaints" class="form-label-premium">Chief Complaints</label>
                             <textarea class="form-input-premium min-h-[100px] py-3 text-sm" id="complaints" name="complaints" placeholder="Reason for visit or current issues..."><?php echo htmlspecialchars($recordData['complaints'] ?? $_POST['complaints'] ?? ''); ?></textarea>
@@ -443,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="diagnosis" class="form-label-premium text-health-900">Diagnosis / Assessment</label>
                             <input type="text" class="form-input-premium border-health-100 focus:border-health-600 focus:ring-health-200" id="diagnosis" name="diagnosis" placeholder="Primary diagnosis..."
