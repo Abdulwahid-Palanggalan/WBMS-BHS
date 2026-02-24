@@ -3,7 +3,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $baseUrl = $GLOBALS['base_url'];
 ?>
 <!-- DEFAULT SIDEBAR - PURE WHITE -->
-<div class="sidebar col-md-3 col-lg-2 d-md-block bg-white shadow-sm">
+<div class="sidebar bg-white shadow-sm p-0 collapse d-lg-block" id="sidebarMenu">
     <div class="position-sticky pt-3">
         <div class="sidebar-header text-center p-3 border-bottom">
             <h6 class="text-secondary">KIBENES eBIRTH</h6>

@@ -116,32 +116,58 @@ body {
 .main-content {
     margin-left: 260px;
     padding: 2rem;
+    transition: margin-left 0.3s ease;
 }
 
+/* Sidebar behavior for different screens */
 @media (max-width: 991.98px) {
     .sidebar {
         width: 260px;
         margin-left: -260px;
-        transition: transform 0.3s ease;
+        transition: margin-left 0.3s ease, transform 0.3s ease;
         top: 0;
         padding-top: 1rem;
         z-index: 1050;
     }
 
     .sidebar.show {
-        transform: translateX(260px);
+        margin-left: 0;
+        transform: none;
     }
 
     .main-content {
         margin-left: 0;
         padding: 1rem;
-        padding-top: 4.5rem;
+        padding-top: 5rem;
     }
 
     .navbar-brand {
         font-size: 1.1rem;
     }
 }
+
+/* Specific optimizations for Tablet (768px to 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .sidebar {
+        width: 240px;
+    }
+
+    .main-content {
+        margin-left: 240px;
+        /* Keep sidebar visible on some tablets if needed, or collapse */
+    }
+
+    /* If we want to collapse it on tablet too, use this: */
+    /* .main-content { margin-left: 0; } */
+}
+
+/* Ensure chart containers are responsive */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
 
 /* Tablet Optimizations (768px - 991px) */
 @media (min-width: 768px) and (max-width: 991.98px) {

@@ -124,11 +124,6 @@ $baseUrl = $GLOBALS['base_url'];
             --dark: #202124;
         }
         
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        
         /* Dashboard Header */
         .dashboard-header {
             background: white;
@@ -146,12 +141,6 @@ $baseUrl = $GLOBALS['base_url'];
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-bottom: 1rem;
         }
         
         .chart-card {
@@ -306,12 +295,8 @@ $baseUrl = $GLOBALS['base_url'];
             color: white;
         }
         
-        /* Responsive */
+        /* Responsive Overrides */
         @media (max-width: 768px) {
-            .chart-container {
-                height: 250px;
-            }
-            
             .quick-access-card {
                 padding: 1rem;
             }
@@ -324,6 +309,7 @@ $baseUrl = $GLOBALS['base_url'];
                 font-size: 1.5rem;
             }
         }
+
     </style>
 </head>
 <body>
@@ -378,49 +364,49 @@ $baseUrl = $GLOBALS['base_url'];
                     </div>
                     <div class="card-body pt-0">
                         <div class="row g-3">
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/prenatal_records.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-heartbeat text-primary fa-2x mb-2"></i>
                                     <span class="fw-bold">Prenatal</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/postnatal_records.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-baby-carriage text-success fa-2x mb-2"></i>
                                     <span class="fw-bold">Postnatal</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/mothers_list.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-female text-info fa-2x mb-2"></i>
                                     <span class="fw-bold">Mothers</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/forms/birth_registration.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-baby text-warning fa-2x mb-2"></i>
                                     <span class="fw-bold">Birth Reg</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/user_management.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-users-cog text-primary fa-2x mb-2"></i>
                                     <span class="fw-bold">Users</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/pregnant_women.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-calendar-check text-danger fa-2x mb-2"></i>
                                     <span class="fw-bold">Pregnancy</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/reports.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-chart-line text-secondary fa-2x mb-2"></i>
                                     <span class="fw-bold">Reports</span>
                                 </a>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-lg-3 col-md-4 col-sm-6">
                                 <a href="<?php echo $baseUrl; ?>/activity_logs.php" class="btn btn-light w-100 py-4 border shadow-sm text-center transition-all h-100 d-flex flex-column align-items-center justify-content-center">
                                     <i class="fas fa-history text-dark fa-2x mb-2"></i>
                                     <span class="fw-bold">Logs</span>
@@ -429,6 +415,7 @@ $baseUrl = $GLOBALS['base_url'];
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Recent Activities Section -->
                 <div class="row mt-4">

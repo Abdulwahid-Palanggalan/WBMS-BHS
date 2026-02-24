@@ -3,7 +3,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $baseUrl = $GLOBALS['base_url'];
 ?>
 <!-- BHW SIDEBAR - PURE WHITE -->
-<div class="sidebar bg-white shadow-sm p-0 collapse d-md-block" id="sidebarMenu">
+<div class="sidebar bg-white shadow-sm p-0 collapse d-lg-block" id="sidebarMenu">
     <div class="d-flex flex-column flex-shrink-0 p-3">
         <div class="sidebar-header text-center p-3 border-bottom">
             <h5 class="text-primary"><i class="fas fa-home me-2"></i>BHW PANEL</h5>

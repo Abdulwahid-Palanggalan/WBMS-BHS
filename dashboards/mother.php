@@ -154,62 +154,64 @@ if (!$motherData) {
                 </div>
                 <?php endif; ?>
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
+                <div class="row align-items-center mb-4 g-3">
+                    <div class="col-12 col-md-auto">
                         <h2 class="fw-bold mb-1">Hello, <?= htmlspecialchars($mother['first_name']); ?>! 👋</h2>
                         <p class="text-muted small mb-0">Your personal health companion</p>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <button class="sos-btn me-3" id="sosTrigger">
+                    <div class="col-12 col-md-auto ms-md-auto d-flex flex-wrap align-items-center gap-2">
+                        <button class="sos-btn flex-grow-1 flex-md-grow-0" id="sosTrigger">
                             <i class="fas fa-exclamation-triangle me-2"></i>SOS EMERGENCY
                         </button>
                         <?php if ($isPregnant): ?>
-                        <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-bold">
+                        <span class="badge bg-primary-light text-primary px-3 py-2 rounded-pill fw-bold flex-grow-1 flex-md-grow-0 text-center">
                             <i class="fas fa-baby me-2"></i><?= $weeksPregnant; ?> Weeks
                         </span>
                         <?php endif; ?>
                     </div>
                 </div>
 
+
                 <!-- Bento Stats -->
-                <div class="row g-4 mb-4">
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--secondary) !important;">
+                <div class="row g-3 g-md-4 mb-4">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--secondary) !important;">
                             <div class="stats-icon" style="background: var(--primary-light); color: var(--secondary);">
                                 <i class="fas fa-child"></i>
                             </div>
                             <span class="stats-number"><?= count($birthRecords); ?></span>
-                            <span class="stats-label">My Children</span>
+                            <span class="stats-label d-block text-truncate">My Children</span>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--primary) !important;">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--primary) !important;">
                             <div class="stats-icon" style="background: var(--primary-light); color: var(--primary);">
                                 <i class="fas fa-clipboard-heart"></i>
                             </div>
                             <span class="stats-number"><?= $prenatalCount; ?></span>
-                            <span class="stats-label">Prenatal Visits</span>
+                            <span class="stats-label d-block text-truncate">Prenatal Visits</span>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--accent) !important;">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--accent) !important;">
                             <div class="stats-icon" style="background: #ecfdf5; color: var(--accent);">
                                 <i class="fas fa-house-medical-check"></i>
                             </div>
                             <span class="stats-number"><?= $postnatalCount; ?></span>
-                            <span class="stats-label">Postnatal Checks</span>
+                            <span class="stats-label d-block text-truncate">Postnatal Checks</span>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-md-6">
-                        <div class="card border-0 shadow-sm stats-card" style="border-top: 4px solid var(--warning) !important;">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card border-0 shadow-sm stats-card h-100" style="border-top: 4px solid var(--warning) !important;">
                             <div class="stats-icon" style="background: #fffbeb; color: var(--warning);">
                                 <i class="fas fa-bell"></i>
                             </div>
                             <span class="stats-number"><?= $nextAppointment ? '1' : '0'; ?></span>
-                            <span class="stats-label">Active Reminders</span>
+                            <span class="stats-label d-block text-truncate">Active Reminders</span>
                         </div>
                     </div>
                 </div>
+
 
                 <div class="row g-4 mb-4">
                     <!-- Health Journey Timeline (Bento Large) -->

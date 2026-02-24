@@ -199,7 +199,7 @@ $totalPregnant = count($pregnantWomen);
         .stat-card.pregnant .stat-icon { background: #ffebee; color: #dc3545; }
         
         .stat-number {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
             color: #2c3e50;
@@ -208,8 +208,27 @@ $totalPregnant = count($pregnantWomen);
         .stat-label {
             color: #6c757d;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
+        
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 1rem;
+            }
+            .stat-number {
+                font-size: 1.25rem;
+            }
+            .stat-label {
+                font-size: 0.75rem;
+            }
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
         
         .section-card {
             background: white;
@@ -289,11 +308,19 @@ $totalPregnant = count($pregnantWomen);
             padding: 1.5rem;
         }
         
+        .nav-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
         .nav-tabs .nav-link {
             border: none;
             color: #6c757d;
             font-weight: 500;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1rem;
+            white-space: nowrap;
         }
         
         .nav-tabs .nav-link.active {
@@ -301,6 +328,7 @@ $totalPregnant = count($pregnantWomen);
             border-bottom: 3px solid #007bff;
             background: transparent;
         }
+
     </style>
 </head>
 <body>
