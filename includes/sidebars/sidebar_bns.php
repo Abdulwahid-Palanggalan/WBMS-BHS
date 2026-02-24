@@ -20,7 +20,7 @@ $baseUrl = $GLOBALS['base_url'] ?? '';
         <h4 class="px-2 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">General</h4>
         <div class="space-y-1">
             <a href="<?= $baseUrl ?>/dashboard.php" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all <?= ($currentPage == 'dashboard.php') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 group' ?>">
-                <i class="fas fa-grid-2 w-5 text-center <?= ($currentPage == 'dashboard.php') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
+                <i class="fas fa-th-large w-5 text-center <?= ($currentPage == 'dashboard.php') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600' ?>"></i>
                 <span>Dashboard</span>
             </a>
         </div>
