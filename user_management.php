@@ -319,9 +319,9 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                     <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em]">User Registry Center</h3>
                     
                     <div class="flex flex-wrap gap-2" id="userTabs" role="tablist">
-                        <button onclick="switchTab('pending')" class="tab-btn tab-btn-active" id="pending-tab">
+                        <button onclick="switchTab('pending')" class="tab-btn tab-btn-inactive" id="pending-tab">
                             <i class="fas fa-clock"></i>
-                            Pending <span class="bg-white/20 px-2 py-0.5 rounded-lg ml-1"><?= $pendingCount; ?></span>
+                            Pending <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $pendingCount; ?></span>
                         </button>
                         <button onclick="switchTab('active')" class="tab-btn tab-btn-inactive" id="active-tab">
                             <i class="fas fa-check-circle"></i>
@@ -335,9 +335,9 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                             <i class="fas fa-times-circle"></i>
                             Rejected <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $rejectedCount; ?></span>
                         </button>
-                        <button onclick="switchTab('all')" class="tab-btn tab-btn-inactive" id="all-tab">
+                        <button onclick="switchTab('all')" class="tab-btn tab-btn-active" id="all-tab">
                             <i class="fas fa-users-viewfinder"></i>
-                            All <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $totalCount; ?></span>
+                            All <span class="bg-white/20 px-2 py-0.5 rounded-lg ml-1"><?= $totalCount; ?></span>
                         </button>
                     </div>
                 </div>
@@ -345,7 +345,7 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                 <div class="card-premium">
                     <div id="userTabsContent">
                         <!-- Pending Users Tab -->
-                        <div class="tab-content-item" id="pending-content">
+                        <div class="tab-content-item hidden" id="pending-content">
                             <?php $pendingUsers = array_filter($users, fn($u) => $u['status'] === 'pending'); ?>
                             <?php if (!empty($pendingUsers)): ?>
                                 <div class="overflow-x-auto">
@@ -596,7 +596,7 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                         </div>
 
                         <!-- All Users Tab -->
-                        <div class="tab-content-item hidden" id="all-content">
+                        <div class="tab-content-item" id="all-content">
                             <div class="overflow-x-auto">
                                 <table class="w-full table-modern">
                                     <thead>
