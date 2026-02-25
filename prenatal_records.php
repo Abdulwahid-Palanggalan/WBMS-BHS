@@ -80,322 +80,281 @@ $prenatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenatal Records - Kibenes eBirth</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Prenatal Records - Kibenes eBirth</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .prenatal-details-modal .modal-lg {
-            max-width: 900px;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php include_once __DIR__ . '/includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .stat-card-clinical {
+                @apply bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300;
+            }
+            .table-modern th {
+                @apply px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50;
+            }
+            .table-modern td {
+                @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-50;
+            }
+            .user-avatar-premium {
+                @apply w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold shadow-soft transition-transform duration-300 group-hover:scale-110;
+            }
+            .badge-clinical {
+                @apply text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border italic;
+            }
         }
-        .detail-section {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #007bff;
-        }
-        .detail-section h6 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        .detail-item {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .detail-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        .detail-label {
-            font-weight: 600;
-            color: #495057;
-            min-width: 180px;
-        }
-        .detail-value {
-            color: #6c757d;
-        }
-        .empty-data {
-            color: #6c757d;
-            font-style: italic;
-        }
-        .mother-info {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
-            border-left: 4px solid #28a745;
-        }
-        .pregnancy-info {
-            background: linear-gradient(135deg, #fff3cd 0%, #f8f9fa 100%);
-            border-left: 4px solid #ffc107;
-        }
-        .visit-info {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            border-left: 4px solid #9c27b0;
-        }
-        .table-hover tbody tr:hover {
-            background-color: rgba(0, 123, 255, 0.05);
-            cursor: pointer;
-        }
-        .table th {
-            background-color: #2c3e50;
-            color: white;
-            font-weight: 600;
-            vertical-align: middle;
-        }
-        .weight-increase { 
-            color: #28a745; 
-        }
-        .weight-decrease { 
-            color: #dc3545; 
-        }
-        .weight-stable { 
-            color: #6c757d; 
-        }
-        .medication-yes {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75em;
-        }
-        .medication-no {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75em;
-        }
-        .test-badge {
-            background-color: #e9ecef;
-            color: #495057;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75em;
-            margin-right: 5px;
-            margin-bottom: 5px;
-            display: inline-block;
-        }
-        .test-normal {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        .test-abnormal {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { @apply bg-slate-50; }
+        ::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen text-slate-900 font-sans antialiased">
     <?php include_once $rootPath . '/includes/header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         <?php include_once $rootPath . '/includes/sidebar.php'; ?>
         
-        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Prenatal Care Records</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <a href="forms/prenatal_form.php" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>New Prenatal Visit
-                        </a>
+        <main class="flex-1 p-4 lg:p-10 space-y-10 group/main">
+            <!-- PAGE HEADER -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-2 h-8 bg-health-600 rounded-full"></div>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Prenatal Registry</h1>
                     </div>
+                    <p class="text-slate-500 font-medium ml-5">Comprehensive maternal checkup monitoring system.</p>
                 </div>
+                
+                <div class="flex items-center gap-3">
+                    <a href="forms/prenatal_form.php" class="bg-health-600 hover:bg-health-700 text-white font-bold px-6 py-4 rounded-[2rem] transition-all shadow-lg shadow-health-100 flex items-center gap-2 active:scale-95">
+                        <i class="fas fa-plus"></i>
+                        <span>New Clinical Visit</span>
+                    </a>
+                </div>
+            </div>
 
-                <!-- Search and Stats -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <form method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search mothers..." value="<?php echo htmlspecialchars($search ?? ''); ?>">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <div class="text-muted">
-                            Total: <strong><?php echo $totalRecords; ?></strong> prenatal records found
+            <!-- SEARCH & STATS -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+                <div class="lg:col-span-8">
+                    <form method="GET" class="relative group/search">
+                        <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/search:text-health-600 transition-colors"></i>
+                        <input type="text" name="search" value="<?= htmlspecialchars($search); ?>" 
+                               class="w-full bg-white border-2 border-slate-100 rounded-[2rem] py-5 pl-14 pr-32 text-sm font-bold text-slate-900 focus:border-health-600 focus:ring-4 focus:ring-health-600/5 transition-all outline-none placeholder:text-slate-300 shadow-sm"
+                               placeholder="Search patient name or clinical identity...">
+                        <button type="submit" class="absolute right-3 top-2 bottom-2 bg-slate-900 text-white px-6 rounded-full font-bold text-xs hover:bg-health-700 transition-all">
+                            Run Query
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="lg:col-span-4">
+                    <div class="bg-white px-8 py-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group/total">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Records</p>
+                            <h3 class="text-2xl font-black text-slate-900"><?= number_format($totalRecords); ?></h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center text-xl shadow-soft group-hover/total:rotate-12 transition-transform">
+                            <i class="fas fa-file-waveform"></i>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Prenatal Records Table -->
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Visit Date</th>
-                                        <th>Mother</th>
-                                        <th>Contact</th>
-                                        <th>Gestational Age</th>
-                                        <th>Visit #</th>
-                                        <th>Vital Signs</th>
-                                        <th>Weight Tracking</th>
-                                        <th>Medications</th>
-                                        <th>Lab Tests</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($prenatalRecords)): ?>
-                                        <?php foreach ($prenatalRecords as $record): ?>
-                                        <tr>
-                                            <td><?= date('M j, Y', strtotime($record['visit_date'])) ?></td>
-                                            <td>
-                                                <div class="fw-semibold"><?= htmlspecialchars(($record['mother_first_name'] ?? '') . ' ' . ($record['mother_last_name'] ?? '')) ?></div>
-                                                <?php if (!empty($record['edc'])): ?>
-                                                    <small class="text-muted">EDC: <?= date('M j, Y', strtotime($record['edc'])) ?></small>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <div><i class="fas fa-phone text-success me-1"></i><?= htmlspecialchars($record['mother_phone'] ?? '') ?></div>
-                                            </td>
-                                            <td>
-                                                <strong><?= $record['gestational_weeks'] ?? 0 ?> weeks</strong>
-                                                <?php if (!empty($record['gestational_age'])): ?>
-                                                    <br><small class="text-muted"><?= $record['gestational_age'] ?></small>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-primary"><?= $record['visit_number'] ?? '' ?></span>
-                                            </td>
-                                            <td>
-                                                <small>
-                                                    BP: <?= $record['blood_pressure'] ?? 'N/A' ?><br>
-                                                    Temp: <?= $record['temperature'] ?? 'N/A' ?>°C
-                                                </small>
-                                            </td>
-                                            <td>
-                                                <strong><?= $record['weight'] ?? '' ?> kg</strong>
-                                                <?php if ($record['previous_weight'] ?? false): ?>
-                                                    <?php
-                                                    $weightChange = $record['weight_change'] ?? 0;
-                                                    $changeClass = $weightChange > 0 ? 'weight-increase' : ($weightChange < 0 ? 'weight-decrease' : 'weight-stable');
-                                                    $changeIcon = $weightChange > 0 ? 'fa-arrow-up' : ($weightChange < 0 ? 'fa-arrow-down' : 'fa-minus');
+            <!-- REGISTRY TABLE -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em]">Patient Visit Timeline</h3>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span class="text-[9px] font-black text-slate-400 uppercase">Live Database</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-modern">
+                            <thead>
+                                <tr>
+                                    <th>Patient Profile</th>
+                                    <th>Pregnancy Status</th>
+                                    <th>Vital Signs</th>
+                                    <th>Weight Tracking</th>
+                                    <th>Medications</th>
+                                    <th>Lab Tests</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                <?php if (!empty($prenatalRecords)): ?>
+                                    <?php foreach ($prenatalRecords as $record): ?>
+                                    <tr class="hover:bg-slate-50/50 transition-all duration-300 group">
+                                        <td class="py-6">
+                                            <div class="flex items-center gap-4">
+                                                <div class="user-avatar-premium bg-health-600 text-white shadow-health-100">
+                                                    <?= strtoupper(substr($record['mother_first_name'], 0, 1) . substr($record['mother_last_name'], 0, 1)); ?>
+                                                </div>
+                                                <div class="flex flex-col">
+                                                    <span class="font-bold text-slate-900 group-hover:text-health-700 transition-colors"><?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']); ?></span>
+                                                    <span class="text-[10px] font-medium text-slate-400 italic">Patient ID: #PR-<?= $record['id']; ?></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex flex-col">
+                                                <span class="text-xs font-black text-slate-900"><?= $record['gestational_weeks'] ?? '0.0'; ?> Weeks</span>
+                                                <span class="text-[10px] font-bold text-health-600 uppercase tracking-tighter mt-1">Visit No. <?= $record['visit_number']; ?></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="space-y-1">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[9px] font-black text-slate-400 uppercase px-1.5 py-0.5 bg-slate-50 rounded">BP</span>
+                                                    <span class="text-xs font-bold text-slate-700"><?= $record['blood_pressure'] ?: '--'; ?></span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-[9px] font-black text-slate-400 uppercase px-1.5 py-0.5 bg-slate-50 rounded">Temp</span>
+                                                    <span class="text-xs font-bold text-slate-700"><?= $record['temperature'] ?: '--'; ?>°C</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex flex-col">
+                                                <div class="flex items-baseline gap-1">
+                                                    <span class="text-xs font-black text-slate-900"><?= $record['weight']; ?></span>
+                                                    <span class="text-[9px] font-bold text-slate-400 uppercase">kg</span>
+                                                </div>
+                                                <?php if ($record['previous_weight']): ?>
+                                                    <?php 
+                                                        $diff = $record['weight_change'];
+                                                        $color = $diff > 0 ? 'text-emerald-500' : ($diff < 0 ? 'text-rose-500' : 'text-slate-400');
+                                                        $icon = $diff > 0 ? 'fa-caret-up' : ($diff < 0 ? 'fa-caret-down' : 'fa-minus');
                                                     ?>
-                                                    <br>
-                                                    <small class="<?= $changeClass ?>">
-                                                        <i class="fas <?= $changeIcon ?>"></i>
-                                                        <?= abs($weightChange) ?> kg
-                                                    </small>
-                                                <?php else: ?>
-                                                    <br><small class="text-muted">First record</small>
+                                                    <span class="text-[10px] font-black <?= $color; ?> flex items-center gap-1">
+                                                        <i class="fas <?= $icon; ?>"></i>
+                                                        <?= abs($diff); ?> kg
+                                                    </span>
                                                 <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex gap-1">
-                                                    <?php if ($record['iron_supplement'] ?? false): ?>
-                                                        <span class="medication-yes" title="Iron">Fe</span>
-                                                    <?php endif; ?>
-                                                    <?php if ($record['folic_acid'] ?? false): ?>
-                                                        <span class="medication-yes" title="Folic Acid">FA</span>
-                                                    <?php endif; ?>
-                                                    <?php if ($record['calcium'] ?? false): ?>
-                                                        <span class="medication-yes" title="Calcium">Ca</span>
-                                                    <?php endif; ?>
-                                                    <?php if (!($record['iron_supplement'] ?? false) && !($record['folic_acid'] ?? false) && !($record['calcium'] ?? false)): ?>
-                                                        <span class="text-muted">-</span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-wrap gap-1">
-                                                    <?php if (!empty($record['hb_level'])): ?>
-                                                        <span class="test-badge <?= ($record['hb_level'] < 11) ? 'test-abnormal' : 'test-normal' ?>" title="Hemoglobin">
-                                                            Hb: <?= $record['hb_level'] ?>
-                                                        </span>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($record['blood_group'])): ?>
-                                                        <span class="test-badge" title="Blood Group">
-                                                            BG: <?= $record['blood_group'] ?>
-                                                        </span>
-                                                    <?php endif; ?>
-                                                    <?php if (empty($record['hb_level']) && empty($record['blood_group'])): ?>
-                                                        <span class="text-muted">-</span>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <a href="forms/prenatal_form.php?edit=<?= $record['id'] ?>" class="btn btn-sm btn-outline-warning">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <button class="btn btn-sm btn-outline-info view-details" 
-                                                            data-record-id="<?= $record['id'] ?>"
-                                                            data-bs-toggle="modal" 
-                                                            data-bs-target="#prenatalDetailsModal">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-danger" 
-                                                            onclick="confirmDelete('prenatal_record', <?= $record['id'] ?>, 'Prenatal Visit #<?= $record['visit_number'] ?? '' ?> for <?= htmlspecialchars(($record['mother_first_name'] ?? '') . ' ' . ($record['mother_last_name'] ?? '')) ?>')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="10" class="text-center py-4 text-muted">
-                                                <i class="fas fa-heartbeat fa-2x mb-3 d-block"></i>
-                                                <?php echo !empty($search) ? 'No prenatal records found matching your search.' : 'No prenatal records found'; ?>
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Pagination -->
-                        <?php if ($totalPages > 1): ?>
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">Previous</a>
-                                    </li>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex flex-wrap gap-1.5">
+                                                <?php if ($record['iron_supplement']): ?>
+                                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 text-[9px] font-black rounded-lg border border-amber-100 uppercase" title="Iron Supplement">Iron</span>
+                                                <?php endif; ?>
+                                                <?php if ($record['folic_acid']): ?>
+                                                    <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg border border-emerald-100 uppercase" title="Folic Acid">Folic</span>
+                                                <?php endif; ?>
+                                                <?php if ($record['calcium']): ?>
+                                                    <span class="px-2 py-1 bg-sky-50 text-sky-600 text-[9px] font-black rounded-lg border border-sky-100 uppercase" title="Calcium">Calc</span>
+                                                <?php endif; ?>
+                                                <?php if (!$record['iron_supplement'] && !$record['folic_acid'] && !$record['calcium']): ?>
+                                                    <span class="text-[10px] font-bold text-slate-300 italic">None</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex flex-col gap-1">
+                                                <?php if ($record['hb_level']): ?>
+                                                    <?php $hbStatus = $record['hb_level'] < 11 ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'; ?>
+                                                    <span class="px-2 py-1 <?= $hbStatus; ?> text-[9px] font-black rounded-lg border uppercase w-fit">Hb: <?= $record['hb_level']; ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($record['blood_group']): ?>
+                                                    <span class="px-2 py-1 bg-slate-50 text-slate-600 text-[9px] font-black rounded-lg border border-slate-100 uppercase w-fit">Group: <?= $record['blood_group']; ?></span>
+                                                <?php endif; ?>
+                                                <?php if (!$record['hb_level'] && !$record['blood_group']): ?>
+                                                    <span class="text-[10px] font-bold text-slate-300 italic">No Labs</span>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="flex justify-end gap-2 pr-4">
+                                                <button onclick="viewPrenatalDetails(<?= $record['id']; ?>)" class="bg-sky-50 hover:bg-sky-100 text-sky-600 p-3 rounded-2xl transition-all shadow-sm active:scale-90" title="View Full Analysis">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <a href="forms/prenatal_form.php?edit=<?= $record['id']; ?>" class="bg-amber-50 hover:bg-amber-100 text-amber-600 p-3 rounded-2xl transition-all shadow-sm active:scale-90" title="Modify Record">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button onclick="confirmDelete('prenatal_record', <?= $record['id']; ?>, 'Prenatal Visit #<?= $record['visit_number']; ?> for <?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']); ?>')" 
+                                                        class="bg-rose-50 hover:bg-rose-100 text-rose-500 p-3 rounded-2xl transition-all shadow-sm active:scale-90" title="Permanently Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="7" class="py-20 text-center">
+                                            <div class="flex flex-col items-center opacity-30">
+                                                <i class="fas fa-folder-open text-6xl mb-4 text-slate-300"></i>
+                                                <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Registry entry not found</p>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 <?php endif; ?>
-
-                                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <?php if ($page < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">Next</a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
-                        <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
+
+                    <!-- PAGINATION -->
+                    <?php if ($totalPages > 1): ?>
+                    <div class="p-8 border-t border-slate-50 flex items-center justify-between bg-slate-50/30">
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            Page <?= $page; ?> of <?= $totalPages; ?>
+                        </p>
+                        <div class="flex gap-2">
+                            <?php if ($page > 1): ?>
+                                <a href="?page=<?= $page - 1; ?>&search=<?= urlencode($search); ?>" class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95">
+                                    <i class="fas fa-chevron-left mr-2 font-bold"></i>Previous
+                                </a>
+                            <?php endif; ?>
+
+                            <?php if ($page < $totalPages): ?>
+                                <a href="?page=<?= $page + 1; ?>&search=<?= urlencode($search); ?>" class="bg-slate-900 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 active:scale-95">
+                                    Next<i class="fas fa-chevron-right ml-2 font-bold"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
-            </main>
+            </div>
+        </main>
     </div>
 
-    <!-- Prenatal Details Modal -->
-    <div class="modal fade prenatal-details-modal" id="prenatalDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Prenatal Visit Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="prenatalDetailsContent">
-                    <!-- Content will be loaded via AJAX -->
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Loading prenatal visit details...</p>
+    <!-- PRENATAL DETAILS MODAL (Premium Tailwind) -->
+    <div id="prenatalDetailsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-in zoom-in duration-300 flex flex-col">
+            <div class="flex items-center justify-between p-8 border-b border-slate-50 bg-slate-50/50">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl">
+                        <i class="fas fa-notes-medical"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight" id="modalTitle">Clinical Analysis</h3>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Detailed Prenatal Observation Record</p>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="editPrenatalBtn">Edit Visit</button>
+                <button onclick="closeDetailsModal()" class="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-600 transition-all active:scale-90">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+                <div id="prenatalDetailsContent">
+                    <!-- Loaded via AJAX -->
+                    <div class="flex flex-col items-center justify-center py-20 opacity-50">
+                        <div class="w-12 h-12 border-4 border-sky-100 border-t-sky-600 rounded-full animate-spin"></div>
+                        <p class="mt-4 font-black text-[10px] text-slate-400 uppercase tracking-widest">Processing Data...</p>
+                    </div>
                 </div>
+            </div>
+
+            <div class="p-8 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
+                <button onclick="closeDetailsModal()" class="px-8 py-4 rounded-2xl text-slate-400 font-bold hover:bg-white transition-all">Dismiss</button>
+                <button id="editPrenatalBtn" class="bg-health-600 hover:bg-health-700 text-white font-bold px-10 py-4 rounded-2xl transition-all shadow-lg shadow-health-100 active:scale-95">
+                    Modify Records
+                </button>
             </div>
         </div>
     </div>
@@ -403,16 +362,64 @@ $prenatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        let currentRecordId = null;
+
+        function viewPrenatalDetails(recordId) {
+            currentRecordId = recordId;
+            const modal = document.getElementById('prenatalDetailsModal');
+            const content = document.getElementById('prenatalDetailsContent');
+            
+            // Show Modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Reset Content
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-20 opacity-50">
+                    <div class="w-12 h-12 border-4 border-sky-100 border-t-sky-600 rounded-full animate-spin"></div>
+                    <p class="mt-4 font-black text-[10px] text-slate-400 uppercase tracking-widest">Processing Data...</p>
+                </div>
+            `;
+
+            // Load Data
+            fetch(`get_prenatal_details.php?id=${recordId}`)
+                .then(response => response.text())
+                .then(data => {
+                    content.innerHTML = data;
+                })
+                .catch(error => {
+                    content.innerHTML = `
+                        <div class="bg-rose-50 border border-rose-100 p-8 rounded-[2rem] text-center">
+                            <i class="fas fa-exclamation-triangle text-rose-500 text-3xl mb-4"></i>
+                            <p class="font-bold text-rose-800">Connection Interrupted</p>
+                            <p class="text-xs text-rose-600 mt-2">Failed to retrieve clinical documentation. Please try again.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('prenatalDetailsModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
         function confirmDelete(type, id, name) {
             Swal.fire({
-                title: 'Are you sure?',
-                html: `You are about to delete <strong>${name}</strong>. This action cannot be undone.`,
+                title: 'Confirm Deletion',
+                html: `Are you sure you want to permanently remove <br><b class="text-health-600">${name}</b>?`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#f43f5e',
+                confirmButtonText: 'Yes, Delete Record',
+                cancelButtonText: 'Cancel Removal',
+                padding: '2rem',
+                customClass: {
+                    popup: 'rounded-[2.5rem]',
+                    confirmButton: 'rounded-2xl font-bold py-4 px-8',
+                    cancelButton: 'rounded-2xl font-bold py-4 px-8'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = `delete.php?type=${type}&id=${id}`;
@@ -420,50 +427,15 @@ $prenatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
             });
         }
 
-        // View prenatal details
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButtons = document.querySelectorAll('.view-details');
-            const modal = document.getElementById('prenatalDetailsModal');
-            const content = document.getElementById('prenatalDetailsContent');
-            const editBtn = document.getElementById('editPrenatalBtn');
-            let currentRecordId = null;
-
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    currentRecordId = this.getAttribute('data-record-id');
-                    loadPrenatalDetails(currentRecordId);
-                });
-            });
-
-            function loadPrenatalDetails(recordId) {
-                fetch(`get_prenatal_details.php?id=${recordId}`)
-                    .then(response => response.text())
-                    .then(data => {
-                        content.innerHTML = data;
-                    })
-                    .catch(error => {
-                        content.innerHTML = `
-                            <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Failed to load prenatal visit details. Please try again.
-                            </div>
-                        `;
-                    });
+        document.getElementById('editPrenatalBtn').addEventListener('click', function() {
+            if (currentRecordId) {
+                window.location.href = `forms/prenatal_form.php?edit=${currentRecordId}`;
             }
+        });
 
-            // Edit button handler
-            editBtn.addEventListener('click', function() {
-                if (currentRecordId) {
-                    window.location.href = `forms/prenatal_form.php?edit=${currentRecordId}`;
-                }
-            });
-
-            // Reload details when modal is shown
-            modal.addEventListener('show.bs.modal', function() {
-                if (currentRecordId) {
-                    loadPrenatalDetails(currentRecordId);
-                }
-            });
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDetailsModal();
         });
     </script>
 </body>
