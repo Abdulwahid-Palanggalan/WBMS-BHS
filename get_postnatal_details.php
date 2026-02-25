@@ -93,170 +93,266 @@ try {
     // Continue with your HTML display code...
     ?>
     
-    <!-- MODAL CONTENT: PREMIUM POSTNATAL DIAGNOSTIC MATRIX -->
-    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div class="row">
+        <!-- Mother Information -->
+        <div class="col-md-6">
+            <div class="detail-section mother-info">
+                <h6><i class="fas fa-female me-2"></i>Mother Information</h6>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value"><?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']) ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Contact:</span>
+                    <span class="detail-value"><?= !empty($record['mother_phone']) ? htmlspecialchars($record['mother_phone']) : '<span class="empty-data">Not provided</span>' ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Address:</span>
+                    <span class="detail-value"><?= !empty($record['mother_address']) ? htmlspecialchars($record['mother_address']) : '<span class="empty-data">Not provided</span>' ?></span>
+                </div>
+            </div>
+        </div>
         
-        <!-- TOP SECTION: PATIENT & NEWBORN MATRICES -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Mother Recovery Profile -->
-            <div class="bg-white border-2 border-slate-50 rounded-[2.5rem] p-8 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center">
-                        <i class="fas fa-female"></i>
-                    </div>
-                    <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest">Recovery Profile</h4>
+        <!-- Baby Information -->
+        <div class="col-md-6">
+            <div class="detail-section baby-info">
+                <h6><i class="fas fa-baby me-2"></i>Baby Information</h6>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value"><?= htmlspecialchars($record['baby_first_name'] . ' ' . $record['baby_last_name']) ?></span>
                 </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Gender:</span>
+                    <span class="detail-value"><?= ucfirst($record['gender']) ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Birth Date:</span>
+                    <span class="detail-value"><?= date('M j, Y', strtotime($record['birth_date'])) ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Birth Weight:</span>
+                    <span class="detail-value"><?= $record['birth_weight'] ?> kg</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Visit Information -->
+    <div class="detail-section visit-info">
+        <h6><i class="fas fa-calendar-alt me-2"></i>Visit Information</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Visit Date:</span>
+                    <span class="detail-value"><?= date('M j, Y', strtotime($record['visit_date'])) ?></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Visit Number:</span>
+                    <span class="detail-value"><?= $record['visit_number'] ?></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Days After Birth:</span>
+                    <span class="detail-value"><?= $daysAfterBirth ? $daysAfterBirth . ' days' : '<span class="empty-data">Not calculated</span>' ?></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Recorded By:</span>
+                    <span class="detail-value"><?= htmlspecialchars($record['recorded_first_name'] . ' ' . $record['recorded_last_name']) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Mother's Health Assessment -->
+        <div class="col-md-6">
+            <div class="detail-section">
+                <h6><i class="fas fa-heartbeat me-2"></i>Mother's Health Assessment</h6>
                 
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Mother Name</span>
-                        <span class="text-sm font-bold text-slate-800"><?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']) ?></span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Comm. Link</span>
-                        <span class="text-sm font-bold text-health-600"><?= !empty($record['mother_phone']) ? htmlspecialchars($record['mother_phone']) : '---'; ?></span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Vitals @ Visit</span>
-                        <div class="flex items-center gap-2">
-                             <span class="px-2 py-1 bg-slate-50 text-slate-600 text-[10px] font-black rounded-lg border border-slate-100 uppercase"><?= $record['blood_pressure'] ?: '---'; ?></span>
-                             <span class="px-2 py-1 bg-amber-50 text-amber-600 text-[10px] font-black rounded-lg border border-amber-100 uppercase"><?= $record['temperature'] ? $record['temperature'] . '°C' : '---'; ?></span>
+                <!-- Vital Signs -->
+                <div class="mb-3">
+                    <strong class="text-primary">Vital Signs:</strong>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Blood Pressure:</span>
+                                <span class="detail-value"><?= !empty($record['blood_pressure']) ? htmlspecialchars($record['blood_pressure']) : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Weight:</span>
+                                <span class="detail-value"><?= !empty($record['weight']) ? $record['weight'] . ' kg' : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Temperature:</span>
+                                <span class="detail-value"><?= !empty($record['temperature']) ? $record['temperature'] . '°C' : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Newborn Identity Matrix -->
-            <div class="bg-white border-2 border-slate-50 rounded-[2.5rem] p-8 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                <div class="absolute right-0 top-0 w-32 h-32 bg-health-50 rounded-full blur-3xl opacity-20 -mr-16 -mt-16"></div>
                 
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
-                        <i class="fas fa-baby"></i>
+                <!-- Postpartum Assessment -->
+                <div class="mb-3">
+                    <strong class="text-primary">Postpartum Assessment:</strong>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Uterus:</span>
+                                <span class="detail-value">
+                                    <?= !empty($record['uterus_status']) ? htmlspecialchars(ucfirst($record['uterus_status'])) : '<span class="empty-data">Not assessed</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Lochia:</span>
+                                <span class="detail-value">
+                                    <?= !empty($record['lochia_status']) ? htmlspecialchars(ucfirst($record['lochia_status'])) : '<span class="empty-data">Not assessed</span>' ?>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest">Newborn Identity</h4>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Perineum:</span>
+                                <span class="detail-value">
+                                    <?= !empty($record['perineum_status']) ? htmlspecialchars(ucfirst($record['perineum_status'])) : '<span class="empty-data">Not assessed</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Breasts:</span>
+                                <span class="detail-value">
+                                    <?= !empty($record['breasts_status']) ? htmlspecialchars(ucfirst($record['breasts_status'])) : '<span class="empty-data">Not assessed</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="detail-item">
+                                <span class="detail-label">Emotional State:</span>
+                                <span class="detail-value">
+                                    <?= !empty($record['emotional_state']) ? htmlspecialchars(ucfirst(str_replace('-', ' ', $record['emotional_state']))) : '<span class="empty-data">Not assessed</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="grid grid-cols-2 gap-4 h-full relative z-10">
-                    <div class="bg-slate-50/50 rounded-2xl p-4 flex flex-col justify-center">
-                        <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Clinical ID</span>
-                        <span class="text-sm font-black text-slate-800 tracking-tight leading-tight"><?= htmlspecialchars($record['baby_first_name'] . ' ' . $record['baby_last_name']) ?></span>
+                <!-- Complaints & Treatment -->
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Complaints:</span>
+                        <span class="detail-value"><?= !empty($record['complaints']) ? nl2br(htmlspecialchars($record['complaints'])) : '<span class="empty-data">None reported</span>' ?></span>
                     </div>
-                    <div class="bg-slate-50/50 rounded-2xl p-4 flex flex-col justify-center">
-                        <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Observation Age</span>
-                        <span class="text-lg font-black text-rose-600 tracking-tight italic"><?= $daysAfterBirth ?> <span class="text-[10px] uppercase tracking-widest text-rose-300">Days</span></span>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Treatment Given:</span>
+                        <span class="detail-value"><?= !empty($record['treatment']) ? nl2br(htmlspecialchars($record['treatment'])) : '<span class="empty-data">No treatment given</span>' ?></span>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- MIDDLE SECTION: POSTPARTUM VECTORS -->
-        <div class="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden group/records border-4 border-white">
-            <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/5 to-transparent"></div>
-            <i class="fas fa-heart-pulse absolute -right-4 -bottom-4 text-8xl text-white/5 rotate-12 group-hover/records:rotate-0 transition-transform duration-700"></i>
+        
+        <!-- Baby's Health Assessment -->
+        <div class="col-md-6">
+            <div class="detail-section">
+                <h6><i class="fas fa-baby me-2"></i>Baby's Health Assessment</h6>
+                
+                <!-- Weight Information -->
+                <div class="mb-3">
+                    <strong class="text-primary">Weight Information:</strong>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <span class="detail-label">Current Weight:</span>
+                                <span class="detail-value"><?= !empty($record['baby_weight']) ? $record['baby_weight'] . ' kg' : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Feeding & Health -->
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Feeding Method:</span>
+                        <span class="detail-value">
+                            <?= !empty($record['feeding_method']) ? htmlspecialchars(ucfirst(str_replace('-', ' ', $record['feeding_method']))) : '<span class="empty-data">Not specified</span>' ?>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Health Issues:</span>
+                        <span class="detail-value"><?= !empty($record['baby_issues']) ? nl2br(htmlspecialchars($record['baby_issues'])) : '<span class="empty-data">None reported</span>' ?></span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Baby Treatment:</span>
+                        <span class="detail-value"><?= !empty($record['baby_treatment']) ? nl2br(htmlspecialchars($record['baby_treatment'])) : '<span class="empty-data">No treatment given</span>' ?></span>
+                    </div>
+                </div>
+            </div>
             
-            <div class="relative z-10 flex flex-col gap-10">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-8">
-                    <div class="space-y-2">
-                        <span class="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-white/80 border border-white/10 italic">Core Health Observation</span>
-                        <h4 class="text-3xl font-black text-white tracking-tight">Diagnostic <span class="text-health-400">Findings</span></h4>
-                    </div>
-                    <div class="flex items-center gap-3">
-                         <div class="px-6 py-4 bg-white/5 rounded-3xl border border-white/10 text-center">
-                            <span class="text-[9px] font-black text-white/40 uppercase block mb-1">Visit Number</span>
-                            <span class="text-xl font-black text-health-400 uppercase italic">№ <?= $record['visit_number'] ?></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white/5 p-6 rounded-3xl border border-white/10">
-                        <span class="text-[9px] font-black text-white/40 uppercase block mb-3 tracking-widest">Uterus Status</span>
-                        <span class="text-sm font-bold text-white"><?= !empty($record['uterus_status']) ? ucfirst($record['uterus_status']) : '---'; ?></span>
-                    </div>
-                    <div class="bg-white/5 p-6 rounded-3xl border border-white/10">
-                        <span class="text-[9px] font-black text-white/40 uppercase block mb-3 tracking-widest">Lochia Vectors</span>
-                        <span class="text-sm font-bold text-white"><?= !empty($record['lochia_status']) ? ucfirst($record['lochia_status']) : '---'; ?></span>
-                    </div>
-                    <div class="bg-white/5 p-6 rounded-3xl border border-white/10">
-                        <span class="text-[9px] font-black text-white/40 uppercase block mb-3 tracking-widest">Breasts Eval.</span>
-                        <span class="text-sm font-bold text-white"><?= !empty($record['breasts_status']) ? ucfirst($record['breasts_status']) : '---'; ?></span>
-                    </div>
-                    <div class="bg-white/5 p-6 rounded-3xl border border-white/10">
-                        <span class="text-[9px] font-black text-white/40 uppercase block mb-3 tracking-widest">Emotional State</span>
-                        <span class="text-sm font-bold text-white uppercase italic"><?= !empty($record['emotional_state']) ? str_replace('-', ' ', $record['emotional_state']) : '---'; ?></span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6">
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-health-400"></div>
-                            <span class="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Subjective Complaints</span>
-                        </div>
-                        <p class="text-sm font-medium text-white/70 leading-relaxed italic">"<?= !empty($record['complaints']) ? htmlspecialchars($record['complaints']) : 'Negative; patient reports no immediate subjective issues.'; ?>"</p>
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-health-400"></div>
-                            <span class="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Medical Interventions Given</span>
-                        </div>
-                        <p class="text-sm font-bold text-white leading-relaxed"><?= !empty($record['treatment']) ? htmlspecialchars($record['treatment']) : 'No pharmacological interventions required at this time.'; ?></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BOTTOM SECTION: NEWBORN MONITORING -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Baby Weight Component -->
-            <div class="md:col-span-1 bg-emerald-50 border border-emerald-100 p-8 rounded-[2.5rem] flex flex-col justify-between group hover:shadow-lg hover:shadow-emerald-500/5 transition-all">
-                <div class="flex items-center justify-between mb-8">
-                    <div class="w-12 h-12 rounded-2xl bg-white text-emerald-500 flex items-center justify-center text-xl shadow-sm group-hover:scale-110 transition-transform">
-                        <i class="fas fa-weight-scale"></i>
-                    </div>
-                    <span class="px-3 py-1 bg-white text-emerald-600 text-[9px] font-black rounded-xl border border-emerald-100">Weight Tracking</span>
-                </div>
-                <div>
-                     <span class="text-[9px] font-black text-emerald-600/50 uppercase block mb-1">Clinical Weight (kg)</span>
-                     <div class="flex items-baseline gap-2">
-                        <span class="text-4xl font-black text-emerald-800 tracking-tighter"><?= $record['baby_weight'] ?: '---'; ?></span>
-                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest italic">Stable</span>
-                     </div>
-                </div>
-            </div>
-
-            <!-- Feeding & Health Component -->
-            <div class="md:col-span-2 bg-white border-2 border-slate-50 p-8 rounded-[2.5rem] shadow-sm flex flex-col justify-between">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center">
-                            <i class="fas fa-person-breastfeeding text-xl"></i>
-                        </div>
-                        <div>
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Nutritional Model</span>
-                            <span class="text-sm font-black text-slate-800 uppercase italic leading-tight"><?= !empty($record['feeding_method']) ? str_replace('-', ' ', $record['feeding_method']) : 'Not Specified'; ?></span>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-[9px] font-black text-slate-400 uppercase block mb-1">Next Expected Visit</span>
-                        <span class="text-sm font-black text-health-600 uppercase italic"><?= !empty($record['next_visit_date']) && $record['next_visit_date'] != '0000-00-00' ? date('M d, Y', strtotime($record['next_visit_date'])) : 'Unscheduled'; ?></span>
+            <!-- Follow-up & Counseling -->
+            <div class="detail-section">
+                <h6><i class="fas fa-calendar-check me-2"></i>Follow-up & Counseling</h6>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Counseling Topics:</span>
+                        <span class="detail-value"><?= !empty($record['counseling_topics']) ? nl2br(htmlspecialchars($record['counseling_topics'])) : '<span class="empty-data">No counseling recorded</span>' ?></span>
                     </div>
                 </div>
                 
-                <div class="mt-8 pt-8 border-t border-slate-50 grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-2">
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Pediatric Observations</span>
-                        <p class="text-xs font-bold text-slate-600 leading-relaxed italic">"<?= !empty($record['baby_issues']) ? htmlspecialchars($record['baby_issues']) : 'No pediatric concerns reported.'; ?>"</p>
-                    </div>
-                    <div class="space-y-2">
-                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Health Directives</span>
-                        <p class="text-xs font-black text-slate-500 leading-relaxed"><?= !empty($record['counseling_topics']) ? htmlspecialchars($record['counseling_topics']) : 'Standard neonatal hygiene and feeding protocols verified.'; ?></p>
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Next Visit Date:</span>
+                        <span class="detail-value">
+                            <?= !empty($record['next_visit_date']) && $record['next_visit_date'] != '0000-00-00' ? 
+                                date('M j, Y', strtotime($record['next_visit_date'])) : 
+                                '<span class="empty-data">Not scheduled</span>' ?>
+                        </span>
                     </div>
                 </div>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Referral Needed:</span>
+                        <span class="detail-value">
+                            <?= $record['referral_needed'] ? 
+                                '<span class="badge bg-warning">Yes</span>' : 
+                                '<span class="badge bg-secondary">No</span>' ?>
+                        </span>
+                    </div>
+                </div>
+                
+                <?php if ($record['referral_needed'] && !empty($record['referral_details'])): ?>
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Referral Details:</span>
+                        <span class="detail-value"><?= nl2br(htmlspecialchars($record['referral_details'])) ?></span>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
-
     </div>
 
     <?php
