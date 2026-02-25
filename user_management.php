@@ -698,9 +698,11 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                     <div>
                         <label class="form-label-premium">System Role</label>
                         <select name="role" required class="form-input-premium">
-                            <option value="user">User</option>
                             <option value="admin">Administrator</option>
                             <option value="midwife">Midwife</option>
+                            <option value="bns">BNS (Nutrition Scholar)</option>
+                            <option value="bhw">BHW (Health Worker)</option>
+                            <option value="mother">Mother</option>
                         </select>
                     </div>
                     <div>
@@ -755,9 +757,11 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                     <div>
                         <label class="form-label-premium">System Role</label>
                         <select name="role" id="edit_role" required class="form-input-premium">
-                            <option value="user">User</option>
                             <option value="admin">Administrator</option>
                             <option value="midwife">Midwife</option>
+                            <option value="bns">BNS (Nutrition Scholar)</option>
+                            <option value="bhw">BHW (Health Worker)</option>
+                            <option value="mother">Mother</option>
                         </select>
                     </div>
                     <div>
