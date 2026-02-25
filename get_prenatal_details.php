@@ -85,167 +85,254 @@ try {
     // Format the data for display
     ?>
     
-    <!-- MODAL CONTENT: PREMIUM CLINICAL LAYOUT -->
-    <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div class="row">
+        <!-- Mother Information -->
+        <div class="col-md-6">
+            <div class="detail-section mother-info">
+                <h6><i class="fas fa-female me-2"></i>Mother Information</h6>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value"><?= htmlspecialchars(($record['mother_first_name'] ?? '') . ' ' . ($record['mother_last_name'] ?? '')) ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Contact:</span>
+                    <span class="detail-value"><?= !empty($record['mother_phone']) ? htmlspecialchars($record['mother_phone']) : '<span class="empty-data">Not provided</span>' ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value"><?= !empty($record['mother_email']) ? htmlspecialchars($record['mother_email']) : '<span class="empty-data">Not provided</span>' ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Address:</span>
+                    <span class="detail-value"><?= !empty($record['address']) ? htmlspecialchars($record['address']) : '<span class="empty-data">Not provided</span>' ?></span>
+                </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Blood Type:</span>
+                    <span class="detail-value">
+                        <?= !empty($record['blood_type']) ? 
+                            htmlspecialchars($record['blood_type'] . ($record['rh_factor'] ?? '')) : 
+                            '<span class="empty-data">Not recorded</span>' ?>
+                    </span>
+                </div>
+            </div>
+        </div>
         
-        <!-- TOP SECTION: PATIENT & PREGNANCY MATRICES -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Patient Biological Identity -->
-            <div class="bg-white border-2 border-slate-50 rounded-[2.5rem] p-8 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center">
-                        <i class="fas fa-fingerprint"></i>
-                    </div>
-                    <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest">Biological Profile</h4>
+        <!-- Pregnancy Information -->
+        <div class="col-md-6">
+            <div class="detail-section pregnancy-info">
+                <h6><i class="fas fa-baby me-2"></i>Pregnancy Information</h6>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Gravida/Para:</span>
+                    <span class="detail-value">G<?= $record['gravida'] ?? '?' ?> P<?= $record['para'] ?? '?' ?></span>
                 </div>
-                
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Legal Name</span>
-                        <span class="text-sm font-bold text-slate-800"><?= htmlspecialchars(($record['mother_first_name'] ?? '') . ' ' . ($record['mother_last_name'] ?? '')) ?></span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Comm. Link</span>
-                        <span class="text-sm font-bold text-health-600"><?= !empty($record['mother_phone']) ? htmlspecialchars($record['mother_phone']) : '---'; ?></span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Clinical Email</span>
-                        <span class="text-xs font-bold text-slate-500"><?= !empty($record['mother_email']) ? htmlspecialchars($record['mother_email']) : '---'; ?></span>
-                    </div>
-                    <div class="flex items-center justify-between py-3 border-b border-slate-50">
-                        <span class="text-[10px] font-black text-slate-400 uppercase">Blood Matrix</span>
-                        <div class="flex items-center gap-2">
-                             <span class="px-2 py-1 bg-rose-50 text-rose-600 text-[10px] font-black rounded-lg border border-rose-100 uppercase"><?= !empty($record['blood_type']) ? htmlspecialchars($record['blood_type'] . ($record['rh_factor'] ?? '')) : 'N/A'; ?></span>
-                        </div>
-                    </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Living Children:</span>
+                    <span class="detail-value"><?= $record['living_children'] ?? '0' ?></span>
                 </div>
-            </div>
-
-            <!-- Pregnancy Diagnostic Matrix -->
-            <div class="bg-white border-2 border-slate-50 rounded-[2.5rem] p-8 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                        <i class="fas fa-heart-pulse"></i>
-                    </div>
-                    <h4 class="text-sm font-black text-slate-400 uppercase tracking-widest">Diagnostic Matrix</h4>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Abortions:</span>
+                    <span class="detail-value"><?= $record['abortions'] ?? '0' ?></span>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4 h-full">
-                    <div class="bg-slate-50/50 rounded-2xl p-4 flex flex-col justify-center">
-                        <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Obstetric History</span>
-                        <span class="text-lg font-black text-slate-800 tracking-tight">G<?= $record['gravida'] ?? '?' ?> P<?= $record['para'] ?? '?' ?></span>
-                    </div>
-                    <div class="bg-slate-50/50 rounded-2xl p-4 flex flex-col justify-center">
-                        <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Expected Delivery</span>
-                        <span class="text-xs font-black text-amber-600 uppercase italic"><?= !empty($record['edc']) && $record['edc'] != '0000-00-00' ? date('M d, Y', strtotime($record['edc'])) : 'Unscheduled'; ?></span>
-                    </div>
-                    <div class="col-span-2 bg-health-50 rounded-2xl p-4 flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white text-health-600 flex items-center justify-center shadow-soft">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div>
-                            <span class="text-[9px] font-black text-health-600/50 uppercase block">Gestational Progress</span>
-                            <span class="text-sm font-black text-health-700 uppercase"><?= $gestationalWeeks ?: 'Calculations Pending'; ?></span>
-                        </div>
-                    </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">LMP:</span>
+                    <span class="detail-value">
+                        <?= !empty($record['lmp']) && $record['lmp'] != '0000-00-00' ? 
+                            date('M j, Y', strtotime($record['lmp'])) : 
+                            '<span class="empty-data">Not recorded</span>' ?>
+                    </span>
                 </div>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">EDC:</span>
+                    <span class="detail-value">
+                        <?= !empty($record['edc']) && $record['edc'] != '0000-00-00' ? 
+                            date('M j, Y', strtotime($record['edc'])) : 
+                            '<span class="empty-data">Not calculated</span>' ?>
+                    </span>
+                </div>
+                <?php if (!empty($gestationalWeeks)): ?>
+                <div class="detail-item d-flex">
+                    <span class="detail-label">Gestational Age:</span>
+                    <span class="detail-value"><?= $gestationalWeeks ?></span>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
-
-        <!-- MIDDLE SECTION: OBSERVATION TIMELINE -->
-        <div class="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden group/records">
-            <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/5 to-transparent"></div>
-            <i class="fas fa-microscope absolute -right-4 -bottom-4 text-8xl text-white/5 rotate-12 group-hover/records:rotate-0 transition-transform duration-700"></i>
-            
-            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <div class="lg:col-span-2 space-y-8">
-                    <div>
-                        <span class="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest text-white/80 border border-white/10 mb-4">Observation Findings</span>
-                        <h4 class="text-3xl font-black text-white tracking-tight leading-tight">Clinical Diagnosis & <br><span class="text-health-400">Treatment Plan</span></h4>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <span class="text-[10px] font-black text-white/40 uppercase tracking-widest block">Main Complaint</span>
-                            <p class="text-sm font-medium text-white/80 italic">"<?= !empty($record['complaints']) ? htmlspecialchars($record['complaints']) : 'No subjective reports recorded.'; ?>"</p>
-                        </div>
-                        <div class="space-y-2">
-                            <span class="text-[10px] font-black text-white/40 uppercase tracking-widest block">Core Findings</span>
-                            <p class="text-sm font-medium text-white/80"><?= !empty($record['findings']) ? htmlspecialchars($record['findings']) : 'No significant clinical findings.'; ?></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/5 backdrop-blur-md rounded-3xl p-6 border border-white/10 flex flex-col justify-between">
-                    <div class="space-y-6">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-black text-white/40 uppercase tracking-widest">Medical Directive</span>
-                            <i class="fas fa-prescription text-health-400"></i>
-                        </div>
-                        <p class="text-sm font-bold text-white leading-relaxed"><?= !empty($record['diagnosis']) ? htmlspecialchars($record['diagnosis']) : 'Final diagnosis pending evaluation.'; ?></p>
-                    </div>
-                    <div class="pt-6 border-t border-white/5 mt-6">
-                        <span class="text-[9px] font-black text-health-400 uppercase block mb-1 tracking-widest">Recorded On</span>
-                        <span class="text-xs font-bold text-white/60 uppercase"><?= date('F d, Y @ h:i A', strtotime($record['recorded_at'])); ?></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BOTTOM SECTION: VITAL SIGNATURES -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white border border-slate-100 p-6 rounded-3xl flex flex-col items-center text-center group hover:border-rose-100 transition-all">
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-droplet"></i>
-                </div>
-                <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Blood Pressure</span>
-                <span class="text-lg font-black text-slate-800"><?= $record['blood_pressure'] ?: '---'; ?></span>
-            </div>
-            
-            <div class="bg-white border border-slate-100 p-6 rounded-3xl flex flex-col items-center text-center group hover:border-emerald-100 transition-all">
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-weight-scale"></i>
-                </div>
-                <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Current Weight</span>
-                <span class="text-lg font-black text-slate-800"><?= $record['weight'] ?: '---'; ?> <span class="text-xs font-medium">kg</span></span>
-            </div>
-
-            <div class="bg-white border border-slate-100 p-6 rounded-3xl flex flex-col items-center text-center group hover:border-amber-100 transition-all">
-                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-temperature-half"></i>
-                </div>
-                <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Body Temp</span>
-                <span class="text-lg font-black text-slate-800"><?= $record['temperature'] ?: '---'; ?> <span class="text-xs font-medium">°C</span></span>
-            </div>
-
-            <div class="bg-white border border-slate-100 p-6 rounded-3xl flex flex-col items-center text-center group hover:border-sky-100 transition-all">
-                <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-500 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-calendar-day"></i>
-                </div>
-                <span class="text-[9px] font-black text-slate-400 uppercase mb-1">Next Appointment</span>
-                <span class="text-sm font-black text-sky-600 uppercase italic"><?= !empty($record['next_visit_date']) && $record['next_visit_date'] != '0000-00-00' ? date('M d, Y', strtotime($record['next_visit_date'])) : 'TBD'; ?></span>
-            </div>
-        </div>
-
     </div>
-<?php
     
-} catch (PDOException $e) {
-    error_log("Database error in get_prenatal_details.php: " . $e->getMessage());
-    http_response_code(500);
-    echo '<div class="bg-rose-50 border border-rose-100 p-8 rounded-[2rem] text-center">
-            <i class="fas fa-database text-rose-500 text-3xl mb-4"></i>
-            <p class="font-bold text-rose-800 uppercase tracking-widest text-xs">Registry Connection Error</p>
-          </div>';
-} catch (Exception $e) {
-    error_log("Error in get_prenatal_details.php: " . $e->getMessage());
-    http_response_code(500);
-    echo '<div class="bg-amber-50 border border-amber-100 p-8 rounded-[2rem] text-center">
-            <i class="fas fa-exclamation-triangle text-amber-500 text-3xl mb-4"></i>
-            <p class="font-bold text-amber-800 uppercase tracking-widest text-xs">Clinical Evaluation Error</p>
-          </div>';
-}
-?>
+    <!-- Current Visit Information -->
+    <div class="detail-section visit-info">
+        <h6><i class="fas fa-calendar-alt me-2"></i>Current Visit Information</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Visit Date:</span>
+                    <span class="detail-value"><?= date('M j, Y', strtotime($record['visit_date'])) ?></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Visit Number:</span>
+                    <span class="detail-value"><?= $record['visit_number'] ?? '' ?></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Gestational Age:</span>
+                    <span class="detail-value"><?= $record['gestational_age'] ?? 'Not recorded' ?></span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="detail-item">
+                    <span class="detail-label">Recorded By:</span>
+                    <span class="detail-value">
+                        <?= !empty($record['recorded_first_name']) ? 
+                            htmlspecialchars(($record['recorded_first_name'] ?? '') . ' ' . ($record['recorded_last_name'] ?? '')) : 
+                            '<span class="empty-data">System</span>' ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Current Visit - Vital Signs & Examination -->
+        <div class="col-md-6">
+            <div class="detail-section">
+                <h6><i class="fas fa-heartbeat me-2"></i>Current Visit - Vital Signs & Examination</h6>
+                
+                <!-- Vital Signs -->
+                <div class="mb-3">
+                    <strong class="text-primary">Vital Signs:</strong>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Blood Pressure:</span>
+                                <span class="detail-value"><?= !empty($record['blood_pressure']) ? htmlspecialchars($record['blood_pressure']) : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Weight:</span>
+                                <span class="detail-value"><?= !empty($record['weight']) ? $record['weight'] . ' kg' : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Temperature:</span>
+                                <span class="detail-value"><?= !empty($record['temperature']) ? $record['temperature'] . '°C' : '<span class="empty-data">Not recorded</span>' ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Complaints & Findings -->
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Complaints:</span>
+                        <span class="detail-value"><?= !empty($record['complaints']) ? nl2br(htmlspecialchars($record['complaints'])) : '<span class="empty-data">None reported</span>' ?></span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Findings:</span>
+                        <span class="detail-value"><?= !empty($record['findings']) ? nl2br(htmlspecialchars($record['findings'])) : '<span class="empty-data">No findings</span>' ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Current Visit - Diagnosis & Treatment -->
+        <div class="col-md-6">
+            <div class="detail-section">
+                <h6><i class="fas fa-stethoscope me-2"></i>Current Visit - Diagnosis & Treatment</h6>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Diagnosis:</span>
+                        <span class="detail-value"><?= !empty($record['diagnosis']) ? nl2br(htmlspecialchars($record['diagnosis'])) : '<span class="empty-data">No diagnosis</span>' ?></span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="detail-item">
+                        <span class="detail-label">Treatment:</span>
+                        <span class="detail-value"><?= !empty($record['treatment']) ? nl2br(htmlspecialchars($record['treatment'])) : '<span class="empty-data">No treatment</span>' ?></span>
+                    </div>
+                </div>
+                
+                <!-- Medications -->
+                <div class="mb-3">
+                    <strong class="text-primary">Medications:</strong>
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Iron:</span>
+                                <span class="detail-value">
+                                    <?= $record['iron_supplement'] ? 
+                                        '<span class="medication-yes">Yes</span>' : 
+                                        '<span class="medication-no">No</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Folic Acid:</span>
+                                <span class="detail-value">
+                                    <?= $record['folic_acid'] ? 
+                                        '<span class="medication-yes">Yes</span>' : 
+                                        '<span class="medication-no">No</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="detail-item">
+                                <span class="detail-label">Calcium:</span>
+                                <span class="detail-value">
+                                    <?= $record['calcium'] ? 
+                                        '<span class="medication-yes">Yes</span>' : 
+                                        '<span class="medication-no">No</span>' ?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if (!empty($record['other_meds'])): ?>
+                    <div class="detail-item">
+                        <span class="detail-label">Other Meds:</span>
+                        <span class="detail-value"><?= nl2br(htmlspecialchars($record['other_meds'])) ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Laboratory Results and Treatments Given sections removed as requested for testing auto-sync -->
+
+    
+    <!-- Follow-up Information -->
+    <div class="detail-section mt-4">
+        <h6><i class="fas fa-calendar-check me-2"></i>Follow-up Information</h6>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <span class="detail-label">Next Visit Date:</span>
+                    <span class="detail-value">
+                        <?= !empty($record['next_visit_date']) && $record['next_visit_date'] != '0000-00-00' ? 
+                            date('M j, Y', strtotime($record['next_visit_date'])) : 
+                            '<span class="empty-data">Not scheduled</span>' ?>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-item">
+                    <span class="detail-label">Recorded At:</span>
+                    <span class="detail-value"><?= date('M j, Y g:i A', strtotime($record['recorded_at'])) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php
     
