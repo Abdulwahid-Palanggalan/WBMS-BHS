@@ -169,474 +169,222 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management - Kibenes eBirth</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>User Management - Help Desk System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 0.35em 0.65em;
-        }
-        .nav-tabs .nav-link.active {
-            font-weight: 600;
-        }
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #007bff;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .action-buttons .btn {
-            margin: 0 2px;
-        }
-        .table th {
-            border-top: none;
-            font-weight: 700;
-            color: #ffffff;
-            background-color: #2c3e50;
-            border-bottom: 2px solid #34495e;
-            padding: 12px 8px;
-        }
-        .table-hover tbody tr:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-        .action-buttons .btn-sm {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php include_once __DIR__ . '/includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .stat-card-clinical {
+                @apply bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300;
+            }
+            .table-modern th {
+                @apply px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50;
+            }
+            .table-modern td {
+                @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-50;
+            }
+            .card-premium {
+                @apply bg-white rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50 p-8;
+            }
+            .form-input-premium {
+                @apply w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-health-500 focus:ring-4 focus:ring-health-500/10 outline-none transition-all duration-200 bg-white;
+            }
+            .form-label-premium {
+                @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1;
+            }
+            .user-avatar-premium {
+                @apply w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold shadow-lg;
+            }
+            .tab-btn {
+                @apply px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-2;
+            }
+            .tab-btn-active {
+                @apply bg-health-600 text-white shadow-lg shadow-health-100;
+            }
+            .tab-btn-inactive {
+                @apply bg-white text-slate-400 hover:bg-slate-50 border border-slate-100;
+            }
         }
     </style>
 </head>
-<body>
-    <?php include_once 'includes/header.php'; ?>
+<body class="bg-slate-50 min-h-full">
+    <?php include_once __DIR__ . '/includes/header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
-        <?php include_once 'includes/sidebar.php'; ?>
+        <?php include_once __DIR__ . '/includes/sidebar.php'; ?>
         
         <main class="flex-1 p-4 lg:p-8 space-y-8">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <div>
-                        <h1 class="h2">User Management</h1>
-                        <p class="text-muted mb-0">Manage user accounts and permissions</p>
-                    </div>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                        <i class="fas fa-user-plus"></i> Add User
-                    </button>
+            <!-- CLINICAL HEADER -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                <div>
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                        <i class="fas fa-users-gear text-health-600"></i>
+                        User Management
+                    </h1>
+                    <p class="text-slate-500 font-medium mt-1">Manage system access, roles, and administrative permissions.</p>
                 </div>
-                
-                <!-- Alerts -->
-                <?php if ($message): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i><?php echo $message; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <?php endif; ?>
-                
-                <?php if ($error): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-                <?php endif; ?>
-                
-                <!-- Status Tabs -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs" id="userTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-                                    Pending <span class="badge bg-warning ms-1"><?php echo $pendingCount; ?></span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
-                                    Active <span class="badge bg-success ms-1"><?php echo $activeCount; ?></span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="suspended-tab" data-bs-toggle="tab" data-bs-target="#suspended" type="button" role="tab">
-                                    Suspended <span class="badge bg-danger ms-1"><?php echo $suspendedCount; ?></span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">
-                                    Rejected <span class="badge bg-secondary ms-1"><?php echo $rejectedCount; ?></span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
-                                    All Users <span class="badge bg-primary ms-1"><?php echo $totalCount; ?></span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="card-body">
-                        <div class="tab-content" id="userTabsContent">
-                            <!-- Pending Users Tab -->
-                            <div class="tab-pane fade show active" id="pending" role="tabpanel">
-                                <?php
-                                $pendingUsers = array_filter($users, function($user) {
-                                    return $user['status'] === 'pending';
-                                });
-                                ?>
-                                <?php if (!empty($pendingUsers)): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Username</th>
-                                                    <th>Email</th>
-                                                    <th>Role</th>
-                                                    <th>Registered</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($pendingUsers as $user): ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="user-avatar me-3">
-                                                                <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
-                                                            </div>
-                                                            <div>
-                                                                <div class="fw-semibold"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></div>
-                                                                <small class="text-muted">Waiting approval</small>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                                    <td>
-                                                        <span class="badge bg-info"><?php echo ucfirst($user['role']); ?></span>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo date('M j, Y', strtotime($user['created_at'])); ?>
-                                                    </td>
-                                                    <td>
-                                                        <div class="action-buttons">
-                                                            <a href="?action=approve&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-success" title="Approve">
-                                                                <i class="fas fa-check"></i> Approve
-                                                            </a>
-                                                            <a href="?action=reject&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-danger" title="Reject" onclick="return confirm('Are you sure you want to reject this user?')">
-                                                                <i class="fas fa-times"></i> Reject
-                                                            </a>
-                                                            <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info" title="Edit">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                            <a href="?action=delete&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
-                                                                <i class="fas fa-trash"></i> Delete
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-center py-4 text-muted">
-                                        <i class="fas fa-users fa-3x mb-3"></i>
-                                        <h5>No Pending Users</h5>
-                                        <p>There are no users waiting for approval.</p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- Active Users Tab -->
-                            <div class="tab-pane fade" id="active" role="tabpanel">
-                                <?php
-                                $activeUsers = array_filter($users, function($user) {
-                                    return $user['status'] === 'active';
-                                });
-                                ?>
-                                <?php if (!empty($activeUsers)): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Username</th>
-                                                    <th>Email</th>
-                                                    <th>Role</th>
-                                                    <th>Last Active</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($activeUsers as $user): ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="user-avatar me-3">
-                                                                <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
-                                                            </div>
-                                                            <div>
-                                                                <div class="fw-semibold"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></div>
-                                                                <small class="text-success">Approved</small>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                                    <td>
-                                                        <span class="badge bg-info"><?php echo ucfirst($user['role']); ?></span>
-                                                    </td>
-                                                    <td>
-                                                        <?php 
-                                                        if ($user['last_activity']) {
-                                                            echo date('M j, Y g:i A', strtotime($user['last_activity']));
-                                                        } else {
-                                                            echo 'Never';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                    <td>
-                                                        <div class="action-buttons">
-                                                            <a href="?action=suspend&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-warning" title="Suspend" onclick="return confirm('Are you sure you want to suspend this user?')">
-                                                                <i class="fas fa-pause"></i> Suspend
-                                                            </a>
-                                                            <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info" title="Edit">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-center py-4 text-muted">
-                                        <i class="fas fa-users fa-3x mb-3"></i>
-                                        <h5>No Active Users</h5>
-                                        <p>There are no active users in the system.</p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- Suspended Users Tab -->
-                            <div class="tab-pane fade" id="suspended" role="tabpanel">
-                                <?php
-                                $suspendedUsers = array_filter($users, function($user) {
-                                    return $user['status'] === 'suspended';
-                                });
-                                ?>
-                                <?php if (!empty($suspendedUsers)): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Username</th>
-                                                    <th>Email</th>
-                                                    <th>Role</th>
-                                                    <th>Suspended Since</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($suspendedUsers as $user): ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="user-avatar me-3">
-                                                                <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
-                                                            </div>
-                                                            <div>
-                                                                <div class="fw-semibold"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></div>
-                                                                <small class="text-danger">Suspended</small>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                                    <td>
-                                                        <span class="badge bg-info"><?php echo ucfirst($user['role']); ?></span>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo date('M j, Y', strtotime($user['created_at'])); ?>
-                                                    </td>
-                                                    <td>
-                                                        <div class="action-buttons">
-                                                            <a href="?action=activate&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-success" title="Activate">
-                                                                <i class="fas fa-play"></i> Activate
-                                                            </a>
-                                                            <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info" title="Edit">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-center py-4 text-muted">
-                                        <i class="fas fa-users fa-3x mb-3"></i>
-                                        <h5>No Suspended Users</h5>
-                                        <p>There are no suspended users.</p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
+                <button onclick="openModal('addUserModal')" class="bg-health-600 hover:bg-health-700 text-white font-bold px-6 py-3 rounded-2xl transition-all shadow-lg shadow-health-100 flex items-center gap-2 active:scale-95">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Add New User</span>
+                </button>
+            </div>
 
-                            <!-- Rejected Users Tab -->
-                            <div class="tab-pane fade" id="rejected" role="tabpanel">
-                                <?php
-                                $rejectedUsers = array_filter($users, function($user) {
-                                    return $user['status'] === 'rejected';
-                                });
-                                ?>
-                                <?php if (!empty($rejectedUsers)): ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th>Username</th>
-                                                    <th>Email</th>
-                                                    <th>Role</th>
-                                                    <th>Rejected Date</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php foreach ($rejectedUsers as $user): ?>
-                                                <tr>
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="user-avatar me-3">
-                                                                <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
-                                                            </div>
-                                                            <div>
-                                                                <div class="fw-semibold"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></div>
-                                                                <small class="text-secondary">Rejected</small>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                                    <td>
-                                                        <span class="badge bg-info"><?php echo ucfirst($user['role']); ?></span>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo date('M j, Y', strtotime($user['created_at'])); ?>
-                                                    </td>
-                                                    <td>
-                                                        <div class="action-buttons">
-                                                            <a href="?action=approve&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-success" title="Approve">
-                                                                <i class="fas fa-check"></i> Approve
-                                                            </a>
-                                                            <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info" title="Edit">
-                                                                <i class="fas fa-edit"></i> Edit
-                                                            </a>
-                                                            <a href="?action=delete&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
-                                                                <i class="fas fa-trash"></i> Delete
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-center py-4 text-muted">
-                                        <i class="fas fa-users fa-3x mb-3"></i>
-                                        <h5>No Rejected Users</h5>
-                                        <p>There are no rejected users.</p>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- All Users Tab -->
-                            <div class="tab-pane fade" id="all" role="tabpanel">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
+            <!-- PREMIUM ALERTS -->
+            <?php if ($message): ?>
+            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top duration-500">
+                <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <p class="font-bold text-sm"><?= $message; ?></p>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($error): ?>
+            <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-center gap-3 text-rose-800 animate-in fade-in slide-in-from-top duration-500">
+                <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <p class="font-bold text-sm"><?= $error; ?></p>
+            </div>
+            <?php endif; ?>
+
+            <!-- STATS GRID -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="stat-card-clinical border-l-4 border-health-600">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Total Registry</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $totalCount; ?></h3>
+                        </div>
+                        <div class="w-10 h-10 bg-health-50 text-health-600 rounded-xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card-clinical border-l-4 border-amber-500 <?= $pendingCount > 0 ? 'ring-2 ring-amber-500/20' : '' ?>">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Pending Approval</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $pendingCount; ?></h3>
+                        </div>
+                        <div class="w-10 h-10 <?= $pendingCount > 0 ? 'bg-amber-500 text-white animate-pulse' : 'bg-amber-50 text-amber-500' ?> rounded-xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card-clinical border-l-4 border-emerald-500">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Active Accounts</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $activeCount; ?></h3>
+                        </div>
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card-clinical border-l-4 border-slate-400">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Suspended</p>
+                            <h3 class="text-3xl font-black text-slate-900"><?= $suspendedCount; ?></h3>
+                        </div>
+                        <div class="w-10 h-10 bg-slate-100 text-slate-500 rounded-xl flex items-center justify-center shadow-soft">
+                            <i class="fas fa-user-slash"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            <!-- USER REGISTRY -->
+            <div class="space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em]">User Registry Center</h3>
+                    
+                    <div class="flex flex-wrap gap-2" id="userTabs" role="tablist">
+                        <button onclick="switchTab('pending')" class="tab-btn tab-btn-active" id="pending-tab">
+                            <i class="fas fa-clock"></i>
+                            Pending <span class="bg-white/20 px-2 py-0.5 rounded-lg ml-1"><?= $pendingCount; ?></span>
+                        </button>
+                        <button onclick="switchTab('active')" class="tab-btn tab-btn-inactive" id="active-tab">
+                            <i class="fas fa-check-circle"></i>
+                            Active <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $activeCount; ?></span>
+                        </button>
+                        <button onclick="switchTab('suspended')" class="tab-btn tab-btn-inactive" id="suspended-tab">
+                            <i class="fas fa-pause-circle"></i>
+                            Suspended <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $suspendedCount; ?></span>
+                        </button>
+                        <button onclick="switchTab('rejected')" class="tab-btn tab-btn-inactive" id="rejected-tab">
+                            <i class="fas fa-times-circle"></i>
+                            Rejected <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $rejectedCount; ?></span>
+                        </button>
+                        <button onclick="switchTab('all')" class="tab-btn tab-btn-inactive" id="all-tab">
+                            <i class="fas fa-users-viewfinder"></i>
+                            All <span class="bg-slate-100 px-2 py-0.5 rounded-lg ml-1"><?= $totalCount; ?></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-premium">
+                    <div id="userTabsContent">
+                        <!-- Pending Users Tab -->
+                        <div class="tab-content-item" id="pending-content">
+                            <?php $pendingUsers = array_filter($users, fn($u) => $u['status'] === 'pending'); ?>
+                            <?php if (!empty($pendingUsers)): ?>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full table-modern">
                                         <thead>
                                             <tr>
-                                                <th>User</th>
-                                                <th>Username</th>
-                                                <th>Email</th>
-                                                <th>Role</th>
-                                                <th>Status</th>
-                                                <th>Registered</th>
-                                                <th>Actions</th>
+                                                <th>User Profile</th>
+                                                <th>Access Details</th>
+                                                <th>Clinical Role</th>
+                                                <th>Registration</th>
+                                                <th class="text-right">Care Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($users as $user): ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="user-avatar me-3">
-                                                            <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                                            <?php foreach ($pendingUsers as $user): ?>
+                                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                                <td class="py-5">
+                                                    <div class="flex items-center gap-4">
+                                                        <div class="user-avatar-premium bg-amber-500 text-white shadow-amber-100">
+                                                            <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
                                                         </div>
-                                                        <div>
-                                                            <div class="fw-semibold"><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></div>
+                                                        <div class="flex flex-col">
+                                                            <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                            <span class="text-[10px] font-medium text-slate-400 italic">Waiting approval</span>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                                <td><?php echo htmlspecialchars($user['email']); ?></td>
                                                 <td>
-                                                    <span class="badge bg-info"><?php echo ucfirst($user['role']); ?></span>
+                                                    <div class="flex flex-col">
+                                                        <span class="text-xs font-bold text-slate-600">@<?= htmlspecialchars($user['username']); ?></span>
+                                                        <span class="text-[10px] text-slate-400"><?= htmlspecialchars($user['email']); ?></span>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <?php if ($user['status'] === 'active'): ?>
-                                                    <span class="badge bg-success">Active</span>
-                                                    <?php elseif ($user['status'] === 'pending'): ?>
-                                                    <span class="badge bg-warning">Pending</span>
-                                                    <?php elseif ($user['status'] === 'suspended'): ?>
-                                                    <span class="badge bg-danger">Suspended</span>
-                                                    <?php elseif ($user['status'] === 'rejected'): ?>
-                                                    <span class="badge bg-secondary">Rejected</span>
-                                                    <?php endif; ?>
+                                                    <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
                                                 </td>
-                                                <td>
-                                                    <?php echo date('M j, Y', strtotime($user['created_at'])); ?>
-                                                </td>
-                                                <td>
-                                                    <div class="action-buttons">
-                                                        <?php if ($user['status'] === 'pending'): ?>
-                                                        <a href="?action=approve&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-success" title="Approve">
+                                                <td><span class="text-xs font-medium text-slate-500"><?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
+                                                <td class="text-right">
+                                                    <div class="flex justify-end gap-2">
+                                                        <button onclick="confirmAction('approve', <?= $user['id']; ?>)" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-emerald-100 active:scale-90" title="Approve">
                                                             <i class="fas fa-check"></i>
-                                                        </a>
-                                                        <a href="?action=reject&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-danger" title="Reject" onclick="return confirm('Are you sure you want to reject this user?')">
+                                                        </button>
+                                                        <button onclick="confirmAction('reject', <?= $user['id']; ?>)" class="bg-rose-500 hover:bg-rose-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-rose-100 active:scale-90" title="Reject">
                                                             <i class="fas fa-times"></i>
-                                                        </a>
-                                                        <?php elseif ($user['status'] === 'active'): ?>
-                                                        <a href="?action=suspend&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-warning" title="Suspend" onclick="return confirm('Are you sure you want to suspend this user?')">
-                                                            <i class="fas fa-pause"></i>
-                                                        </a>
-                                                        <?php elseif ($user['status'] === 'suspended'): ?>
-                                                        <a href="?action=activate&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-success" title="Activate">
-                                                            <i class="fas fa-play"></i>
-                                                        </a>
-                                                        <?php endif; ?>
-                                                        
-                                                        <a href="?edit_id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info" title="Edit">
+                                                        </button>
+                                                        <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-sky-100 active:scale-90" title="Edit">
                                                             <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        
-                                                        <?php if (in_array($user['status'], ['pending', 'rejected'])): ?>
-                                                        <a href="?action=delete&id=<?php echo $user['id']; ?>" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
-                                                            <i class="fas fa-trash"></i>
-                                                        </a>
-                                                        <?php endif; ?>
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -644,176 +392,491 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                                         </tbody>
                                     </table>
                                 </div>
+                            <?php else: ?>
+                                <div class="text-center py-10 opacity-50">
+                                    <i class="fas fa-user-clock text-4xl mb-4 text-slate-300"></i>
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No pending approvals found</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Active Users Tab -->
+                        <div class="tab-content-item hidden" id="active-content">
+                            <?php $activeUsers = array_filter($users, fn($u) => $u['status'] === 'active'); ?>
+                            <?php if (!empty($activeUsers)): ?>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>User Profile</th>
+                                                <th>Access Details</th>
+                                                <th>Clinical Role</th>
+                                                <th>Last Activity</th>
+                                                <th class="text-right">Care Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($activeUsers as $user): ?>
+                                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                                <td class="py-5">
+                                                    <div class="flex items-center gap-4">
+                                                        <div class="user-avatar-premium bg-health-600 text-white shadow-health-100">
+                                                            <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                                                        </div>
+                                                        <div class="flex flex-col">
+                                                            <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Active System Access</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex flex-col">
+                                                        <span class="text-xs font-bold text-slate-600">@<?= htmlspecialchars($user['username']); ?></span>
+                                                        <span class="text-[10px] text-slate-400"><?= htmlspecialchars($user['email']); ?></span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-xs font-medium text-slate-500">
+                                                        <?= $user['last_activity'] ? date('M j, Y g:i A', strtotime($user['last_activity'])) : 'No recent login'; ?>
+                                                    </span>
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="flex justify-end gap-2">
+                                                        <button onclick="confirmAction('suspend', <?= $user['id']; ?>)" class="bg-amber-500 hover:bg-amber-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-amber-100 active:scale-90" title="Suspend">
+                                                            <i class="fas fa-pause"></i>
+                                                        </button>
+                                                        <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-sky-100 active:scale-90" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php else: ?>
+                                <div class="text-center py-10 opacity-50">
+                                    <i class="fas fa-users-slash text-4xl mb-4 text-slate-300"></i>
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No active accounts matching criteria</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Suspended Users Tab -->
+                        <div class="tab-content-item hidden" id="suspended-content">
+                            <?php $suspendedUsers = array_filter($users, fn($u) => $u['status'] === 'suspended'); ?>
+                            <?php if (!empty($suspendedUsers)): ?>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>User Profile</th>
+                                                <th>Access Details</th>
+                                                <th>Clinical Role</th>
+                                                <th>Inactivity</th>
+                                                <th class="text-right">Care Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($suspendedUsers as $user): ?>
+                                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                                <td class="py-5">
+                                                    <div class="flex items-center gap-4">
+                                                        <div class="user-avatar-premium bg-slate-400 text-white shadow-slate-100">
+                                                            <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                                                        </div>
+                                                        <div class="flex flex-col">
+                                                            <span class="font-bold text-slate-800 tracking-tight transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Access Terminated</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex flex-col">
+                                                        <span class="text-xs font-bold text-slate-600">@<?= htmlspecialchars($user['username']); ?></span>
+                                                        <span class="text-[10px] text-slate-400"><?= htmlspecialchars($user['email']); ?></span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
+                                                </td>
+                                                <td><span class="text-xs font-medium text-slate-500">Suspended: <?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
+                                                <td class="text-right">
+                                                    <div class="flex justify-end gap-2">
+                                                        <button onclick="confirmAction('activate', <?= $user['id']; ?>)" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-emerald-100 active:scale-90" title="Reactivate">
+                                                            <i class="fas fa-play"></i>
+                                                        </button>
+                                                        <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-sky-100 active:scale-90" title="Edit">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php else: ?>
+                                <div class="text-center py-10 opacity-50">
+                                    <i class="fas fa-user-slash text-4xl mb-4 text-slate-300"></i>
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No suspended accounts found</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Rejected Users Tab -->
+                        <div class="tab-content-item hidden" id="rejected-content">
+                            <?php $rejectedUsers = array_filter($users, fn($u) => $u['status'] === 'rejected'); ?>
+                            <?php if (!empty($rejectedUsers)): ?>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>User Profile</th>
+                                                <th>Access Details</th>
+                                                <th>Clinical Role</th>
+                                                <th class="text-right">Care Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($rejectedUsers as $user): ?>
+                                            <tr class="hover:bg-slate-50/50 transition-colors group">
+                                                <td class="py-5">
+                                                    <div class="flex items-center gap-4 text-slate-400">
+                                                        <div class="user-avatar-premium bg-slate-200 text-slate-400 shadow-none">
+                                                            <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                                                        </div>
+                                                        <div class="flex flex-col">
+                                                            <span class="font-bold tracking-tight italic"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                            <span class="text-[10px] font-bold uppercase tracking-widest">Application Rejected</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="flex flex-col opacity-50">
+                                                        <span class="text-xs font-bold text-slate-600">@<?= htmlspecialchars($user['username']); ?></span>
+                                                        <span class="text-[10px] text-slate-400"><?= htmlspecialchars($user['email']); ?></span>
+                                                    </div>
+                                                </td>
+                                                <td><span class="opacity-50"><?= ucfirst($user['role']); ?></span></td>
+                                                <td class="text-right">
+                                                    <div class="flex justify-end gap-2">
+                                                        <button onclick="confirmAction('approve', <?= $user['id']; ?>)" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-emerald-100 active:scale-90" title="Rethink / Approve">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>
+                                                        <button onclick="confirmAction('delete', <?= $user['id']; ?>)" class="bg-rose-500 hover:bg-rose-600 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-rose-100 active:scale-90" title="Delete Forever">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php else: ?>
+                                <div class="text-center py-10 opacity-50">
+                                    <i class="fas fa-user-xmark text-4xl mb-4 text-slate-300"></i>
+                                    <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No rejected applications found</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- All Users Tab -->
+                        <div class="tab-content-item hidden" id="all-content">
+                            <div class="overflow-x-auto">
+                                <table class="w-full table-modern">
+                                    <thead>
+                                        <tr>
+                                            <th>User Profile</th>
+                                            <th>Clinical Role</th>
+                                            <th>Status</th>
+                                            <th>Registration</th>
+                                            <th class="text-right">Care Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($users as $user): ?>
+                                        <tr class="hover:bg-slate-50/50 transition-colors group">
+                                            <td class="py-5">
+                                                <div class="flex items-center gap-4">
+                                                    <?php 
+                                                        $avatarColor = match($user['status']) {
+                                                            'active' => 'bg-health-600',
+                                                            'pending' => 'bg-amber-500',
+                                                            'suspended' => 'bg-slate-400',
+                                                            'rejected' => 'bg-slate-200',
+                                                            default => 'bg-slate-200'
+                                                        };
+                                                    ?>
+                                                    <div class="user-avatar-premium <?= $avatarColor; ?> text-white font-bold">
+                                                        <?= strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                                                    </div>
+                                                    <div class="flex flex-col">
+                                                        <span class="font-bold text-slate-800 tracking-tight group-hover:text-health-700 transition-colors"><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></span>
+                                                        <span class="text-[10px] font-medium text-slate-400">@<?= htmlspecialchars($user['username']); ?></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="bg-sky-50 text-sky-600 text-[10px] font-bold px-3 py-1 rounded-full border border-sky-100 uppercase tracking-tighter italic"><?= ucfirst($user['role']); ?></span>
+                                            </td>
+                                            <td>
+                                                <?php if ($user['status'] === 'active'): ?>
+                                                <span class="text-emerald-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Active</span>
+                                                <?php elseif ($user['status'] === 'pending'): ?>
+                                                <span class="text-amber-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"><div class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div> Pending</span>
+                                                <?php elseif ($user['status'] === 'suspended'): ?>
+                                                <span class="text-slate-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">Suspended</span>
+                                                <?php elseif ($user['status'] === 'rejected'): ?>
+                                                <span class="text-slate-300 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">Rejected</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><span class="text-xs font-medium text-slate-500"><?= date('M j, Y', strtotime($user['created_at'])); ?></span></td>
+                                            <td class="text-right">
+                                                <button onclick="openEditModal(<?= htmlspecialchars(json_encode($user)); ?>)" class="bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-health-600 p-2.5 rounded-xl transition-all active:scale-90" title="Advanced Edit">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             </main>
     </div>
     
-    <!-- Add User Modal -->
-    <div class="modal fade" id="addUserModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST">
-                        <input type="hidden" name="add_user" value="1">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="first_name" class="form-label">First Name *</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="last_name" class="form-label">Last Name *</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username *</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="role" class="form-label">Role *</label>
-                            <select class="form-select" id="role" name="role" required>
-                                <option value="midwife">Midwife</option>
-                                <option value="bhw">Barangay Health Worker</option>
-                                <option value="bns">Barangay Nutrition Scholar</option>
-                                <option value="mother">Mother</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password *</label>
-                            <input type="password" class="form-control" id="password" name="password" required minlength="6">
-                            <div class="form-text">Password must be at least 6 characters long.</div>
-                        </div>
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            New users will be created with "Pending" status and will require admin approval before they can access the system.
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Add User</button>
-                    </form>
-                </div>
+    <!-- ADD USER MODAL -->
+    <div id="addUserModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in duration-300">
+            <div class="flex items-center justify-between p-8 border-b border-slate-50 bg-slate-50/50">
+                <h3 class="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                    <i class="fas fa-user-plus text-health-600"></i>
+                    Register New User
+                </h3>
+                <button onclick="closeModal('addUserModal')" class="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-health-600 transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
+            <form action="" method="POST" class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label-premium">First Name</label>
+                        <input type="text" name="first_name" required class="form-input-premium" placeholder="Enter first name">
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Last Name</label>
+                        <input type="text" name="last_name" required class="form-input-premium" placeholder="Enter last name">
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Username</label>
+                        <input type="text" name="username" required class="form-input-premium" placeholder="e.g. jdoe">
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Email Address</label>
+                        <input type="email" name="email" required class="form-input-premium" placeholder="email@example.com">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label-premium">System Role</label>
+                        <select name="role" required class="form-input-premium">
+                            <option value="user">User</option>
+                            <option value="admin">Administrator</option>
+                            <option value="midwife">Midwife</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Password</label>
+                        <input type="password" name="password" id="add-password" required class="form-input-premium" placeholder="••••••••">
+                        <div id="add-password-strength" class="text-[10px] font-bold mt-2 uppercase tracking-widest"></div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-6">
+                    <button type="button" onclick="closeModal('addUserModal')" class="px-6 py-3 rounded-2xl text-slate-400 font-bold hover:bg-slate-50 transition-all">Cancel</button>
+                    <button type="submit" name="add_user" class="bg-health-600 hover:bg-health-700 text-white font-bold px-8 py-3 rounded-2xl transition-all shadow-lg shadow-health-100 active:scale-95">Complete Registration</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Edit User Modal -->
-    <?php if ($editUser): ?>
-    <div class="modal fade show" id="editUserModal" tabindex="-1" style="display: block; padding-right: 17px;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit User</h5>
-                    <a href="?" class="btn-close"></a>
-                </div>
-                <div class="modal-body">
-                    <form method="POST">
-                        <input type="hidden" name="edit_user" value="1">
-                        <input type="hidden" name="user_id" value="<?php echo $editUser['id']; ?>">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="edit_first_name" class="form-label">First Name *</label>
-                                    <input type="text" class="form-control" id="edit_first_name" name="first_name" value="<?php echo htmlspecialchars($editUser['first_name']); ?>" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="edit_last_name" class="form-label">Last Name *</label>
-                                    <input type="text" class="form-control" id="edit_last_name" name="last_name" value="<?php echo htmlspecialchars($editUser['last_name']); ?>" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_username" class="form-label">Username *</label>
-                            <input type="text" class="form-control" id="edit_username" name="username" value="<?php echo htmlspecialchars($editUser['username']); ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_email" class="form-label">Email *</label>
-                            <input type="email" class="form-control" id="edit_email" name="email" value="<?php echo htmlspecialchars($editUser['email']); ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_role" class="form-label">Role *</label>
-                            <select class="form-select" id="edit_role" name="role" required>
-                                <option value="midwife" <?php echo $editUser['role'] === 'midwife' ? 'selected' : ''; ?>>Midwife</option>
-                                <option value="bhw" <?php echo $editUser['role'] === 'bhw' ? 'selected' : ''; ?>>Barangay Health Worker</option>
-                                <option value="bns" <?php echo $editUser['role'] === 'bns' ? 'selected' : ''; ?>>Barangay Nutrition Scholar</option>
-                                <option value="mother" <?php echo $editUser['role'] === 'mother' ? 'selected' : ''; ?>>Mother</option>
-                            </select>
-                        </div>
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            Changing user information will not affect their current status.
-                        </div>
-                        <div class="d-flex gap-2">
-                            <a href="?" class="btn btn-secondary w-50">Cancel</a>
-                            <button type="submit" class="btn btn-primary w-50">Update User</button>
-                        </div>
-                    </form>
-                </div>
+    <!-- EDIT USER MODAL -->
+    <div id="editUserModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in duration-300">
+            <div class="flex items-center justify-between p-8 border-b border-slate-50 bg-slate-50/50">
+                <h3 class="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                    <i class="fas fa-user-pen text-sky-600"></i>
+                    Update User Identity
+                </h3>
+                <button onclick="closeModal('editUserModal')" class="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-sky-600 transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
+            <form action="" method="POST" class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <input type="hidden" name="user_id" id="edit_user_id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label-premium">First Name</label>
+                        <input type="text" name="first_name" id="edit_first_name" required class="form-input-premium">
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Last Name</label>
+                        <input type="text" name="last_name" id="edit_last_name" required class="form-input-premium">
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label-premium">Email Address</label>
+                    <input type="email" name="email" id="edit_email" required class="form-input-premium">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label-premium">System Role</label>
+                        <select name="role" id="edit_role" required class="form-input-premium">
+                            <option value="user">User</option>
+                            <option value="admin">Administrator</option>
+                            <option value="midwife">Midwife</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Account Status</label>
+                        <select name="status" id="edit_status" required class="form-input-premium">
+                            <option value="pending">Pending Approval</option>
+                            <option value="active">Active System Access</option>
+                            <option value="suspended">Suspended / Deactivated</option>
+                            <option value="rejected">Rejected Application</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <label class="form-label-premium">New Password <span class="text-[10px] normal-case">(leave blank to keep current)</span></label>
+                    <input type="password" name="password" id="edit-password" class="form-input-premium" placeholder="••••••••">
+                    <div id="edit-password-strength" class="text-[10px] font-bold mt-2 uppercase tracking-widest"></div>
+                </div>
+                <div class="flex justify-end gap-3 pt-6">
+                    <button type="button" onclick="closeModal('editUserModal')" class="px-6 py-3 rounded-2xl text-slate-400 font-bold hover:bg-slate-50 transition-all">Discard Changes</button>
+                    <button type="submit" name="edit_user" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-8 py-3 rounded-2xl transition-all shadow-lg shadow-sky-100 active:scale-95">Save System Identity</button>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="modal-backdrop fade show"></div>
-    <?php endif; ?>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Auto-focus on first input when modal opens
-        document.getElementById('addUserModal')?.addEventListener('shown.bs.modal', function () {
-            document.getElementById('first_name').focus();
-        });
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
 
-        // Auto-focus on first input when edit modal is shown
-        <?php if ($editUser): ?>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('edit_first_name').focus();
-        });
-        <?php endif; ?>
-        
-        // Show password strength (optional enhancement)
-        document.getElementById('password')?.addEventListener('input', function() {
-            const password = this.value;
-            const strength = document.getElementById('password-strength');
-            
-            if (!strength) {
-                const strengthDiv = document.createElement('div');
-                strengthDiv.id = 'password-strength';
-                strengthDiv.className = 'form-text';
-                this.parentNode.appendChild(strengthDiv);
-            }
-            
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchTab(tabId) {
+            // Update Tab Buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('tab-btn-active');
+                btn.classList.add('tab-btn-inactive');
+                btn.querySelector('span').classList.remove('bg-white/20');
+                btn.querySelector('span').classList.add('bg-slate-100');
+            });
+
+            const activeBtn = document.getElementById(tabId + '-tab');
+            activeBtn.classList.remove('tab-btn-inactive');
+            activeBtn.classList.add('tab-btn-active');
+            activeBtn.querySelector('span').classList.remove('bg-slate-100');
+            activeBtn.querySelector('span').classList.add('bg-white/20');
+
+            // Update Tab Content
+            const contentItems = document.querySelectorAll('.tab-content-item');
+            contentItems.forEach(item => item.classList.add('hidden'));
+            document.getElementById(tabId + '-content').classList.remove('hidden');
+        }
+
+        function openEditModal(user) {
+            document.getElementById('edit_user_id').value = user.id;
+            document.getElementById('edit_first_name').value = user.first_name;
+            document.getElementById('edit_last_name').value = user.last_name;
+            document.getElementById('edit_email').value = user.email;
+            document.getElementById('edit_role').value = user.role;
+            document.getElementById('edit_status').value = user.status;
+            openModal('editUserModal');
+        }
+
+        function confirmAction(action, id) {
+            const configs = {
+                approve: { title: 'Approve User?', text: 'Give system access to this user?', icon: 'question', color: '#10b981' },
+                reject: { title: 'Reject Application?', text: 'Deny system access to this user?', icon: 'warning', color: '#f43f5e' },
+                suspend: { title: 'Suspend Account?', text: 'Temporarily disable system access?', icon: 'warning', color: '#f59e0b' },
+                activate: { title: 'Reactivate Account?', text: 'Restore system access for this user?', icon: 'question', color: '#10b981' },
+                delete: { title: 'Delete Forever?', text: 'This action cannot be undone!', icon: 'error', color: '#f43f5e' }
+            };
+
+            const config = configs[action];
+            Swal.fire({
+                title: config.title,
+                text: config.text,
+                icon: config.icon,
+                showCancelButton: true,
+                confirmButtonColor: config.color,
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Yes, proceed',
+                borderRadius: '1.5rem',
+                customClass: { popup: 'rounded-[2rem]' }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `?action=${action}&id=${id}`;
+                }
+            });
+        }
+
+        function updatePasswordStrength(input, output) {
+            const password = input.value;
             let strengthText = '';
             let strengthClass = '';
             
-            if (password.length === 0) {
-                strengthText = '';
-            } else if (password.length < 6) {
-                strengthText = 'Weak';
-                strengthClass = 'text-danger';
-            } else if (password.length < 8) {
-                strengthText = 'Medium';
-                strengthClass = 'text-warning';
-            } else {
-                strengthText = 'Strong';
-                strengthClass = 'text-success';
+            if (password.length > 0) {
+                if (password.length < 6) {
+                    strengthText = 'Weak Connection';
+                    strengthClass = 'text-rose-500';
+                } else if (password.length < 10) {
+                    strengthText = 'Average Security';
+                    strengthClass = 'text-amber-500';
+                } else {
+                    strengthText = 'Premium Security';
+                    strengthClass = 'text-emerald-500';
+                }
             }
             
-            document.getElementById('password-strength').innerHTML = strengthText;
-            document.getElementById('password-strength').className = 'form-text ' + strengthClass;
+            output.innerHTML = strengthText;
+            output.className = 'text-[10px] font-black mt-2 uppercase tracking-widest ' + strengthClass;
+        }
+
+        document.getElementById('add-password')?.addEventListener('input', function() {
+            updatePasswordStrength(this, document.getElementById('add-password-strength'));
         });
+        document.getElementById('edit-password')?.addEventListener('input', function() {
+            updatePasswordStrength(this, document.getElementById('edit-password-strength'));
+        });
+
+        // Open specific user for edit if requested by URL
+        <?php if (isset($_GET['edit_id'])): ?>
+            <?php
+            $editUser = array_filter($users, fn($u) => $u['id'] == $_GET['edit_id']);
+            if (!empty($editUser)):
+                $editUser = reset($editUser);
+            ?>
+                openEditModal(<?= json_encode($editUser); ?>);
+            <?php endif; ?>
+        <?php endif; ?>
     </script>
 </body>
 </html>
