@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = $_POST['username'];
         $email = $_POST['email'];
         $role = $_POST['role'];
+        $status = $_POST['status'];
         
         // Check if username or email already exists (excluding current user)
         $checkSql = "SELECT id FROM users WHERE (username = ? OR email = ?) AND id != ?";
@@ -120,10 +121,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($checkStmt->fetch()) {
             $error = "Username or email already exists!";
         } else {
-            $sql = "UPDATE users SET first_name = ?, last_name = ?, username = ?, email = ?, role = ? WHERE id = ?";
+            $params = [$firstName, $lastName, $username, $email, $role, $status];
+            $passwordSet = "";
+            if (!empty($_POST['password'])) {
+                $passwordSet = ", password = ?";
+                $params[] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            }
+            $params[] = $userId;
+            
+            $sql = "UPDATE users SET first_name = ?, last_name = ?, username = ?, email = ?, role = ?, status = ? $passwordSet WHERE id = ?";
             $stmt = $pdo->prepare($sql);
             
-            if ($stmt->execute([$firstName, $lastName, $username, $email, $role, $userId])) {
+            if ($stmt->execute($params)) {
                 $message = "User updated successfully!";
                 logActivity($_SESSION['user_id'], "Updated user ID: $userId");
             } else {
@@ -732,9 +741,15 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                         <input type="text" name="last_name" id="edit_last_name" required class="form-input-premium">
                     </div>
                 </div>
-                <div>
-                    <label class="form-label-premium">Email Address</label>
-                    <input type="email" name="email" id="edit_email" required class="form-input-premium">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="form-label-premium">Username</label>
+                        <input type="text" name="username" id="edit_username" required class="form-input-premium">
+                    </div>
+                    <div>
+                        <label class="form-label-premium">Email Address</label>
+                        <input type="email" name="email" id="edit_email" required class="form-input-premium">
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -805,6 +820,7 @@ $totalCount = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
             document.getElementById('edit_user_id').value = user.id;
             document.getElementById('edit_first_name').value = user.first_name;
             document.getElementById('edit_last_name').value = user.last_name;
+            document.getElementById('edit_username').value = user.username;
             document.getElementById('edit_email').value = user.email;
             document.getElementById('edit_role').value = user.role;
             document.getElementById('edit_status').value = user.status;
