@@ -246,16 +246,3 @@ try {
           </div>';
 }
 ?>
-
-    <?php
-    
-} catch (PDOException $e) {
-    error_log("Database error in get_prenatal_details.php: " . $e->getMessage());
-    http_response_code(500);
-    echo '<div class="alert alert-danger">Database Error: ' . htmlspecialchars($e->getMessage()) . '</div>';
-} catch (Exception $e) {
-    error_log("Error in get_prenatal_details.php: " . $e->getMessage());
-    http_response_code(500);
-    echo '<div class="alert alert-danger">Error: ' . htmlspecialchars($e->getMessage()) . '</div>';
-}
-?>
