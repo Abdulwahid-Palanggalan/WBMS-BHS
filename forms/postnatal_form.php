@@ -313,91 +313,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </section>
 
-                <!-- Visit & Vital Signs -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Visit Details -->
-                    <section class="card-premium lg:col-span-1">
-                        <div class="section-header">
-                            <div class="section-icon">
-                                <i class="fas fa-calendar-alt text-health-600"></i>
+                <!-- Visit Details -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-calendar-alt text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Visit & Timing</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Clinical timing and visit sequence</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="visit_date" class="form-label-premium">Visit Date <span class="text-rose-500">*</span></label>
+                            <input type="date" class="form-input-premium font-bold text-slate-700" id="visit_date" name="visit_date" required 
+                                   value="<?php echo htmlspecialchars($recordData['visit_date'] ?? $_POST['visit_date'] ?? date('Y-m-d')); ?>">
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="visit_date_warning">
+                                Required field
                             </div>
-                            <div>
-                                <h2 class="text-xl font-bold text-slate-800">Visit Details</h2>
-                                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Time and sequence</p>
+                        </div>
+                        <div>
+                            <label for="visit_number" class="form-label-premium">Visit Sequence <span class="text-rose-500">*</span></label>
+                            <input type="number" class="form-input-premium" id="visit_number" name="visit_number" placeholder="e.g. 1" required min="1"
+                                   value="<?php echo htmlspecialchars($recordData['visit_number'] ?? $_POST['visit_number'] ?? ''); ?>">
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="visit_number_warning">
+                                Required field
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mother's Vital Signs -->
+                <section class="card-premium">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fas fa-heartbeat text-health-600"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Maternal Vitals</h2>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Physical health metrics</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="blood_pressure" class="form-label-premium">Blood Pressure <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input type="text" class="form-input-premium pr-12" id="blood_pressure" name="blood_pressure" placeholder="110/70" required
+                                       value="<?php echo htmlspecialchars($recordData['blood_pressure'] ?? $_POST['blood_pressure'] ?? ''); ?>">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">mmHg</span>
+                            </div>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="blood_pressure_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required
                             </div>
                         </div>
 
-                        <div class="space-y-6">
-                            <div>
-                                <label for="visit_date" class="form-label-premium">Visit Date <span class="text-rose-500">*</span></label>
-                                <input type="date" class="form-input-premium font-bold text-slate-700" id="visit_date" name="visit_date" required 
-                                       value="<?php echo htmlspecialchars($recordData['visit_date'] ?? $_POST['visit_date'] ?? date('Y-m-d')); ?>">
-                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="visit_date_warning">
-                                    Required field
-                                </div>
+                        <div>
+                            <label for="weight" class="form-label-premium">Weight (kg) <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input type="number" step="0.1" class="form-input-premium pr-12" id="weight" name="weight" placeholder="00.0" required
+                                       value="<?php echo htmlspecialchars($recordData['weight'] ?? $_POST['weight'] ?? ''); ?>">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">kg</span>
                             </div>
-                            <div>
-                                <label for="visit_number" class="form-label-premium">Visit Sequence <span class="text-rose-500">*</span></label>
-                                <input type="number" class="form-input-premium" id="visit_number" name="visit_number" placeholder="e.g. 1" required min="1"
-                                       value="<?php echo htmlspecialchars($recordData['visit_number'] ?? $_POST['visit_number'] ?? ''); ?>">
-                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-xs font-bold rounded-lg border border-rose-100" id="visit_number_warning">
-                                    Required field
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Mother's Vital Signs -->
-                    <section class="card-premium lg:col-span-2">
-                        <div class="section-header">
-                            <div class="section-icon">
-                                <i class="fas fa-heartbeat text-health-600"></i>
-                            </div>
-                            <div>
-                                <h2 class="text-xl font-bold text-slate-800">Maternal Vitals</h2>
-                                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Physical health metrics</p>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="weight_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                            <div>
-                                <label for="blood_pressure" class="form-label-premium">Blood Pressure <span class="text-rose-500">*</span></label>
-                                <div class="relative">
-                                    <input type="text" class="form-input-premium pr-12" id="blood_pressure" name="blood_pressure" placeholder="110/70" required
-                                           value="<?php echo htmlspecialchars($recordData['blood_pressure'] ?? $_POST['blood_pressure'] ?? ''); ?>">
-                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">mmHg</span>
-                                </div>
-                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="blood_pressure_warning">
-                                    <i class="fas fa-exclamation-triangle me-1"></i> Required
-                                </div>
+                        <div>
+                            <label for="temperature" class="form-label-premium">Temperature (°C) <span class="text-rose-500">*</span></label>
+                            <div class="relative">
+                                <input type="number" step="0.1" class="form-input-premium pr-12" id="temperature" name="temperature" placeholder="36.5" required
+                                       value="<?php echo htmlspecialchars($recordData['temperature'] ?? $_POST['temperature'] ?? ''); ?>">
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">°C</span>
                             </div>
-
-                            <div>
-                                <label for="weight" class="form-label-premium">Weight (kg) <span class="text-rose-500">*</span></label>
-                                <div class="relative">
-                                    <input type="number" step="0.1" class="form-input-premium pr-12" id="weight" name="weight" placeholder="00.0" required
-                                           value="<?php echo htmlspecialchars($recordData['weight'] ?? $_POST['weight'] ?? ''); ?>">
-                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">kg</span>
-                                </div>
-                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="weight_warning">
-                                    <i class="fas fa-exclamation-triangle me-1"></i> Required
-                                </div>
-                            </div>
-
-                            <div>
-                                <label for="temperature" class="form-label-premium">Temperature (°C) <span class="text-rose-500">*</span></label>
-                                <div class="relative">
-                                    <input type="number" step="0.1" class="form-input-premium pr-12" id="temperature" name="temperature" placeholder="36.5" required
-                                           value="<?php echo htmlspecialchars($recordData['temperature'] ?? $_POST['temperature'] ?? ''); ?>">
-                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400 uppercase">°C</span>
-                                </div>
-                                <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="temperature_warning">
-                                    <i class="fas fa-exclamation-triangle me-1"></i> Required
-                                </div>
+                            <div class="hidden mt-2 p-2 bg-rose-50 text-rose-600 text-[10px] font-bold rounded-lg border border-rose-100" id="temperature_warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i> Required
                             </div>
                         </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
 
                 <!-- Postpartum Assessment -->
                 <section class="card-premium">
@@ -463,7 +460,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="complaints" class="form-label-premium">Maternal Complaints</label>
                             <textarea class="form-input-premium min-h-[100px] py-3 text-sm" id="complaints" name="complaints" placeholder="Note any maternal issues..."><?php echo htmlspecialchars($recordData['complaints'] ?? $_POST['complaints'] ?? ''); ?></textarea>
@@ -487,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-slate-100 pb-8">
                         <div>
                             <label for="baby_weight" class="form-label-premium">Current Weight (kg)</label>
                             <div class="relative">
@@ -507,7 +504,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="baby_issues" class="form-label-premium">Observed Issues</label>
                             <textarea class="form-input-premium min-h-[100px] py-3 text-sm" id="baby_issues" name="baby_issues" placeholder="Note any health concerns for the baby..."><?php echo htmlspecialchars($recordData['baby_issues'] ?? $_POST['baby_issues'] ?? ''); ?></textarea>
