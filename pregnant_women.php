@@ -5,8 +5,8 @@ $rootPath = __DIR__; // Current directory where pregnant_women.php is located
 require_once $rootPath . '/includes/auth.php';
 require_once $rootPath . '/includes/functions.php';
 
-if (!isAuthorized(['admin'])) {
-    header("Location: " . $rootPath . "/login.php");
+if (!isAuthorized(['admin', 'midwife'])) {
+    header("Location: login.php");
     exit();
 }
 

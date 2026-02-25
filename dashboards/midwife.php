@@ -286,8 +286,8 @@ $upcomingAppointments = $pdo->query("
                             ['url' => 'prenatal_records.php', 'icon' => 'fa-heart-pulse', 'color' => 'bg-emerald-50 text-emerald-600', 'label' => 'Prenatal'],
                             ['url' => 'postnatal_records.php', 'icon' => 'fa-child-reaching', 'color' => 'bg-sky-50 text-sky-600', 'label' => 'Postnatal'],
                             ['url' => 'mothers_list.php', 'icon' => 'fa-female', 'color' => 'bg-indigo-50 text-indigo-600', 'label' => 'Mothers List'],
-                            ['url' => 'forms/birth_registration.php', 'icon' => 'fa-baby-carriage', 'color' => 'bg-amber-50 text-amber-600', 'label' => 'Birth Reg'],
-                            ['url' => 'pregnant_women.php', 'icon' => 'fa-person-pregnant', 'color' => 'bg-rose-50 text-rose-600', 'label' => 'Pregnant'],
+                            ['url' => 'birth_records.php', 'icon' => 'fa-baby-carriage', 'color' => 'bg-amber-50 text-amber-600', 'label' => 'Birth Records'],
+                            ['url' => 'pregnant_women.php', 'icon' => 'fa-person-pregnant', 'color' => 'bg-rose-50 text-rose-600', 'label' => 'Pregnant Records'],
                             ['url' => 'reports.php', 'icon' => 'fa-chart-mixed', 'color' => 'bg-slate-100 text-slate-600', 'label' => 'Reports'],
                         ];
                         foreach ($actions as $action): ?>
