@@ -511,7 +511,6 @@ $stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
             if (currentRecordId) {
                 window.location.href = `forms/prenatal_form.php?edit=${currentRecordId}`;
             }
-        });
 
         // Close on backdrop click
         document.getElementById('prenatalDetailsModal').addEventListener('click', function(e) {
