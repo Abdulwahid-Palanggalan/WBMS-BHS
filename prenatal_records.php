@@ -24,7 +24,7 @@ $page = max(1, intval($_GET['page'] ?? 1));
 $limit = 20;
 $offset = ($page - 1) * $limit;
 
-// Build query - UPDATED FOR YOUR ACTUAL DATABASE STRUCTURE
+// Build query
 $query = "
     SELECT pr.*, 
            m.first_name as mother_first_name, 
@@ -72,293 +72,374 @@ $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $prenatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Stats
+$statsQuery = $pdo->query("SELECT COUNT(*) as total, COUNT(DISTINCT mother_id) as unique_mothers FROM prenatal_records");
+$stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenatal Records - Kibenes eBirth</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php include_once __DIR__ . '/includes/tailwind_config.php'; ?>
     <style type="text/tailwindcss">
         @layer components {
-            .stat-card-clinical {
-                @apply bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300;
+            .stat-chip {
+                @apply bg-white border border-slate-100 rounded-[2rem] p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all duration-300;
             }
-            .table-modern th {
-                @apply px-6 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50;
+            .stat-icon {
+                @apply w-12 h-12 rounded-2xl flex items-center justify-center text-lg flex-shrink-0;
             }
-            .table-modern td {
-                @apply px-6 py-4 text-sm text-slate-600 border-b border-slate-50;
+            .table-th {
+                @apply px-5 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100;
             }
-            .user-avatar-premium {
-                @apply w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold shadow-soft transition-transform duration-300 group-hover:scale-110;
+            .table-td {
+                @apply px-5 py-4 border-b border-slate-50/80;
             }
-            .badge-clinical {
-                @apply text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border italic;
+            .pill-badge {
+                @apply text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest border;
+            }
+            .action-btn {
+                @apply p-2.5 rounded-xl transition-all duration-200 shadow-sm active:scale-90;
             }
         }
-        
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { @apply bg-slate-50; }
-        ::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors; }
+        ::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
+        ::-webkit-scrollbar-thumb:hover { @apply bg-health-300; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-900 font-sans antialiased">
+<body class="bg-slate-50 min-h-full text-slate-900 font-sans antialiased">
     <?php include_once $rootPath . '/includes/header.php'; ?>
-    
+
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         <?php include_once $rootPath . '/includes/sidebar.php'; ?>
-        
-        <main class="flex-1 p-4 lg:p-10 space-y-10 group/main">
+
+        <main class="flex-1 p-4 lg:p-10 space-y-8">
+
             <!-- PAGE HEADER -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="w-2 h-8 bg-health-600 rounded-full"></div>
-                        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Prenatal Registry</h1>
+            <header class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-[1.2rem] bg-gradient-to-br from-health-600 to-health-700 flex items-center justify-center text-white text-2xl shadow-lg shadow-health-100">
+                        <i class="fas fa-heartbeat"></i>
                     </div>
-                    <p class="text-slate-500 font-medium ml-5">Comprehensive maternal checkup monitoring system.</p>
+                    <div>
+                        <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-tight">Prenatal Registry</h1>
+                        <p class="text-sm text-slate-400 font-medium mt-0.5">Comprehensive maternal checkup monitoring system</p>
+                    </div>
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <a href="forms/prenatal_form.php" class="bg-health-600 hover:bg-health-700 text-white font-bold px-6 py-4 rounded-[2rem] transition-all shadow-lg shadow-health-100 flex items-center gap-2 active:scale-95">
-                        <i class="fas fa-plus"></i>
-                        <span>New Clinical Visit</span>
-                    </a>
+                <a href="forms/prenatal_form.php"
+                   class="inline-flex items-center gap-2.5 bg-health-600 hover:bg-health-700 text-white font-bold px-6 py-3.5 rounded-2xl transition-all shadow-lg shadow-health-100 active:scale-95 text-sm">
+                    <i class="fas fa-plus text-xs"></i>
+                    <span>New Clinical Visit</span>
+                </a>
+            </header>
+
+            <!-- STAT CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="stat-chip">
+                    <div class="stat-icon bg-health-50 text-health-600">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Total Visits</p>
+                        <h3 class="text-2xl font-black text-slate-900"><?= number_format($stats['total'] ?? $totalRecords) ?></h3>
+                    </div>
+                </div>
+                <div class="stat-chip">
+                    <div class="stat-icon bg-sky-50 text-sky-500">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Unique Patients</p>
+                        <h3 class="text-2xl font-black text-slate-900"><?= number_format($stats['unique_mothers'] ?? 0) ?></h3>
+                    </div>
+                </div>
+                <div class="stat-chip">
+                    <div class="stat-icon bg-amber-50 text-amber-500">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Showing Results</p>
+                        <h3 class="text-2xl font-black text-slate-900"><?= number_format($totalRecords) ?></h3>
+                    </div>
                 </div>
             </div>
 
-            <!-- SEARCH & STATS -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
-                <div class="lg:col-span-8">
-                    <form method="GET" class="relative group/search">
-                        <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/search:text-health-600 transition-colors"></i>
-                        <input type="text" name="search" value="<?= htmlspecialchars($search); ?>" 
-                               class="w-full bg-white border-2 border-slate-100 rounded-[2rem] py-5 pl-14 pr-32 text-sm font-bold text-slate-900 focus:border-health-600 focus:ring-4 focus:ring-health-600/5 transition-all outline-none placeholder:text-slate-300 shadow-sm"
-                               placeholder="Search patient name or clinical identity...">
-                        <button type="submit" class="absolute right-3 top-2 bottom-2 bg-slate-900 text-white px-6 rounded-full font-bold text-xs hover:bg-health-700 transition-all">
-                            Run Query
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="lg:col-span-4">
-                    <div class="bg-white px-8 py-5 rounded-[2rem] border border-slate-100 shadow-sm flex items-center justify-between group/total">
-                        <div>
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Records</p>
-                            <h3 class="text-2xl font-black text-slate-900"><?= number_format($totalRecords); ?></h3>
-                        </div>
-                        <div class="w-12 h-12 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center text-xl shadow-soft group-hover/total:rotate-12 transition-transform">
-                            <i class="fas fa-file-waveform"></i>
-                        </div>
-                    </div>
-                </div>
+            <!-- SEARCH BAR -->
+            <div class="flex items-center gap-4">
+                <form method="GET" class="relative flex-1 group/search">
+                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/search:text-health-600 transition-colors duration-200 text-sm"></i>
+                    <input type="text" name="search" value="<?= htmlspecialchars($search); ?>"
+                           class="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-32 text-sm font-medium text-slate-800 focus:border-health-500 focus:ring-4 focus:ring-health-600/10 outline-none transition-all placeholder:text-slate-300 shadow-sm"
+                           placeholder="Search patient name or phone number...">
+                    <button type="submit" class="absolute right-2.5 top-2 bottom-2 bg-health-600 hover:bg-health-700 text-white px-5 rounded-xl font-bold text-xs transition-all">
+                        Search
+                    </button>
+                </form>
+                <?php if (!empty($search)): ?>
+                <a href="prenatal_records.php" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-rose-500 transition-colors bg-white border border-slate-200 px-4 py-3 rounded-2xl shadow-sm">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+                <?php endif; ?>
             </div>
 
-            <!-- REGISTRY TABLE -->
-            <div class="space-y-6">
-                <div class="flex items-center justify-between px-2">
-                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-[0.3em]">Patient Visit Timeline</h3>
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                        <span class="text-[9px] font-black text-slate-400 uppercase">Live Database</span>
+            <!-- RECORDS TABLE -->
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                <!-- Table Header Label -->
+                <div class="flex items-center justify-between px-8 py-5 border-b border-slate-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Patient Visit Timeline</span>
                     </div>
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest"><?= $totalRecords ?> Records</span>
                 </div>
 
-                <div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full table-modern">
-                            <thead>
-                                <tr>
-                                    <th>Patient Profile</th>
-                                    <th>Pregnancy Status</th>
-                                    <th>Vital Signs</th>
-                                    <th>Weight Tracking</th>
-                                    <th>Medications</th>
-                                    <th>Lab Tests</th>
-                                    <th class="text-right">Actions</th>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-slate-50/50">
+                                <th class="table-th">Patient</th>
+                                <th class="table-th">Visit Date</th>
+                                <th class="table-th">Pregnancy</th>
+                                <th class="table-th">Vital Signs</th>
+                                <th class="table-th">Weight</th>
+                                <th class="table-th">Medications</th>
+                                <th class="table-th">Lab Results</th>
+                                <th class="table-th text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($prenatalRecords)): ?>
+                                <?php foreach ($prenatalRecords as $record): ?>
+                                <tr class="hover:bg-health-50/30 transition-colors duration-200 group">
+                                    <!-- Patient -->
+                                    <td class="table-td">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-xl bg-health-600 text-white flex items-center justify-center text-xs font-black shadow-sm shadow-health-100 flex-shrink-0 group-hover:scale-105 transition-transform">
+                                                <?= strtoupper(substr($record['mother_first_name'], 0, 1) . substr($record['mother_last_name'], 0, 1)); ?>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-800 group-hover:text-health-700 transition-colors leading-tight">
+                                                    <?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']); ?>
+                                                </p>
+                                                <p class="text-[10px] text-slate-400 font-medium">#PR-<?= $record['id']; ?></p>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Visit Date -->
+                                    <td class="table-td">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-bold text-slate-700">
+                                                <?= date('M d, Y', strtotime($record['visit_date'])); ?>
+                                            </span>
+                                            <span class="text-[10px] font-medium text-health-600 uppercase tracking-tight mt-0.5">
+                                                Visit #<?= $record['visit_number']; ?>
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Pregnancy Status -->
+                                    <td class="table-td">
+                                        <div class="flex flex-col gap-1">
+                                            <?php if ($record['gestational_weeks'] !== null): ?>
+                                            <span class="text-sm font-black text-slate-800"><?= $record['gestational_weeks'] ?? '0.0'; ?> <span class="text-[10px] font-bold text-slate-400">wks</span></span>
+                                            <?php endif; ?>
+                                            <?php if (!empty($record['edc']) && $record['edc'] !== '0000-00-00'): ?>
+                                            <span class="text-[10px] font-bold text-amber-600">EDC: <?= date('M d', strtotime($record['edc'])); ?></span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+
+                                    <!-- Vital Signs -->
+                                    <td class="table-td">
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="inline-block text-[9px] font-black text-slate-400 uppercase bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded-md">BP</span>
+                                                <span class="text-xs font-bold text-slate-700"><?= $record['blood_pressure'] ?: '—'; ?></span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5">
+                                                <span class="inline-block text-[9px] font-black text-slate-400 uppercase bg-slate-50 border border-slate-100 px-1.5 py-0.5 rounded-md">T°</span>
+                                                <span class="text-xs font-bold text-slate-700"><?= $record['temperature'] ? $record['temperature'] . '°C' : '—'; ?></span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Weight -->
+                                    <td class="table-td">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-baseline gap-1">
+                                                <span class="text-sm font-black text-slate-800"><?= $record['weight'] ?: '—'; ?></span>
+                                                <?php if ($record['weight']): ?>
+                                                <span class="text-[9px] font-bold text-slate-400">kg</span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <?php if ($record['previous_weight'] && $record['weight']): ?>
+                                                <?php
+                                                    $diff = $record['weight_change'];
+                                                    $wColor = $diff > 0 ? 'text-emerald-500' : ($diff < 0 ? 'text-rose-500' : 'text-slate-400');
+                                                    $wIcon  = $diff > 0 ? 'fa-arrow-up' : ($diff < 0 ? 'fa-arrow-down' : 'fa-minus');
+                                                ?>
+                                                <span class="text-[10px] font-black <?= $wColor; ?> flex items-center gap-0.5 mt-0.5">
+                                                    <i class="fas <?= $wIcon; ?> text-[8px]"></i>
+                                                    <?= abs($diff); ?> kg
+                                                </span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+
+                                    <!-- Medications -->
+                                    <td class="table-td">
+                                        <div class="flex flex-wrap gap-1">
+                                            <?php if ($record['iron_supplement']): ?>
+                                                <span class="pill-badge bg-amber-50 text-amber-600 border-amber-200" title="Iron Supplement">Iron</span>
+                                            <?php endif; ?>
+                                            <?php if ($record['folic_acid']): ?>
+                                                <span class="pill-badge bg-emerald-50 text-emerald-600 border-emerald-200" title="Folic Acid">Folic</span>
+                                            <?php endif; ?>
+                                            <?php if ($record['calcium']): ?>
+                                                <span class="pill-badge bg-sky-50 text-sky-600 border-sky-200" title="Calcium">Ca</span>
+                                            <?php endif; ?>
+                                            <?php if (!$record['iron_supplement'] && !$record['folic_acid'] && !$record['calcium']): ?>
+                                                <span class="text-[10px] font-medium text-slate-300 italic">None</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+
+                                    <!-- Lab Results -->
+                                    <td class="table-td">
+                                        <div class="flex flex-col gap-1">
+                                            <?php if ($record['hb_level']): ?>
+                                                <?php $hbStatus = $record['hb_level'] < 11 ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'; ?>
+                                                <span class="pill-badge <?= $hbStatus; ?> w-fit">Hb: <?= $record['hb_level']; ?></span>
+                                            <?php endif; ?>
+                                            <?php if ($record['blood_group']): ?>
+                                                <span class="pill-badge bg-slate-50 text-slate-600 border-slate-200 w-fit"><?= htmlspecialchars($record['blood_group']); ?></span>
+                                            <?php endif; ?>
+                                            <?php if (!$record['hb_level'] && !$record['blood_group']): ?>
+                                                <span class="text-[10px] font-medium text-slate-300 italic">No labs</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="table-td">
+                                        <div class="flex items-center justify-end gap-1.5 pr-2">
+                                            <button onclick="viewPrenatalDetails(<?= $record['id']; ?>)"
+                                                    class="action-btn bg-sky-50 hover:bg-sky-100 text-sky-600 border border-sky-100"
+                                                    title="View Details">
+                                                <i class="fas fa-eye text-xs"></i>
+                                            </button>
+                                            <a href="forms/prenatal_form.php?edit=<?= $record['id']; ?>"
+                                               class="action-btn bg-amber-50 hover:bg-amber-100 text-amber-600 border border-amber-100"
+                                               title="Edit Record">
+                                                <i class="fas fa-pen text-xs"></i>
+                                            </a>
+                                            <button onclick="confirmDelete('prenatal_record', <?= $record['id']; ?>, 'Visit #<?= $record['visit_number']; ?> — <?= htmlspecialchars(addslashes($record['mother_first_name'] . ' ' . $record['mother_last_name'])); ?>')"
+                                                    class="action-btn bg-rose-50 hover:bg-rose-100 text-rose-500 border border-rose-100"
+                                                    title="Delete Record">
+                                                <i class="fas fa-trash text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-50">
-                                <?php if (!empty($prenatalRecords)): ?>
-                                    <?php foreach ($prenatalRecords as $record): ?>
-                                    <tr class="hover:bg-slate-50/50 transition-all duration-300 group">
-                                        <td class="py-6">
-                                            <div class="flex items-center gap-4">
-                                                <div class="user-avatar-premium bg-health-600 text-white shadow-health-100">
-                                                    <?= strtoupper(substr($record['mother_first_name'], 0, 1) . substr($record['mother_last_name'], 0, 1)); ?>
-                                                </div>
-                                                <div class="flex flex-col">
-                                                    <span class="font-bold text-slate-900 group-hover:text-health-700 transition-colors"><?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']); ?></span>
-                                                    <span class="text-[10px] font-medium text-slate-400 italic">Patient ID: #PR-<?= $record['id']; ?></span>
-                                                </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="8" class="py-24 text-center">
+                                        <div class="flex flex-col items-center gap-3 opacity-40">
+                                            <div class="w-16 h-16 rounded-3xl bg-slate-100 flex items-center justify-center">
+                                                <i class="fas fa-folder-open text-2xl text-slate-400"></i>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex flex-col">
-                                                <span class="text-xs font-black text-slate-900"><?= $record['gestational_weeks'] ?? '0.0'; ?> Weeks</span>
-                                                <span class="text-[10px] font-bold text-health-600 uppercase tracking-tighter mt-1">Visit No. <?= $record['visit_number']; ?></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="space-y-1">
-                                                <div class="flex items-center gap-2">
-                                                    <span class="text-[9px] font-black text-slate-400 uppercase px-1.5 py-0.5 bg-slate-50 rounded">BP</span>
-                                                    <span class="text-xs font-bold text-slate-700"><?= $record['blood_pressure'] ?: '--'; ?></span>
-                                                </div>
-                                                <div class="flex items-center gap-2">
-                                                    <span class="text-[9px] font-black text-slate-400 uppercase px-1.5 py-0.5 bg-slate-50 rounded">Temp</span>
-                                                    <span class="text-xs font-bold text-slate-700"><?= $record['temperature'] ?: '--'; ?>°C</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex flex-col">
-                                                <div class="flex items-baseline gap-1">
-                                                    <span class="text-xs font-black text-slate-900"><?= $record['weight']; ?></span>
-                                                    <span class="text-[9px] font-bold text-slate-400 uppercase">kg</span>
-                                                </div>
-                                                <?php if ($record['previous_weight']): ?>
-                                                    <?php 
-                                                        $diff = $record['weight_change'];
-                                                        $color = $diff > 0 ? 'text-emerald-500' : ($diff < 0 ? 'text-rose-500' : 'text-slate-400');
-                                                        $icon = $diff > 0 ? 'fa-caret-up' : ($diff < 0 ? 'fa-caret-down' : 'fa-minus');
-                                                    ?>
-                                                    <span class="text-[10px] font-black <?= $color; ?> flex items-center gap-1">
-                                                        <i class="fas <?= $icon; ?>"></i>
-                                                        <?= abs($diff); ?> kg
-                                                    </span>
+                                            <div>
+                                                <p class="text-sm font-black text-slate-400 uppercase tracking-widest">No Records Found</p>
+                                                <?php if (!empty($search)): ?>
+                                                <p class="text-xs text-slate-300 mt-1">Try a different search term</p>
                                                 <?php endif; ?>
                                             </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex flex-wrap gap-1.5">
-                                                <?php if ($record['iron_supplement']): ?>
-                                                    <span class="px-2 py-1 bg-amber-50 text-amber-600 text-[9px] font-black rounded-lg border border-amber-100 uppercase" title="Iron Supplement">Iron</span>
-                                                <?php endif; ?>
-                                                <?php if ($record['folic_acid']): ?>
-                                                    <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[9px] font-black rounded-lg border border-emerald-100 uppercase" title="Folic Acid">Folic</span>
-                                                <?php endif; ?>
-                                                <?php if ($record['calcium']): ?>
-                                                    <span class="px-2 py-1 bg-sky-50 text-sky-600 text-[9px] font-black rounded-lg border border-sky-100 uppercase" title="Calcium">Calc</span>
-                                                <?php endif; ?>
-                                                <?php if (!$record['iron_supplement'] && !$record['folic_acid'] && !$record['calcium']): ?>
-                                                    <span class="text-[10px] font-bold text-slate-300 italic">None</span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="flex flex-col gap-1">
-                                                <?php if ($record['hb_level']): ?>
-                                                    <?php $hbStatus = $record['hb_level'] < 11 ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'; ?>
-                                                    <span class="px-2 py-1 <?= $hbStatus; ?> text-[9px] font-black rounded-lg border uppercase w-fit">Hb: <?= $record['hb_level']; ?></span>
-                                                <?php endif; ?>
-                                                <?php if ($record['blood_group']): ?>
-                                                    <span class="px-2 py-1 bg-slate-50 text-slate-600 text-[9px] font-black rounded-lg border border-slate-100 uppercase w-fit">Group: <?= $record['blood_group']; ?></span>
-                                                <?php endif; ?>
-                                                <?php if (!$record['hb_level'] && !$record['blood_group']): ?>
-                                                    <span class="text-[10px] font-bold text-slate-300 italic">No Labs</span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            <div class="flex justify-end gap-2 pr-4">
-                                                <button onclick="viewPrenatalDetails(<?= $record['id']; ?>)" class="bg-sky-50 hover:bg-sky-100 text-sky-600 p-3 rounded-2xl transition-all shadow-sm active:scale-90" title="View Full Analysis">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                <a href="forms/prenatal_form.php?edit=<?= $record['id']; ?>" class="bg-amber-50 hover:bg-amber-100 text-amber-600 p-3 rounded-2xl transition-all shadow-sm active:scale-90" title="Modify Record">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button onclick="confirmDelete('prenatal_record', <?= $record['id']; ?>, 'Prenatal Visit #<?= $record['visit_number']; ?> for <?= htmlspecialchars($record['mother_first_name'] . ' ' . $record['mother_last_name']); ?>')" 
-                                                        class="bg-rose-50 hover:bg-rose-100 text-rose-500 p-3 rounded-2xl transition-all shadow-sm active:scale-90" title="Permanently Delete">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="7" class="py-20 text-center">
-                                            <div class="flex flex-col items-center opacity-30">
-                                                <i class="fas fa-folder-open text-6xl mb-4 text-slate-300"></i>
-                                                <p class="text-sm font-black text-slate-400 uppercase tracking-widest">Registry entry not found</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- PAGINATION -->
-                    <?php if ($totalPages > 1): ?>
-                    <div class="p-8 border-t border-slate-50 flex items-center justify-between bg-slate-50/30">
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                            Page <?= $page; ?> of <?= $totalPages; ?>
-                        </p>
-                        <div class="flex gap-2">
-                            <?php if ($page > 1): ?>
-                                <a href="?page=<?= $page - 1; ?>&search=<?= urlencode($search); ?>" class="bg-white border border-slate-200 text-slate-600 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95">
-                                    <i class="fas fa-chevron-left mr-2 font-bold"></i>Previous
-                                </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
-
-                            <?php if ($page < $totalPages): ?>
-                                <a href="?page=<?= $page + 1; ?>&search=<?= urlencode($search); ?>" class="bg-slate-900 text-white px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 active:scale-95">
-                                    Next<i class="fas fa-chevron-right ml-2 font-bold"></i>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
+
+                <!-- PAGINATION -->
+                <?php if ($totalPages > 1): ?>
+                <div class="px-8 py-5 border-t border-slate-50 flex items-center justify-between bg-slate-50/30">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        Page <?= $page; ?> of <?= $totalPages; ?>
+                    </p>
+                    <div class="flex gap-2">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1; ?>&search=<?= urlencode($search); ?>"
+                               class="flex items-center gap-2 bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">
+                                <i class="fas fa-chevron-left"></i> Prev
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?page=<?= $page + 1; ?>&search=<?= urlencode($search); ?>"
+                               class="flex items-center gap-2 bg-health-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-health-700 transition-all shadow-sm">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
+
         </main>
     </div>
 
-    <!-- PRENATAL DETAILS MODAL (Premium Tailwind) -->
-    <div id="prenatalDetailsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-in zoom-in duration-300 flex flex-col">
-            <div class="flex items-center justify-between p-8 border-b border-slate-50 bg-slate-50/50">
+    <!-- PRENATAL DETAILS MODAL -->
+    <div id="prenatalDetailsModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex-shrink-0">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl">
+                    <div class="w-11 h-11 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center text-lg">
                         <i class="fas fa-notes-medical"></i>
                     </div>
                     <div>
-                        <h3 class="text-2xl font-black text-slate-900 tracking-tight" id="modalTitle">Clinical Analysis</h3>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Detailed Prenatal Observation Record</p>
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight" id="modalPatientName">Clinical Record</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Detailed Prenatal Observation</p>
                     </div>
                 </div>
-                <button onclick="closeDetailsModal()" class="w-10 h-10 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-600 transition-all active:scale-90">
-                    <i class="fas fa-times"></i>
+                <button onclick="closeDetailsModal()"
+                        class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all active:scale-90">
+                    <i class="fas fa-times text-sm"></i>
                 </button>
             </div>
-            
-            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                <div id="prenatalDetailsContent">
-                    <!-- Loaded via AJAX -->
-                    <div class="flex flex-col items-center justify-center py-20 opacity-50">
-                        <div class="w-12 h-12 border-4 border-sky-100 border-t-sky-600 rounded-full animate-spin"></div>
-                        <p class="mt-4 font-black text-[10px] text-slate-400 uppercase tracking-widest">Processing Data...</p>
-                    </div>
+
+            <!-- Modal Body -->
+            <div class="flex-1 overflow-y-auto p-8" id="prenatalDetailsContent">
+                <div class="flex flex-col items-center justify-center py-20 opacity-40">
+                    <div class="w-10 h-10 border-[3px] border-health-100 border-t-health-600 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading...</p>
                 </div>
             </div>
 
-            <div class="p-8 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3">
-                <button onclick="closeDetailsModal()" class="px-8 py-4 rounded-2xl text-slate-400 font-bold hover:bg-white transition-all">Dismiss</button>
-                <button id="editPrenatalBtn" class="bg-health-600 hover:bg-health-700 text-white font-bold px-10 py-4 rounded-2xl transition-all shadow-lg shadow-health-100 active:scale-95">
-                    Modify Records
+            <!-- Modal Footer -->
+            <div class="px-8 py-5 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3 flex-shrink-0">
+                <button onclick="closeDetailsModal()"
+                        class="px-6 py-3 rounded-2xl text-slate-400 font-bold text-sm hover:bg-white hover:text-slate-600 transition-all">
+                    Close
+                </button>
+                <button id="editPrenatalBtn"
+                        class="bg-health-600 hover:bg-health-700 text-white font-bold px-8 py-3 rounded-2xl transition-all text-sm shadow-lg shadow-health-100 active:scale-95">
+                    <i class="fas fa-pen mr-2 text-xs"></i>Edit Record
                 </button>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let currentRecordId = null;
@@ -367,31 +448,31 @@ $prenatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
             currentRecordId = recordId;
             const modal = document.getElementById('prenatalDetailsModal');
             const content = document.getElementById('prenatalDetailsContent');
-            
-            // Show Modal
+
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
-            // Reset Content
+            document.body.style.overflow = 'hidden';
+
             content.innerHTML = `
-                <div class="flex flex-col items-center justify-center py-20 opacity-50">
-                    <div class="w-12 h-12 border-4 border-sky-100 border-t-sky-600 rounded-full animate-spin"></div>
-                    <p class="mt-4 font-black text-[10px] text-slate-400 uppercase tracking-widest">Processing Data...</p>
+                <div class="flex flex-col items-center justify-center py-20 opacity-40">
+                    <div class="w-10 h-10 border-[3px] border-health-100 border-t-health-600 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading record...</p>
                 </div>
             `;
 
-            // Load Data
             fetch(`get_prenatal_details.php?id=${recordId}`)
-                .then(response => response.text())
+                .then(r => r.text())
                 .then(data => {
                     content.innerHTML = data;
                 })
-                .catch(error => {
+                .catch(() => {
                     content.innerHTML = `
                         <div class="bg-rose-50 border border-rose-100 p-8 rounded-[2rem] text-center">
-                            <i class="fas fa-exclamation-triangle text-rose-500 text-3xl mb-4"></i>
-                            <p class="font-bold text-rose-800">Connection Interrupted</p>
-                            <p class="text-xs text-rose-600 mt-2">Failed to retrieve clinical documentation. Please try again.</p>
+                            <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center text-2xl mx-auto mb-4">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <p class="font-black text-rose-800 text-sm uppercase tracking-widest">Connection Error</p>
+                            <p class="text-xs text-rose-600 mt-2 font-medium">Failed to retrieve clinical record. Please try again.</p>
                         </div>
                     `;
                 });
@@ -401,39 +482,44 @@ $prenatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
             const modal = document.getElementById('prenatalDetailsModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            document.body.style.overflow = '';
         }
 
         function confirmDelete(type, id, name) {
             Swal.fire({
-                title: 'Confirm Deletion',
-                html: `Are you sure you want to permanently remove <br><b class="text-health-600">${name}</b>?`,
+                title: 'Delete Record?',
+                html: `This will permanently remove<br><b class="text-health-700">${name}</b>`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#10b981',
+                confirmButtonColor: '#0D9488',
                 cancelButtonColor: '#f43f5e',
-                confirmButtonText: 'Yes, Delete Record',
-                cancelButtonText: 'Cancel Removal',
-                padding: '2rem',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
                 customClass: {
-                    popup: 'rounded-[2.5rem]',
-                    confirmButton: 'rounded-2xl font-bold py-4 px-8',
-                    cancelButton: 'rounded-2xl font-bold py-4 px-8'
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl font-bold',
+                    cancelButton: 'rounded-xl font-bold'
                 }
-            }).then((result) => {
+            }).then(result => {
                 if (result.isConfirmed) {
                     window.location.href = `delete.php?type=${type}&id=${id}`;
                 }
             });
         }
 
-        document.getElementById('editPrenatalBtn').addEventListener('click', function() {
+        document.getElementById('editPrenatalBtn').addEventListener('click', () => {
             if (currentRecordId) {
                 window.location.href = `forms/prenatal_form.php?edit=${currentRecordId}`;
             }
         });
 
-        // Close modal on escape key
-        document.addEventListener('keydown', (e) => {
+        // Close on backdrop click
+        document.getElementById('prenatalDetailsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailsModal();
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeDetailsModal();
         });
     </script>
