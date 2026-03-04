@@ -120,403 +120,332 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Birth Records - Kibenes eBirth</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Birth Registry - Kibenes eBirth</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .birth-details-modal .modal-lg {
-            max-width: 1000px;
+    <?php include_once __DIR__ . '/includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .stat-chip {
+                @apply bg-white border border-slate-100 rounded-[2rem] p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-all duration-300;
+            }
+            .stat-icon {
+                @apply w-12 h-12 rounded-2xl flex items-center justify-center text-lg flex-shrink-0;
+            }
+            .table-th {
+                @apply px-5 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-100;
+            }
+            .table-td {
+                @apply px-5 py-4 border-b border-slate-50/80;
+            }
+            .pill-badge {
+                @apply text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest border;
+            }
+            .action-btn {
+                @apply p-2.5 rounded-xl transition-all duration-200 shadow-sm active:scale-90 border;
+            }
         }
-        .detail-section {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid #007bff;
-        }
-        .detail-section h6 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        .detail-item {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .detail-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        .detail-label {
-            font-weight: 600;
-            color: #495057;
-            min-width: 180px;
-        }
-        .detail-value {
-            color: #6c757d;
-        }
-        .empty-data {
-            color: #6c757d;
-            font-style: italic;
-        }
-        .baby-info {
-            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
-            border-left: 4px solid #28a745;
-        }
-        .parents-info {
-            background: linear-gradient(135deg, #fff3cd 0%, #f8f9fa 100%);
-            border-left: 4px solid #ffc107;
-        }
-        .table-hover tbody tr:hover {
-            background-color: rgba(0, 123, 255, 0.05);
-            cursor: pointer;
-        }
-        .table th {
-            background-color: #2c3e50;
-            color: white;
-            font-weight: 600;
-            vertical-align: middle;
-        }
-        .status-badge {
-            font-size: 0.75em;
-            padding: 0.35em 0.65em;
-        }
-        .action-buttons {
-            min-width: 140px;
-        }
-        .gender-badge {
-            font-size: 0.8em;
-            padding: 0.4em 0.8em;
-        }
-        .status-pending { background-color: #ffc107; color: #000; }
-        .status-approved { background-color: #28a745; color: #fff; }
-        .status-rejected { background-color: #dc3545; color: #fff; }
-        .alert-auto-close {
-            animation: fadeOut 5s forwards;
-        }
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { opacity: 0; display: none; }
-        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { @apply bg-slate-50; }
+        ::-webkit-scrollbar-thumb { @apply bg-slate-200 rounded-full; }
+        ::-webkit-scrollbar-thumb:hover { @apply bg-health-300; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-full text-slate-900 font-sans antialiased">
     <?php include_once $rootPath . '/includes/header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         <?php include_once $rootPath . '/includes/sidebar.php'; ?>
         
-        <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">All Birth Records</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <a href="forms/birth_registration.php" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Register New Birth
-                        </a>
+        <main class="flex-1 p-4 lg:p-10 space-y-8 no-print">
+            <!-- PAGE HEADER -->
+            <header class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-[1.2rem] bg-gradient-to-br from-health-600 to-health-700 flex items-center justify-center text-white text-2xl shadow-lg shadow-health-100">
+                        <i class="fas fa-baby"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-tight">Birth Registry</h1>
+                        <p class="text-sm text-slate-400 font-medium mt-0.5">Comprehensive newborn and delivery records</p>
                     </div>
                 </div>
+                <a href="forms/birth_registration.php"
+                   class="inline-flex items-center gap-2.5 bg-health-600 hover:bg-health-700 text-white font-bold px-6 py-3.5 rounded-2xl transition-all shadow-lg shadow-health-100 active:scale-95 text-sm">
+                    <i class="fas fa-plus text-xs"></i>
+                    <span>Register New Birth</span>
+                </a>
+            </header>
 
-                <!-- Display Messages -->
-                <?php if (isset($_SESSION['success_message'])): ?>
-                    <div class="alert alert-success alert-dismissible fade show alert-auto-close" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <?php echo $_SESSION['success_message']; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- STAT CARDS -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="stat-chip">
+                    <div class="stat-icon bg-health-50 text-health-600">
+                        <i class="fas fa-id-card"></i>
                     </div>
-                    <?php unset($_SESSION['success_message']); ?>
-                <?php endif; ?>
-
-                <?php if (isset($_SESSION['error_message'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <?php echo $_SESSION['error_message']; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    <?php unset($_SESSION['error_message']); ?>
-                <?php endif; ?>
-
-                <!-- Search and Stats -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <form method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search by baby name or parents..." value="<?php echo htmlspecialchars($search); ?>">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <?php if (!empty($search)): ?>
-                                <a href="?" class="btn btn-outline-secondary ms-2">Clear</a>
-                            <?php endif; ?>
-                        </form>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <div class="text-muted">
-                            Total: <strong><?php echo $totalBabies; ?></strong> birth records found
-                            <?php if (!empty($search)): ?>
-                                <span class="badge bg-info">Search Active</span>
-                            <?php endif; ?>
-                        </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Total Records</p>
+                        <h3 class="text-2xl font-black text-slate-900"><?= number_format($totalBabies) ?></h3>
                     </div>
                 </div>
+                <div class="stat-chip">
+                    <div class="stat-icon bg-sky-50 text-sky-500">
+                        <i class="fas fa-mars-venus"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Recent Deliveries</p>
+                        <h3 class="text-2xl font-black text-slate-900"><?= count($babies) ?></h3>
+                    </div>
+                </div>
+                <div class="stat-chip">
+                    <div class="stat-icon bg-amber-50 text-amber-500">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Search Results</p>
+                        <h3 class="text-2xl font-black text-slate-900"><?= number_format($totalBabies) ?></h3>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Birth Records Table -->
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="20%">Baby Information</th>
-                                        <th width="8%">Gender</th>
-                                        <th width="15%">Birth Details</th>
-                                        <th width="15%">Delivery Information</th>
-                                        <th width="22%">Parents Information</th>
-                                        <th width="10%" class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($babies)): ?>
-                                        <?php foreach ($babies as $baby): ?>
-                                        <tr>
-                                            <!-- Baby Information Column -->
-                                            <td>
-                                                <div class="fw-semibold text-primary">
+            <!-- SEARCH BAR -->
+            <div class="flex items-center gap-4">
+                <form method="GET" class="relative flex-1 group/search">
+                    <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within/search:text-health-600 transition-colors duration-200 text-sm"></i>
+                    <input type="text" name="search" value="<?= htmlspecialchars($search); ?>"
+                           class="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-32 text-sm font-medium text-slate-800 focus:border-health-500 focus:ring-4 focus:ring-health-600/10 outline-none transition-all placeholder:text-slate-300 shadow-sm"
+                           placeholder="Search by baby name or parents...">
+                    <button type="submit" class="absolute right-2.5 top-2 bottom-2 bg-health-600 hover:bg-health-700 text-white px-5 rounded-xl font-bold text-xs transition-all">
+                        Search
+                    </button>
+                </form>
+                <?php if (!empty($search)): ?>
+                <a href="birth_records.php" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-rose-500 transition-colors bg-white border border-slate-200 px-4 py-3 rounded-2xl shadow-sm">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+                <?php endif; ?>
+            </div>
+
+            <!-- BIRTH RECORDS TABLE -->
+            <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                <div class="flex items-center justify-between px-8 py-5 border-b border-slate-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Newborn Registry Index</span>
+                    </div>
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest"><?= $totalBabies ?> Records</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-slate-50/50">
+                                <th class="table-th">Baby Information</th>
+                                <th class="table-th">Gender</th>
+                                <th class="table-th">Measurements</th>
+                                <th class="table-th">Delivery</th>
+                                <th class="table-th">Parents</th>
+                                <th class="table-th text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($babies)): ?>
+                                <?php foreach ($babies as $baby): ?>
+                                <tr class="hover:bg-health-50/30 transition-colors duration-200 group">
+                                    <td class="table-td">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-xl bg-health-600 text-white flex items-center justify-center text-xs font-black shadow-sm shadow-health-100 flex-shrink-0 group-hover:scale-105 transition-transform">
+                                                <?= strtoupper(substr($baby['first_name'], 0, 1) . substr($baby['last_name'], 0, 1)); ?>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold text-slate-800 group-hover:text-health-700 transition-colors leading-tight">
                                                     <?php 
                                                     $babyName = htmlspecialchars($baby['first_name']);
-                                                    if (!empty($baby['middle_name'])) {
-                                                        $babyName .= ' ' . htmlspecialchars($baby['middle_name']);
-                                                    }
+                                                    if (!empty($baby['middle_name'])) $babyName .= ' ' . htmlspecialchars($baby['middle_name']);
                                                     $babyName .= ' ' . htmlspecialchars($baby['last_name']);
                                                     echo $babyName;
                                                     ?>
+                                                </p>
+                                                <div class="flex items-center gap-2 mt-1">
+                                                    <span class="text-[10px] text-slate-400 font-medium">B-<?= $baby['id']; ?></span>
+                                                    <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-bold uppercase tracking-tighter">Order: <?= $baby['birth_order'] ?: 'N/A' ?></span>
                                                 </div>
-                                                <div class="small text-muted mt-1">
-                                                    <i class="fas fa-sort-numeric-up-alt me-1"></i>
-                                                    Birth Order: <?php echo !empty($baby['birth_order']) ? htmlspecialchars($baby['birth_order']) : 'N/A'; ?>
-                                                </div>
-                                                <?php if (!empty($baby['birth_date']) && $baby['birth_date'] != '0000-00-00'): ?>
-                                                    <div class="small text-muted">
-                                                        <i class="fas fa-calendar-day me-1"></i>
-                                                        <?php echo date('M j, Y', strtotime($baby['birth_date'])); ?>
-                                                        <?php if (!empty($baby['birth_time'])): ?>
-                                                            <span class="ms-1">• <?php echo date('g:i A', strtotime($baby['birth_time'])); ?></span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                <?php endif; ?>
-                                            </td>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="table-td">
+                                        <?php if (!empty($baby['gender'])): ?>
+                                            <?php $gColor = strtolower($baby['gender']) == 'male' ? 'bg-sky-50 text-sky-600 border-sky-100' : 'bg-rose-50 text-rose-600 border-rose-100'; ?>
+                                            <span class="pill-badge <?= $gColor ?>">
+                                                <i class="fas fa-<?php echo strtolower($baby['gender']) == 'male' ? 'mars' : 'venus'; ?> mr-1.5 text-[8px]"></i>
+                                                <?= ucfirst($baby['gender']); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-[10px] font-medium text-slate-300 italic">N/A</span>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <td class="table-td">
+                                        <div class="space-y-1.5">
+                                            <div class="flex items-center gap-1.5 text-xs">
+                                                <span class="text-slate-400 font-bold w-4">W:</span>
+                                                <span class="font-black text-slate-700"><?= $baby['birth_weight'] ?: '—'; ?></span>
+                                                <span class="text-[9px] text-slate-400">kg</span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5 text-xs">
+                                                <span class="text-slate-400 font-bold w-4">L:</span>
+                                                <span class="font-black text-slate-700"><?= $baby['birth_length'] ?: '—'; ?></span>
+                                                <span class="text-[9px] text-slate-400">cm</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="table-td">
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-[10px] font-black text-health-600 uppercase tracking-tight"><?= htmlspecialchars($baby['delivery_type'] ?: 'Unknown'); ?></span>
+                                            <span class="text-[10px] font-bold text-slate-400"><?= htmlspecialchars($baby['birth_attendant'] ?: 'Unspecified'); ?></span>
+                                        </div>
+                                    </td>
+
+                                    <td class="table-td">
+                                        <div class="flex flex-col gap-1.5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-1 h-3 bg-emerald-400 rounded-full"></span>
+                                                <span class="text-[10px] font-bold text-slate-700 truncate max-w-[120px]">
+                                                    <?php 
+                                                    $motherName = htmlspecialchars($baby['mother_first_name'] ?? '');
+                                                    $motherName .= ' ' . htmlspecialchars($baby['mother_last_name'] ?? '');
+                                                    echo !empty(trim($motherName)) ? $motherName : 'Mother N/A';
+                                                    ?>
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-1 h-3 bg-sky-400 rounded-full"></span>
+                                                <span class="text-[10px] font-bold text-slate-700 truncate max-w-[120px]">
+                                                    <?php 
+                                                    $fatherName = htmlspecialchars($baby['father_first_name'] ?? '');
+                                                    $fatherName .= ' ' . htmlspecialchars($baby['father_last_name'] ?? '');
+                                                    echo !empty(trim($fatherName)) ? $fatherName : 'Father N/A';
+                                                    ?>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td class="table-td">
+                                        <div class="flex items-center justify-end gap-1.5">
+                                            <button class="action-btn bg-sky-50 hover:bg-sky-100 text-sky-600 border-sky-100 view-details" 
+                                                    data-baby-id="<?php echo $baby['id']; ?>"
+                                                    title="View Full Profile">
+                                                <i class="fas fa-eye text-xs"></i>
+                                            </button>
                                             
-                                            <!-- Gender Column -->
-                                            <td>
-                                                <?php if (!empty($baby['gender'])): ?>
-                                                    <span class="badge gender-badge bg-<?php echo strtolower($baby['gender']) == 'male' ? 'primary' : 'danger'; ?>">
-                                                        <i class="fas fa-<?php echo strtolower($baby['gender']) == 'male' ? 'mars' : 'venus'; ?> me-1"></i>
-                                                        <?php echo ucfirst($baby['gender']); ?>
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span class="text-muted small">N/A</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            
-                                            <!-- Birth Details Column -->
-                                            <td>
-                                                <?php if (!empty($baby['birth_weight'])): ?>
-                                                    <div class="mb-1">
-                                                        <strong class="small">Weight:</strong>
-                                                        <span class="small fw-semibold text-success"><?php echo $baby['birth_weight']; ?> kg</span>
-                                                    </div>
-                                                <?php endif; ?>
-                                                <?php if (!empty($baby['birth_length'])): ?>
-                                                    <div class="mb-1">
-                                                        <strong class="small">Length:</strong>
-                                                        <span class="small"><?php echo $baby['birth_length']; ?> cm</span>
-                                                    </div>
-                                                <?php endif; ?>
-                                                <?php if (empty($baby['birth_weight']) && empty($baby['birth_length'])): ?>
-                                                    <span class="text-muted small">No measurements</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            
-                                            <!-- Delivery Information Column -->
-                                            <td>
-                                                <div class="small">
-                                                    <?php if (!empty($baby['delivery_type'])): ?>
-                                                        <div class="mb-1">
-                                                            <strong>Type:</strong> 
-                                                            <span class="text-primary"><?php echo htmlspecialchars($baby['delivery_type']); ?></span>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($baby['type_of_birth'])): ?>
-                                                        <div class="mb-1">
-                                                            <strong>Birth Type:</strong> 
-                                                            <?php echo htmlspecialchars($baby['type_of_birth']); ?>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    <?php if (!empty($baby['birth_attendant'])): ?>
-                                                        <div>
-                                                            <strong>Attendant:</strong> 
-                                                            <span class="text-success"><?php echo htmlspecialchars($baby['birth_attendant']); ?></span>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            
-                                            <!-- Parents Information Column -->
-                                            <td>
-                                                <div class="small">
-                                                    <div class="mb-2">
-                                                        <strong class="text-success">Mother:</strong><br>
-                                                        <?php 
-                                                        $motherName = htmlspecialchars($baby['mother_first_name'] ?? '');
-                                                        if (!empty($baby['mother_middle_name'])) {
-                                                            $motherName .= ' ' . htmlspecialchars($baby['mother_middle_name']);
-                                                        }
-                                                        $motherName .= ' ' . htmlspecialchars($baby['mother_last_name'] ?? '');
-                                                        echo !empty(trim($motherName)) ? $motherName : '<span class="text-muted">Not specified</span>';
-                                                        ?>
-                                                    </div>
-                                                    <div>
-                                                        <strong class="text-primary">Father:</strong><br>
-                                                        <?php 
-                                                        $fatherName = htmlspecialchars($baby['father_first_name'] ?? '');
-                                                        if (!empty($baby['father_middle_name'])) {
-                                                            $fatherName .= ' ' . htmlspecialchars($baby['father_middle_name']);
-                                                        }
-                                                        $fatherName .= ' ' . htmlspecialchars($baby['father_last_name'] ?? '');
-                                                        echo !empty(trim($fatherName)) ? $fatherName : '<span class="text-muted">Not specified</span>';
-                                                        ?>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            
-                                            <!-- Status Column -->
-                                            <!-- <td>
-                                                <?php
-                                                // Registration Status
-                                                // if (!empty($baby['status'])) {
-                                                //     $statusClass = 'status-' . $baby['status'];
-                                                //     echo '<span class="badge ' . $statusClass . ' status-badge">' . ucfirst($baby['status']) . '</span>';
-                                                // } else {
-                                                //     echo '<span class="badge bg-secondary status-badge">Unknown</span>';
-                                                // }
-                                                ?>
-                                            </td> -->
-                                            
-                                            <!-- Actions Column - UPDATED FOR MIDWIFE DELETE ACCESS -->
-                                            <td class="text-center action-buttons">
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <!-- View Button - For everyone -->
-                                                    <button class="btn btn-outline-info view-details" 
-                                                            data-baby-id="<?php echo $baby['id']; ?>"
-                                                            data-bs-toggle="modal" 
-                                                            data-bs-target="#birthDetailsModal"
-                                                            title="View Details">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    
-                                                    <!-- Edit Button - For admin and midwife -->
-                                                    <?php if (in_array($_SESSION['role'], ['admin', 'midwife'])): ?>
-                                                    <a href="forms/birth_registration.php?edit=<?php echo $baby['id']; ?>" 
-                                                       class="btn btn-outline-warning" title="Edit Record">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <?php endif; ?>
-                                                    
-                                                    <!-- Delete Button - For admin and midwife -->
-                                                    <?php if (in_array($_SESSION['role'], ['admin', 'midwife'])): ?>
-                                                    <button class="btn btn-outline-danger delete-baby" 
-                                                            data-baby-id="<?php echo $baby['id']; ?>"
-                                                            data-baby-name="<?php echo htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?>"
-                                                            title="Delete Record">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="7" class="text-center py-4 text-muted">
-                                                <i class="fas fa-baby fa-2x mb-3 d-block"></i>
-                                                <?php echo !empty($search) ? 'No birth records found matching your search.' : 'No birth records yet'; ?>
+                                            <?php if (in_array($_SESSION['role'], ['admin', 'midwife'])): ?>
+                                            <a href="forms/birth_registration.php?edit=<?php echo $baby['id']; ?>" 
+                                               class="action-btn bg-amber-50 hover:bg-amber-100 text-amber-600 border-amber-100" title="Edit Record">
+                                                <i class="fas fa-edit text-xs"></i>
+                                            </a>
+                                            <button class="action-btn bg-rose-50 hover:bg-rose-100 text-rose-500 border-rose-100 delete-baby" 
+                                                    data-baby-id="<?php echo $baby['id']; ?>"
+                                                    data-baby-name="<?php echo htmlspecialchars($baby['first_name'] . ' ' . $baby['last_name']); ?>"
+                                                    title="Remove Record">
+                                                <i class="fas fa-trash text-xs"></i>
+                                            </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="py-24 text-center">
+                                        <div class="flex flex-col items-center gap-3 opacity-40">
+                                            <div class="w-16 h-16 rounded-3xl bg-slate-100 flex items-center justify-center">
+                                                <i class="fas fa-folder-open text-2xl text-slate-400"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-black text-slate-400 uppercase tracking-widest">No Birth Records Found</p>
                                                 <?php if (!empty($search)): ?>
-                                                    <br><a href="?" class="btn btn-sm btn-outline-primary mt-2">Clear Search</a>
+                                                <p class="text-xs text-slate-300 mt-1">Try a different search term</p>
                                                 <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
 
-                        <!-- Pagination -->
-                        <?php if ($totalPages > 1): ?>
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            <i class="fas fa-chevron-left"></i> Previous
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-
-                                <?php 
-                                // Show limited pagination links
-                                $startPage = max(1, $page - 2);
-                                $endPage = min($totalPages, $page + 2);
-                                
-                                for ($i = $startPage; $i <= $endPage; $i++): ?>
-                                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <?php if ($page < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            Next <i class="fas fa-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
+                <!-- PAGINATION -->
+                <?php if ($totalPages > 1): ?>
+                <div class="px-8 py-5 border-t border-slate-50 flex items-center justify-between bg-slate-50/30">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        Page <?= $page; ?> of <?= $totalPages; ?>
+                    </p>
+                    <div class="flex gap-2 text-xs font-black">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1; ?>&search=<?= urlencode($search); ?>"
+                               class="flex items-center gap-2 bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-xl uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm">
+                                <i class="fas fa-chevron-left"></i> Prev
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($page < $totalPages): ?>
+                            <a href="?page=<?= $page + 1; ?>&search=<?= urlencode($search); ?>"
+                               class="flex items-center gap-2 bg-health-600 text-white px-4 py-2 rounded-xl uppercase tracking-widest hover:bg-health-700 transition-all shadow-sm">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
                         <?php endif; ?>
                     </div>
                 </div>
-            </main>
+                <?php endif; ?>
+            </div>
+        </main>
     </div>
 
-    <!-- Birth Details Modal -->
-    <div class="modal fade birth-details-modal" id="birthDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Birth Record Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="birthDetailsContent">
-                    <!-- Content will be loaded via AJAX -->
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Loading birth record details...</p>
+    <!-- BIRTH DETAILS MODAL -->
+    <div id="birthDetailsModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-8 py-6 border-b border-slate-100 bg-slate-50/50 flex-shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center text-lg">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight">Birth Record Profile</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Certified Delivery Statement</p>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <?php if (in_array($_SESSION['role'], ['admin', 'midwife'])): ?>
-                    <button type="button" class="btn btn-primary" id="editBirthBtn">
-                        <i class="fas fa-edit me-1"></i>Edit Record
-                    </button>
-                    <?php endif; ?>
+                <button onclick="closeDetailsModal()"
+                        class="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all active:scale-90">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="flex-1 overflow-y-auto p-8" id="birthDetailsContent">
+                <div class="flex flex-col items-center justify-center py-20 opacity-40">
+                    <div class="w-10 h-10 border-[3px] border-health-100 border-t-health-600 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Compiling Records...</p>
                 </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-8 py-5 bg-slate-50/50 border-t border-slate-100 flex justify-end gap-3 flex-shrink-0">
+                <button onclick="closeDetailsModal()"
+                        class="px-6 py-3 rounded-2xl text-slate-400 font-bold text-sm hover:bg-white hover:text-slate-600 transition-all">
+                    Close
+                </button>
+                <?php if (in_array($_SESSION['role'], ['admin', 'midwife'])): ?>
+                <button id="editBirthBtn"
+                        class="bg-health-600 hover:bg-health-700 text-white font-bold px-8 py-3 rounded-2xl transition-all text-sm shadow-lg shadow-health-100 active:scale-95">
+                    <i class="fas fa-pen mr-2 text-xs"></i>Edit Record
+                </button>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -524,98 +453,112 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Delete functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('.delete-baby');
-            
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const babyId = this.getAttribute('data-baby-id');
-                    const babyName = this.getAttribute('data-baby-name');
-                    
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        html: `You are about to delete birth record for <strong>${babyName}</strong>. This action cannot be undone and will also delete related postnatal records.`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, delete it!',
-                        cancelButtonText: 'Cancel',
-                        showLoaderOnConfirm: true,
-                        preConfirm: () => {
-                            return fetch(`?delete=${babyId}`)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok');
-                                    }
-                                    return response;
-                                })
-                                .catch(error => {
-                                    Swal.showValidationMessage(`Request failed: ${error}`);
-                                });
-                        },
-                        allowOutsideClick: () => !Swal.isLoading()
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire({
-                                title: 'Deleted!',
-                                text: 'Birth record has been deleted.',
-                                icon: 'success',
-                                timer: 2000,
-                                showConfirmButton: false
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        }
-                    });
-                });
-            });
-
-            // View birth details
-            const viewButtons = document.querySelectorAll('.view-details');
-            const modal = document.getElementById('birthDetailsModal');
-            const content = document.getElementById('birthDetailsContent');
-            const editBtn = document.getElementById('editBirthBtn');
             let currentBabyId = null;
 
-            viewButtons.forEach(button => {
+            // View Details Handler
+            document.querySelectorAll('.view-details').forEach(button => {
                 button.addEventListener('click', function() {
                     currentBabyId = this.getAttribute('data-baby-id');
-                    loadBirthDetails(currentBabyId);
+                    openDetailsModal(currentBabyId);
                 });
             });
 
-            function loadBirthDetails(babyId) {
+            function openDetailsModal(babyId) {
+                const modal = document.getElementById('birthDetailsModal');
+                const content = document.getElementById('birthDetailsContent');
+
+                if (window.closeSidebar) window.closeSidebar();
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+
+                content.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20 opacity-40">
+                        <div class="w-10 h-10 border-[3px] border-health-100 border-t-health-600 rounded-full animate-spin"></div>
+                        <p class="mt-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Accessing Registry...</p>
+                    </div>
+                `;
+
                 fetch(`get_birth_details.php?id=${babyId}`)
-                    .then(response => response.text())
+                    .then(r => r.text())
                     .then(data => {
                         content.innerHTML = data;
                     })
-                    .catch(error => {
+                    .catch(() => {
                         content.innerHTML = `
-                            <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Failed to load birth record details. Please try again.
+                            <div class="bg-rose-50 border border-rose-100 p-8 rounded-[2rem] text-center">
+                                <p class="font-black text-rose-800 text-sm uppercase tracking-widest">Sync Error</p>
+                                <p class="text-xs text-rose-600 mt-2 font-medium">Failed to retrieve birth profile. Please try again.</p>
                             </div>
                         `;
                     });
             }
 
+            window.closeDetailsModal = function() {
+                const modal = document.getElementById('birthDetailsModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            };
+
             // Edit button handler
+            const editBtn = document.getElementById('editBirthBtn');
             if (editBtn) {
-                editBtn.addEventListener('click', function() {
-                    if (currentBabyId) {
-                        window.location.href = `forms/birth_registration.php?edit=${currentBabyId}`;
-                    }
+                editBtn.addEventListener('click', () => {
+                    if (currentBabyId) window.location.href = `forms/birth_registration.php?edit=${currentBabyId}`;
                 });
             }
 
-            // Reload details when modal is shown
-            modal.addEventListener('show.bs.modal', function() {
-                if (currentBabyId) {
-                    loadBirthDetails(currentBabyId);
-                }
+            // Backdrop and ESC handlers
+            const modalEl = document.getElementById('birthDetailsModal');
+            modalEl.addEventListener('click', e => { if (e.target === modalEl) closeDetailsModal(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetailsModal(); });
+
+            // Delete functionality
+            document.querySelectorAll('.delete-baby').forEach(button => {
+                button.addEventListener('click', function() {
+                    const babyId = this.getAttribute('data-baby-id');
+                    const babyName = this.getAttribute('data-baby-name');
+                    
+                    Swal.fire({
+                        title: 'Delete Record?',
+                        html: `This will permanently remove<br><b class="text-health-700">${babyName}</b><br><small class="text-slate-400 mt-2 block">Related postnatal data will also be purged.</small>`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#f43f5e',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: 'Yes, Delete',
+                        cancelButtonText: 'Cancel',
+                        showLoaderOnConfirm: true,
+                        preConfirm: () => {
+                            return fetch(`?delete=${babyId}`)
+                                .then(response => {
+                                    if (!response.ok) throw new Error('Delete request failed');
+                                    return response;
+                                })
+                                .catch(error => Swal.showValidationMessage(`Error: ${error}`));
+                        },
+                        allowOutsideClick: () => !Swal.isLoading(),
+                        customClass: {
+                            popup: 'rounded-[2rem]',
+                            confirmButton: 'rounded-xl font-bold px-6 py-3',
+                            cancelButton: 'rounded-xl font-bold px-6 py-3'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Purged!',
+                                text: 'The record has been removed from registry.',
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false,
+                                customClass: { popup: 'rounded-[2rem]' }
+                            }).then(() => window.location.reload());
+                        }
+                    });
+                });
             });
 
             // Auto-close success alerts
