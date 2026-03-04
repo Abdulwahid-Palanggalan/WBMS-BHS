@@ -351,8 +351,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <?php include_once __DIR__ . '/../includes/tailwind_config.php'; ?>
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-header {
+                @apply flex items-center gap-3 py-4 border-b border-slate-100 mb-6;
+            }
+            .section-icon {
+                @apply w-10 h-10 bg-health-50 text-health-600 rounded-xl flex items-center justify-center text-lg;
+            }
+            .form-input-premium {
+                @apply w-full px-4 py-3 rounded-2xl border border-slate-200 focus:border-health-500 focus:ring-4 focus:ring-health-500/10 outline-none transition-all duration-200 bg-white;
+            }
+            .form-label-premium {
+                @apply block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1;
+            }
+            .card-premium {
+                @apply bg-white rounded-[2rem] border border-slate-100 shadow-sm shadow-slate-200/50 p-8;
+            }
+            .info-box {
+                @apply bg-slate-50 rounded-2xl p-6 border border-slate-100;
+            }
+            .badge-edit {
+                @apply bg-amber-500 text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-amber-200;
+            }
+        }
+    </style>
 </head>
-<body class="bg-health-50 font-inter text-slate-900 antialiased selection:bg-health-100 selection:text-health-700">
+<body class="bg-slate-50 min-h-full font-inter selection:bg-health-100 selection:text-health-700">
     <?php include_once INCLUDE_PATH . 'header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
@@ -360,54 +386,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
             <!-- Header Section -->
-            <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
                 <div>
-                    <h1 class="text-3xl font-black text-slate-900 tracking-tight">
+                    <h1 class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                        <i class="fas fa-venus-mars text-health-600"></i>
                         <?php echo $editMode ? 'Edit Mother Profile' : 'Mother Registration'; ?>
                     </h1>
-                    <p class="text-slate-500 font-medium mt-1 italic">Comprehensive maternal health record system</p>
+                    <p class="text-slate-500 font-medium mt-1">
+                        Comprehensive maternal health record system
+                    </p>
                 </div>
-                
-                <?php if ($editMode): ?>
-                    <div class="badge-edit flex items-center gap-2 group">
-                        <div class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
-                        <span class="text-rose-700 font-bold uppercase tracking-widest text-[10px]">Active Edit Mode</span>
+                <div class="flex items-center gap-3">
+                    <?php if ($editMode): ?>
+                        <span class="badge-edit">
+                            <i class="fas fa-edit me-1"></i>Edit Mode Active
+                        </span>
+                    <?php endif; ?>
+                    <div class="px-4 py-2 bg-slate-50 rounded-xl border border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        Ref: WBMS-MR-<?= date('Y') ?>
                     </div>
-                <?php endif; ?>
-            </header>
+                </div>
+            </div>
 
-            <!-- Alerts Section -->
+            <!-- Success/Error Alerts -->
             <?php if ($message): ?>
-                <div class="p-6 bg-emerald-50 border border-emerald-100 rounded-3xl flex items-start gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-200">
-                        <i class="fas fa-check text-white text-xl"></i>
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3 text-emerald-800 animate-in fade-in slide-in-from-top duration-500">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="space-y-1 pt-1">
-                        <h3 class="text-emerald-900 font-black text-lg leading-tight uppercase tracking-tight">Operation Successful</h3>
-                        <div class="text-emerald-700 font-medium text-sm leading-relaxed opacity-90"><?php echo $message; ?></div>
-                    </div>
+                    <div class="font-bold text-sm"><?php echo $message; ?></div>
                 </div>
             <?php endif; ?>
 
             <?php if ($error): ?>
-                <div class="p-6 bg-rose-50 border border-rose-100 rounded-3xl flex items-start gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-500 flex items-center justify-center shrink-0 shadow-lg shadow-rose-200">
-                        <i class="fas fa-exclamation-triangle text-white text-xl"></i>
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-center gap-3 text-rose-800 animate-in fade-in slide-in-from-top duration-500">
+                    <div class="w-8 h-8 bg-rose-100 rounded-lg flex items-center justify-center text-sm">
+                        <i class="fas fa-exclamation-triangle"></i>
                     </div>
-                    <div class="space-y-1 pt-1">
-                        <h3 class="text-rose-900 font-black text-lg leading-tight uppercase tracking-tight">Action Required</h3>
-                        <p class="text-rose-700 font-medium text-sm leading-relaxed opacity-90"><?php echo $error; ?></p>
-                    </div>
+                    <p class="font-bold text-sm"><?php echo $error; ?></p>
                 </div>
             <?php endif; ?>
 
-            <div class="info-box flex items-center gap-4 bg-sky-50 border-sky-100">
-                <div class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center shrink-0 shadow-md">
-                    <i class="fas fa-info text-white text-sm"></i>
+            <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 flex items-center gap-3 text-sky-800">
+                <div class="w-8 h-8 bg-sky-100 rounded-lg flex items-center justify-center text-sm">
+                    <i class="fas fa-info-circle"></i>
                 </div>
-                <p class="text-sky-800 text-sm font-bold leading-tight uppercase tracking-widest">
-                    Fields marked with <span class="text-rose-500 font-black">*</span> are mandatory for legal documentation.
-                </p>
+                <p class="text-sm font-medium">Fields marked with <span class="text-rose-500 font-bold">*</span> are required for legal documentation.</p>
             </div>
 
             <form method="POST" action="" id="motherRegistrationForm" class="space-y-8" novalidate>
@@ -419,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-user text-health-600"></i>
+                            <i class="fas fa-user-pregnant text-health-600"></i>
                         </div>
                         <div>
                             <h2 class="text-xl font-bold text-slate-800">Maternal Personal Data</h2>
@@ -511,7 +535,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <section class="card-premium">
                     <div class="section-header">
                         <div class="section-icon">
-                            <i class="fas fa-address-book text-health-600"></i>
+                            <i class="fas fa-phone-office text-health-600"></i>
                         </div>
                         <div>
                             <h2 class="text-xl font-bold text-slate-800">Contact & Address Data</h2>
@@ -736,7 +760,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <i class="fas fa-baby text-health-600"></i>
                         </div>
                         <div>
-                            <h2 class="text-xl font-bold text-slate-800">Pregancy & Gestation Data</h2>
+                            <h2 class="text-xl font-bold text-slate-800">Pregnancy & Gestation Data</h2>
                             <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Clinical data for current and past pregnancies</p>
                         </div>
                     </div>
@@ -809,15 +833,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </section>
                 <!-- Form Actions -->
-                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-8">
+                <div class="flex flex-col sm:flex-row justify-end items-center gap-4 pt-12 pb-12 border-t border-slate-100">
                     <button type="button" onclick="window.history.back()" 
-                            class="w-full sm:w-auto px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200 transition-all active:scale-95">
-                        Cancel
+                            class="w-full sm:w-auto px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200 transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-arrow-left text-[10px]"></i>
+                        Back to List
                     </button>
                     <button type="submit" 
                             class="w-full sm:w-auto px-12 py-4 bg-health-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-health-700 shadow-xl shadow-health-200 transition-all active:scale-95 flex items-center justify-center gap-2">
                         <i class="fas fa-save shadow-sm"></i>
-                        <?php echo $editMode ? 'Update Mother Profile' : 'Register Mother'; ?>
+                        <?php echo $editMode ? 'Update Mother Profile' : 'Complete Registration'; ?>
                     </button>
                 </div>
             </form>
