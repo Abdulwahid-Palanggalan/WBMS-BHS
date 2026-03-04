@@ -403,9 +403,6 @@ $postnatalRecords = $stmt->fetchAll(PDO::FETCH_ASSOC);
         const modalContent = document.getElementById('postnatalDetailsContent');
 
         function viewPostnatalDetails(recordId) {
-            // Close sidebar if open (using global function from header)
-            if (window.closeSidebar) window.closeSidebar();
-            
             postnatalModal.show();
             // Show loader
             modalContent.innerHTML = `

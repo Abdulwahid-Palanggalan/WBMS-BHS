@@ -406,9 +406,6 @@ $mothers = $stmt->fetchAll(PDO::FETCH_ASSOC);
         const modalContent = document.getElementById('motherDetailsContent');
 
         function viewMotherDetails(motherId) {
-            // Close sidebar if open
-            if (window.closeSidebar) window.closeSidebar();
-            
             motherModal.show();
             modalContent.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-20 text-center">

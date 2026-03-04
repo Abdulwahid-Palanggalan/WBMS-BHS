@@ -314,14 +314,6 @@ $baseUrl = $GLOBALS['base_url'];
 
     <script>
         function viewMother(id) {
-            // Use global sidebar toggle if it exists to close it
-            if (typeof toggleSidebar === "function") {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
-                    toggleSidebar();
-                }
-            }
-
             const modal = new bootstrap.Modal(document.getElementById('motherDetailsModal'));
             const content = document.getElementById('motherDetailsContent');
             

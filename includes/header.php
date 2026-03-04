@@ -168,5 +168,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('show.bs.modal', function () {
         if (window.closeSidebar) window.closeSidebar();
     });
+
+    // Global Bootstrap Modal Listener to restore sidebar
+    document.addEventListener('hidden.bs.modal', function () {
+        if (sidebar) {
+            sidebar.classList.remove('sidebar-force-hide');
+            // On desktop, the natural lg:translate-x-0 will take over
+            // On mobile, it remains hidden (-translate-x-full) unless manually opened
+        }
+    });
 });
 </script>
