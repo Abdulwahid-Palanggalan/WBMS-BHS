@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sidebar   = document.querySelector('.sidebar'); // Assuming sidebar class
     const overlay   = document.getElementById('sidebarOverlay');
 
-    function openSidebar() {
+    window.openSidebar = function() {
         if (sidebar) sidebar.classList.add('translate-x-0');
         if (sidebar) sidebar.classList.remove('-translate-x-full');
         if (overlay) {
@@ -137,9 +137,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 overlay.classList.remove('opacity-0');
             }, 10);
         }
-    }
+    };
 
-    function closeSidebar() {
+    window.closeSidebar = function() {
         if (sidebar) sidebar.classList.remove('translate-x-0');
         if (sidebar) sidebar.classList.add('-translate-x-full');
         if (overlay) {
@@ -147,17 +147,22 @@ document.addEventListener('DOMContentLoaded', function () {
             overlay.classList.add('opacity-0');
             setTimeout(() => overlay.classList.add('hidden'), 300);
         }
-    }
+    };
 
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function () {
             const isHidden = sidebar && sidebar.classList.contains('-translate-x-full');
-            isHidden ? openSidebar() : closeSidebar();
+            isHidden ? window.openSidebar() : window.closeSidebar();
         });
     }
 
     if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', window.closeSidebar);
     }
+
+    // Global Bootstrap Modal Listener to close sidebar
+    document.addEventListener('show.bs.modal', function () {
+        if (window.closeSidebar) window.closeSidebar();
+    });
 });
 </script>

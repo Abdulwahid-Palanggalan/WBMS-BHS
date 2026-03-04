@@ -449,6 +449,9 @@ $stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
             const modal = document.getElementById('prenatalDetailsModal');
             const content = document.getElementById('prenatalDetailsContent');
 
+            closeDetailsModal(); // Reset any open state
+            if (window.closeSidebar) window.closeSidebar(); // Ensure sidebar is closed for focus
+            
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             document.body.style.overflow = 'hidden';
