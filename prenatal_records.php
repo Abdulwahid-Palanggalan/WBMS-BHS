@@ -511,6 +511,7 @@ $stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
             if (currentRecordId) {
                 window.location.href = `forms/prenatal_form.php?edit=${currentRecordId}`;
             }
+        });
 
         // Close on backdrop click
         document.getElementById('prenatalDetailsModal').addEventListener('click', function(e) {
@@ -521,6 +522,63 @@ $stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeDetailsModal();
         });
+
+        function confirmDelete(type, id, name) {
+            Swal.fire({
+                title: 'Delete Record?',
+                html: `This will permanently remove<br><b class="text-health-700">${name}</b>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f43f5e',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, Delete',
+                cancelButtonText: 'Cancel',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    const formData = new FormData();
+                    formData.append('type', type);
+                    formData.append('id', id);
+                    
+                    return fetch('delete.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error(response.statusText);
+                        return response.json();
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(`Request failed: ${error}`);
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading(),
+                customClass: {
+                    popup: 'rounded-[2rem]',
+                    confirmButton: 'rounded-xl font-bold px-6 py-3',
+                    cancelButton: 'rounded-xl font-bold px-6 py-3'
+                }
+            }).then(result => {
+                if (result.isConfirmed && result.value.success) {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: result.value.message,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        customClass: { popup: 'rounded-[2rem]' }
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: result.value.message || 'Failed to delete record.',
+                        icon: 'error',
+                        customClass: { popup: 'rounded-[2rem]' }
+                    });
+                }
+            });
+        }
     </script>
 </body>
 </html>
