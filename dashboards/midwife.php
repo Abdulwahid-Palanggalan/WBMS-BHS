@@ -113,7 +113,7 @@ $upcomingAppointments = $pdo->query("
             }
             .alert-pulse-red::after {
                 content: '';
-                @apply absolute inset-0 rounded-2xl ring-4 ring-rose-500/30 animate-pulse;
+                @apply absolute inset-0 rounded-2xl ring-4 ring-rose-500/30 animate-pulse pointer-events-none;
             }
             .stat-card-clinical {
                 @apply bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-all duration-300;
