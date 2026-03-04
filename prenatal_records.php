@@ -483,9 +483,12 @@ $stats = $statsQuery->fetch(PDO::FETCH_ASSOC);
 
         function closeDetailsModal() {
             const modal = document.getElementById('prenatalDetailsModal');
+            const sidebar = document.querySelector('.sidebar');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             document.body.style.overflow = '';
+            
+            if (sidebar) sidebar.classList.remove('sidebar-force-hide');
         }
 
         function confirmDelete(type, id, name) {

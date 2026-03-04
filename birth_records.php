@@ -498,9 +498,12 @@ $babies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             window.closeDetailsModal = function() {
                 const modal = document.getElementById('birthDetailsModal');
+                const sidebar = document.querySelector('.sidebar');
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
                 document.body.style.overflow = '';
+                
+                if (sidebar) sidebar.classList.remove('sidebar-force-hide');
             };
 
             // Edit button handler
