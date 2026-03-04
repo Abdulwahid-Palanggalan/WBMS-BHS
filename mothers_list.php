@@ -75,330 +75,325 @@ $mothers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .mother-details-modal .modal-lg {
-    max-width: 900px;
-}
-.detail-section {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-left: 4px solid #007bff;
-}
-.detail-section h6 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-.detail-item {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #e9ecef;
-}
-.detail-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-.detail-label {
-    font-weight: 600;
-    color: #495057;
-    min-width: 180px;
-}
-.detail-value {
-    color: #6c757d;
-}
-.empty-data {
-    color: #6c757d;
-    font-style: italic;
-}
-.pregnancy-info {
-    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
-    border-left: 4px solid #28a745;
-}
-.medical-info {
-    background: linear-gradient(135deg, #fff3cd 0%, #f8f9fa 100%);
-    border-left: 4px solid #ffc107;
-}
-.table-hover tbody tr:hover {
-    background-color: rgba(0, 123, 255, 0.05);
-    cursor: pointer;
-}
-.table th {
-    background-color: #2c3e50;
-    color: white;
-    font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-    vertical-align: middle;
-}
-.status-badge {
-    font-size: 0.75em;
-    padding: 0.35em 0.65em;
-}
-.action-buttons {
-    min-width: 140px;
-}
+        .premium-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            border-radius: 2rem;
+        }
+        .modern-table thead th {
+            background: #f8fafc;
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            border-top: none;
+            padding: 1.25rem 1rem;
+        }
+        .modern-table tbody td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .action-btn {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .search-input-group {
+            background: #f1f5f9;
+            border-radius: 1.25rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .search-input-group:focus-within {
+            background: white;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
+        }
+        .mother-details-modal .modal-content {
+            border: none;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .mother-details-modal .modal-header {
+            background: #fff;
+            border-bottom: 1px solid #f1f5f9;
+            padding: 1.5rem 2rem;
+        }
+        .mother-details-modal .modal-body {
+            padding: 2rem;
+            background: #f8fafc;
+        }
     </style>
 </head>
-<body>
+<body class="bg-slate-50">
     <?php include_once $rootPath . '/includes/header.php'; ?>
     
     <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
         <?php include_once $rootPath . '/includes/sidebar.php'; ?>
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">All Registered Mothers</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <a href="forms/mother_registration.php" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Register New Mother
-                        </a>
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <nav class="flex mb-3" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                            <li class="inline-flex items-center">
+                                <a href="dashboards/admin.php" class="text-xs font-bold text-slate-400 hover:text-health-600 transition-colors uppercase tracking-widest">Dashboard</a>
+                            </li>
+                            <li>
+                                <div class="flex items-center">
+                                    <i class="fas fa-chevron-right text-[10px] text-slate-300 mx-2"></i>
+                                    <span class="text-xs font-bold text-slate-800 uppercase tracking-widest">Maternal Records</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Registered Mothers</h1>
+                    <p class="text-slate-500 font-medium mt-1">Directory of all registered maternal patients and their clinical profiles.</p>
+                </div>
+                <a href="forms/mother_registration.php" class="inline-flex items-center justify-center px-6 py-3.5 bg-health-600 hover:bg-health-700 text-white rounded-2xl font-bold text-sm transition-all hover:shadow-lg hover:shadow-health-200 active:scale-95 group">
+                    <i class="fas fa-plus-circle mr-2 group-hover:rotate-90 transition-transform duration-500"></i>
+                    Register New Mother
+                </a>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-health-50 flex items-center justify-center text-health-600">
+                        <i class="fas fa-user-friends text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Total Registered</span>
+                        <span class="text-2xl font-black text-slate-800"><?= number_format($totalMothers) ?></span>
                     </div>
                 </div>
-
-                <!-- Search and Stats -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <form method="GET" class="d-flex">
-                            <input type="text" name="search" class="form-control me-2" placeholder="Search by name, email, or phone..." value="<?php echo htmlspecialchars($search); ?>">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </form>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600">
+                        <i class="fas fa-female text-2xl"></i>
                     </div>
-                    <div class="col-md-6 text-end">
-                        <div class="text-muted">
-                            Total: <strong><?php echo $totalMothers; ?></strong> mothers found
-                            <?php if (!empty($search)): ?>
-                                <span class="badge bg-info">Search Active</span>
-                            <?php endif; ?>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Active Cases</span>
+                        <span class="text-2xl font-black text-slate-800">Dynamic</span>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+                        <i class="fas fa-calendar-alt text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Registrations</span>
+                        <span class="text-2xl font-black text-slate-800"><?= date('M Y') ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Card -->
+            <div class="premium-card">
+                <!-- Search and Filters -->
+                <div class="p-6 border-bottom border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <form method="GET" class="relative group w-full md:w-96">
+                        <div class="search-input-group flex items-center">
+                            <i class="fas fa-search text-slate-400 mr-3"></i>
+                            <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search by name or contact..." class="bg-transparent border-none focus:ring-0 text-sm font-bold text-slate-800 w-full placeholder:text-slate-400">
                         </div>
-                    </div>
+                    </form>
+                    <?php if (!empty($search)): ?>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Search: <span class="text-health-600"><?= htmlspecialchars($search) ?></span></span>
+                            <a href="mothers_list.php" class="text-[10px] font-black uppercase tracking-widest text-rose-500 hover:text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg transition-colors">Clear Search</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Mothers Table -->
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="18%">Mother Information</th>
-                                        <th width="8%">Age</th>
-                                        <th width="15%">Contact Details</th>
-                                        <th width="15%">Address</th>
-                                        <th width="18%">Pregnancy Details</th>
-                                        <th width="8%">Status</th>
-                                        <th width="18%" class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($mothers)): ?>
-                                        <?php foreach ($mothers as $mother): ?>
-                                        <tr>
-                                            <!-- Mother Information Column -->
-                                            <td>
-                                                <div class="fw-semibold text-primary">
-                                                    <?php echo htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?>
+                <!-- Table Content -->
+                <div class="table-responsive">
+                    <table class="table modern-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Mother Information</th>
+                                <th>Contact Details</th>
+                                <th>Pregnancy Score</th>
+                                <th>LMP/EDC</th>
+                                <th>Case Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($mothers)): ?>
+                                <?php foreach ($mothers as $mother): ?>
+                                    <tr class="hover:bg-slate-50/50 transition-colors group cursor-pointer" onclick="viewMotherDetails(<?= $mother['id'] ?>)">
+                                        <td>
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-health-100 group-hover:text-health-600 transition-colors">
+                                                    <i class="fas fa-female text-sm"></i>
                                                 </div>
-                                                <div class="small text-muted mt-1">
-                                                    <i class="fas fa-heart text-danger me-1"></i>
-                                                    <?php echo !empty($mother['civil_status']) ? htmlspecialchars($mother['civil_status']) : 'Civil Status: N/A'; ?>
-                                                </div>
-                                                <?php if (!empty($mother['date_of_birth']) && $mother['date_of_birth'] != '0000-00-00'): ?>
-                                                    <div class="small text-muted">
-                                                        <i class="fas fa-birthday-cake me-1"></i>
-                                                        <?php echo date('M j, Y', strtotime($mother['date_of_birth'])); ?>
-                                                    </div>
-                                                <?php endif; ?>
-                                            </td>
-                                            
-                                            <!-- Age Column -->
-                                            <td>
-                                                <?php 
-                                                if (!empty($mother['date_of_birth']) && $mother['date_of_birth'] != '0000-00-00') {
-                                                    $age = date_diff(date_create($mother['date_of_birth']), date_create('today'))->y;
-                                                    echo '<span class="fw-bold">' . $age . '</span> years';
-                                                } else {
-                                                    echo '<span class="text-muted">N/A</span>';
-                                                }
-                                                ?>
-                                            </td>
-                                            
-                                            <!-- Contact Details Column -->
-                                            <td>
-                                                <?php if (!empty($mother['phone'])): ?>
-                                                    <div class="d-flex align-items-center mb-1">
-                                                        <i class="fas fa-phone text-success me-2 fa-sm"></i>
-                                                        <span><?php echo htmlspecialchars($mother['phone']); ?></span>
-                                                    </div>
-                                                <?php endif; ?>
-                                                <?php if (!empty($mother['email'])): ?>
-                                                    <div class="d-flex align-items-center">
-                                                        <i class="fas fa-envelope text-primary me-2 fa-sm"></i>
-                                                        <span class="small"><?php echo htmlspecialchars($mother['email']); ?></span>
-                                                    </div>
-                                                <?php endif; ?>
-                                                <?php if (empty($mother['phone']) && empty($mother['email'])): ?>
-                                                    <span class="text-muted small">No contact info</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            
-                                            <!-- Address Column -->
-                                            <td>
-                                                <?php if (!empty($mother['address'])): ?>
-                                                    <span class="small" title="<?php echo htmlspecialchars($mother['address']); ?>">
+                                                <div>
+                                                    <div class="text-sm font-black text-slate-800 tracking-tight"><?= htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']) ?></div>
+                                                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                         <?php 
-                                                        $address = htmlspecialchars($mother['address']);
-                                                        echo strlen($address) > 30 ? substr($address, 0, 30) . '...' : $address;
+                                                        if (!empty($mother['date_of_birth']) && $mother['date_of_birth'] != '0000-00-00') {
+                                                            echo date_diff(date_create($mother['date_of_birth']), date_create('today'))->y . ' yrs old';
+                                                        } else {
+                                                            echo 'Age N/A';
+                                                        }
                                                         ?>
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span class="text-muted small">No address</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            
-                                            <!-- Pregnancy Details Column -->
-                                            <td>
-                                                <?php if (!empty($mother['lmp']) && $mother['lmp'] != '0000-00-00'): ?>
-                                                    <div class="mb-1">
-                                                        <strong class="small">EDC:</strong>
-                                                        <span class="small text-success fw-semibold">
-                                                            <?php echo date('M j, Y', strtotime($mother['edc'])); ?>
-                                                        </span>
                                                     </div>
-                                                    <div class="small text-muted">
-                                                        <strong>G:</strong><?php echo $mother['gravida']; ?> 
-                                                        <strong class="ms-2">P:</strong><?php echo $mother['para']; ?>
-                                                        <?php if (!empty($mother['lmp'])): ?>
-                                                            <br><strong>LMP:</strong> <?php echo date('M j, Y', strtotime($mother['lmp'])); ?>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                <?php else: ?>
-                                                    <span class="text-muted small">No pregnancy data</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            
-                                            <!-- Status Column -->
-                                            <td>
-                                                <?php
-                                                // Determine status based on EDC
-                                                if (!empty($mother['edc']) && $mother['edc'] != '0000-00-00') {
-                                                    $edc = new DateTime($mother['edc']);
-                                                    $today = new DateTime();
-                                                    $days_diff = $today->diff($edc)->days;
-                                                    
-                                                    if ($edc < $today) {
-                                                        echo '<span class="badge bg-warning status-badge">Delivered</span>';
-                                                    } else if ($days_diff <= 30) {
-                                                        echo '<span class="badge bg-danger status-badge">Due Soon</span>';
-                                                    } else {
-                                                        echo '<span class="badge bg-success status-badge">Pregnant</span>';
-                                                    }
-                                                } else {
-                                                    echo '<span class="badge bg-secondary status-badge">Not Pregnant</span>';
-                                                }
-                                                ?>
-                                            </td>
-                                            
-                                            <!-- Actions Column -->
-                                            <td class="text-center action-buttons">
-                                                <div class="btn-group btn-group-sm" role="group">
-                                                    <button class="btn btn-outline-info view-details" 
-                                                            data-mother-id="<?php echo $mother['id']; ?>"
-                                                            data-bs-toggle="modal" 
-                                                            data-bs-target="#motherDetailsModal"
-                                                            title="View Details">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <a href="forms/mother_registration.php?edit=<?php echo $mother['id']; ?>" 
-                                                       class="btn btn-outline-warning" title="Edit Mother">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    
-                                                    <button class="btn btn-outline-danger" 
-                                                            onclick="confirmDelete('mother', <?php echo $mother['id']; ?>, '<?php echo htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']); ?>')"
-                                                            title="Delete Mother">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="7" class="text-center py-4 text-muted">
-                                                <i class="fas fa-female fa-2x mb-3 d-block"></i>
-                                                <?php echo !empty($search) ? 'No mothers found matching your search.' : 'No mothers registered yet'; ?>
-                                                <?php if (!empty($search)): ?>
-                                                    <br><a href="?" class="btn btn-sm btn-outline-primary mt-2">Clear Search</a>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Pagination -->
-                        <?php if ($totalPages > 1): ?>
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            <i class="fas fa-chevron-left"></i> Previous
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-
-                                <?php 
-                                // Show limited pagination links
-                                $startPage = max(1, $page - 2);
-                                $endPage = min($totalPages, $page + 2);
-                                
-                                for ($i = $startPage; $i <= $endPage; $i++): ?>
-                                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                                    </li>
-                                <?php endfor; ?>
-
-                                <?php if ($page < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>">
-                                            Next <i class="fas fa-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
-                        <?php endif; ?>
-                    </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="space-y-1">
+                                                <div class="flex items-center gap-2 text-sm font-bold text-slate-800 tracking-tight">
+                                                    <i class="fas fa-phone-alt text-[10px] text-health-500"></i>
+                                                    <?= htmlspecialchars($mother['phone'] ?: 'N/A') ?>
+                                                </div>
+                                                <div class="text-[10px] font-bold text-slate-400 truncate max-w-[150px]">
+                                                    <?= htmlspecialchars($mother['address'] ?: 'No address specified') ?>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="flex items-center gap-3">
+                                                <div class="text-center">
+                                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tight block">G</span>
+                                                    <span class="text-sm font-black text-slate-800"><?= $mother['gravida'] ?: '0' ?></span>
+                                                </div>
+                                                <div class="text-center">
+                                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-tight block">P</span>
+                                                    <span class="text-sm font-black text-slate-800"><?= $mother['para'] ?: '0' ?></span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php if (!empty($mother['lmp']) && $mother['lmp'] != '0000-00-00'): ?>
+                                                <div class="space-y-1">
+                                                    <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-tight">EDC: <?= date('M j, Y', strtotime($mother['edc'])) ?></div>
+                                                    <div class="text-[9px] font-bold text-slate-400">LMP: <?= date('M j, Y', strtotime($mother['lmp'])) ?></div>
+                                                </div>
+                                            <?php else: ?>
+                                                <span class="text-xs font-bold text-slate-300">NO ACTIVE PREGNANCY</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            if (!empty($mother['edc']) && $mother['edc'] != '0000-00-00') {
+                                                $edc = new DateTime($mother['edc']);
+                                                $today = new DateTime();
+                                                $days_diff = $today->diff($edc)->days;
+                                                
+                                                if ($edc < $today) {
+                                                    $statusClass = 'text-amber-600 bg-amber-50';
+                                                    $statusText = 'Delivered';
+                                                } else if ($days_diff <= 30) {
+                                                    $statusClass = 'text-rose-600 bg-rose-50 animate-pulse';
+                                                    $statusText = 'Due Soon';
+                                                } else {
+                                                    $statusClass = 'text-emerald-600 bg-emerald-50';
+                                                    $statusText = 'Pregnant';
+                                                }
+                                            } else {
+                                                $statusClass = 'text-slate-500 bg-slate-50';
+                                                $statusText = 'Regular';
+                                            }
+                                            ?>
+                                            <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest <?= $statusClass ?>">
+                                                <?= $statusText ?>
+                                            </span>
+                                        </td>
+                                        <td onclick="event.stopPropagation()">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <button onclick="viewMotherDetails(<?= $mother['id'] ?>)" class="action-btn bg-health-50 text-health-600 hover:bg-health-600 hover:text-white" title="Clinical Profile">
+                                                    <i class="fas fa-eye text-sm"></i>
+                                                </button>
+                                                <a href="forms/mother_registration.php?edit=<?= $mother['id'] ?>" class="action-btn bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white" title="Edit Profile">
+                                                    <i class="fas fa-edit text-sm"></i>
+                                                </a>
+                                                <button onclick="confirmDelete('mother', <?= $mother['id'] ?>, '<?= htmlspecialchars($mother['first_name'] . ' ' . $mother['last_name']) ?>')" class="action-btn bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white" title="Delete Record">
+                                                    <i class="fas fa-trash text-sm"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" class="py-20 text-center">
+                                        <div class="flex flex-col items-center">
+                                            <div class="w-20 h-20 bg-slate-50 rounded-[2.5rem] flex items-center justify-center text-slate-300 mb-6">
+                                                <i class="fas fa-user-slash text-4xl"></i>
+                                            </div>
+                                            <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">No Patients Found</h3>
+                                            <p class="text-slate-400 font-medium max-w-xs mx-auto mt-2">Adjust your search or register a new mother to see them in this directory.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-            </main>
+
+                <!-- Pagination -->
+                <?php if ($totalPages > 1): ?>
+                    <div class="p-6 border-t border-slate-100 flex items-center justify-center">
+                        <nav class="flex items-center gap-1">
+                            <?php if ($page > 1): ?>
+                                <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>" class="action-btn bg-slate-50 text-slate-600 hover:bg-health-600 hover:text-white">
+                                    <i class="fas fa-chevron-left text-xs"></i>
+                                </a>
+                            <?php endif; ?>
+
+                            <?php
+                            $startPage = max(1, $page - 2);
+                            $endPage = min($totalPages, $page + 2);
+                            for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>" class="action-btn <?= $i == $page ? 'bg-health-600 text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100' ?> font-black text-xs"><?= $i ?></a>
+                            <?php endfor; ?>
+
+                            <?php if ($page < $totalPages): ?>
+                                <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>" class="action-btn bg-slate-50 text-slate-600 hover:bg-health-600 hover:text-white">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </a>
+                            <?php endif; ?>
+                        </nav>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </main>
     </div>
 
     <!-- Mother Details Modal -->
     <div class="modal fade mother-details-modal" id="motherDetailsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Mother Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header flex items-center justify-between">
+                    <div>
+                        <h5 class="text-lg font-black text-slate-800 tracking-tight">Clinical Patient Profile</h5>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Comprehensive Medical Record</p>
+                    </div>
+                    <button type="button" class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-rose-50 hover:text-rose-500 transition-all border-none" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="modal-body" id="motherDetailsContent">
-                    <!-- Content will be loaded via AJAX -->
-                    <div class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Loading mother details...</p>
+                    <div class="flex flex-col items-center justify-center py-20 text-center">
+                        <div class="w-16 h-16 border-4 border-health-100 border-t-health-600 rounded-full animate-spin mb-4"></div>
+                        <p class="text-sm font-black text-slate-800 uppercase tracking-widest">Retrieving Profile...</p>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="editMotherBtn">
-                        <i class="fas fa-edit me-1"></i>Edit Information
-                    </button>
                 </div>
             </div>
         </div>
@@ -407,68 +402,58 @@ $mothers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const motherModal = new bootstrap.Modal(document.getElementById('motherDetailsModal'));
+        const modalContent = document.getElementById('motherDetailsContent');
+
+        function viewMotherDetails(motherId) {
+            // Close sidebar if open
+            if (window.closeSidebar) window.closeSidebar();
+            
+            motherModal.show();
+            modalContent.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-20 text-center">
+                    <div class="w-16 h-16 border-4 border-health-100 border-t-health-600 rounded-full animate-spin mb-4"></div>
+                    <p class="text-sm font-black text-slate-800 uppercase tracking-widest">Retrieving Profile...</p>
+                </div>
+            `;
+            
+            fetch(`get_mother_details.php?id=${motherId}`)
+                .then(response => response.text())
+                .then(data => {
+                    modalContent.innerHTML = data;
+                })
+                .catch(error => {
+                    modalContent.innerHTML = `
+                        <div class="p-8 text-center text-rose-500">
+                            <i class="fas fa-exclamation-triangle text-3xl mb-4"></i>
+                            <p class="font-bold">Error loading profile details.</p>
+                        </div>
+                    `;
+                });
+        }
+
         function confirmDelete(type, id, name) {
             Swal.fire({
-                title: 'Are you sure?',
-                html: `You are about to delete <strong>${name}</strong>. This action cannot be undone.`,
+                title: '<span class="text-2xl font-black text-slate-800 uppercase tracking-tight">Confirm Deletion</span>',
+                html: `<p class="text-slate-500 font-medium">Are you sure you want to permanently delete the clinical record for<br><strong class="text-slate-800">${name}</strong>?</p>`,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonColor: '#e11d48',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Delete Record',
+                cancelButtonText: 'Keep Record',
+                background: '#fff',
+                borderRadius: '1.5rem',
+                customClass: {
+                    confirmButton: 'px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest',
+                    cancelButton: 'px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-widest'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = `delete.php?type=${type}&id=${id}`;
                 }
             });
         }
-
-        // View mother details
-        document.addEventListener('DOMContentLoaded', function() {
-            const viewButtons = document.querySelectorAll('.view-details');
-            const modal = document.getElementById('motherDetailsModal');
-            const content = document.getElementById('motherDetailsContent');
-            const editBtn = document.getElementById('editMotherBtn');
-            let currentMotherId = null;
-
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    currentMotherId = this.getAttribute('data-mother-id');
-                    loadMotherDetails(currentMotherId);
-                });
-            });
-
-            function loadMotherDetails(motherId) {
-                fetch(`get_mother_details.php?id=${motherId}`)
-                    .then(response => response.text())
-                    .then(data => {
-                        content.innerHTML = data;
-                    })
-                    .catch(error => {
-                        content.innerHTML = `
-                            <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Failed to load mother details. Please try again.
-                            </div>
-                        `;
-                    });
-            }
-
-            // Edit button handler
-            editBtn.addEventListener('click', function() {
-                if (currentMotherId) {
-                    window.location.href = `forms/mother_registration.php?edit=${currentMotherId}`;
-                }
-            });
-
-            // Reload details when modal is shown
-            modal.addEventListener('show.bs.modal', function() {
-                if (currentMotherId) {
-                    loadMotherDetails(currentMotherId);
-                }
-            });
-        });
     </script>
 </body>
 </html>
