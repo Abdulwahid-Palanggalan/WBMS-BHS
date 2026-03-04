@@ -57,257 +57,315 @@ if (!isset($GLOBALS['base_url'])) {
 
 $baseUrl = $GLOBALS['base_url'];
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pregnant Women - Health Station System</title>
+    <title>Pregnant Women Management | Clinical Dashboard</title>
+    
+    <!-- CSS Dependencies -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="<?php echo $baseUrl; ?>/css/style.css">
+    <?php include_once $rootPath . '/includes/tailwind_config.php'; ?>
+    
     <style>
-        :root {
-            --primary: #1a73e8;
-            --primary-light: #e8f0fe;
-            --secondary: #34a853;
-            --accent: #fbbc05;
-            --light: #f8f9fa;
-            --dark: #202124;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
         
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        .premium-table thead th {
+            font-size: 0.65rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #64748b;
+            padding: 1.25rem 1rem;
+            background: #f8fafc;
+            border: none;
         }
-        
-        .dashboard-header {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary);
+
+        .premium-table tbody td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
         }
-        
-        .content-section {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            overflow: hidden;
+
+        .action-btn {
+            @apply w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300;
         }
-        
-        .section-header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
-        
-        .section-header h5 {
-            margin: 0;
-            font-weight: 600;
-        }
-        
-        .section-header i {
-            margin-right: 0.5rem;
-        }
-        
-        .section-body {
-            padding: 1.5rem;
-        }
-        
-        .btn-view-all {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 0.375rem 0.75rem;
-            font-size: 0.875rem;
-        }
-        
-        .btn-view-all:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            color: white;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        .badge-urgent {
-            background: #e74c3c;
-            color: white;
-        }
-        
-        .badge-warning {
-            background: #f39c12;
-            color: white;
-        }
-        
-        .badge-success {
-            background: var(--secondary);
-            color: white;
-        }
-        
-        .badge-info {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: #6c757d;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
+
+        .float-animation {
+            animation: subtle-float 4s ease-in-out infinite;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 font-sans text-slate-900 overflow-x-hidden">
     <?php include_once $rootPath . '/includes/header.php'; ?>
     
-    <div class="flex flex-col lg:flex-row min-h-[calc(100vh-4rem)]">
+    <div class="flex flex-col lg:flex-row min-h-screen">
         <?php include_once $rootPath . '/includes/sidebar.php'; ?>
         
         <main class="flex-1 p-4 lg:p-8 space-y-8 no-print">
-                <!-- Dashboard Header -->
-                <div class="dashboard-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h1 class="h3 mb-1">Pregnant Women Management</h1>
-                            <p class="text-muted mb-0">Currently pregnant women in the system</p>
+            <!-- Header & Analytics -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-8 bg-health-600 rounded-full"></div>
+                        <h1 class="text-3xl font-black tracking-tight text-slate-800">Pregnant Registry</h1>
+                    </div>
+                    <p class="text-slate-500 font-medium flex items-center gap-2">
+                        <i class="fas fa-stethoscope text-health-500"></i>
+                        Active Maternal Monitoring Dashboard
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 sm:flex items-center gap-4">
+                    <!-- Quick Stats Cards -->
+                    <div class="bg-white px-5 py-4 rounded-[1.8rem] border border-slate-100 shadow-sm flex items-center gap-4 min-w-[160px]">
+                        <div class="w-12 h-12 rounded-2xl bg-health-50 text-health-600 flex items-center justify-center text-xl shadow-inner">
+                            <i class="fas fa-female"></i>
                         </div>
-                        <div class="col-auto">
-                            <span class="badge bg-primary fs-6">Total: <?php echo count($pregnantWomen); ?></span>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Active</p>
+                            <h3 class="text-2xl font-black text-slate-800 leading-none"><?= count($pregnantWomen) ?></h3>
                         </div>
+                    </div>
+                    
+                    <div class="bg-slate-900 px-5 py-4 rounded-[1.8rem] text-white flex items-center gap-4 min-w-[160px] shadow-xl shadow-slate-200">
+                        <div class="w-12 h-12 rounded-2xl bg-white/10 text-health-400 flex items-center justify-center text-xl backdrop-blur-md">
+                            <i class="fas fa-person-breastfeeding"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">New Case</p>
+                            <a href="forms/mother_registration.php" class="text-xs font-black text-health-400 hover:text-health-300 transition-colors uppercase flex items-center gap-1">
+                                Register <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Registry Table -->
+            <div class="glass-card rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-xl shadow-slate-200/50 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                <div class="p-8 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="relative group max-w-md w-full">
+                        <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-health-500 transition-colors"></i>
+                        <input type="text" id="pregnantSearch" placeholder="Search by name or contact..." 
+                               class="w-full pl-12 pr-6 py-4 bg-slate-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-health-500/20 transition-all placeholder:text-slate-400">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button class="bg-slate-100 hover:bg-slate-200 p-4 rounded-2xl text-slate-600 transition-all active:scale-95 shadow-sm">
+                            <i class="fas fa-filter"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Pregnant Women Section -->
-                <div class="content-section">
-                    <div class="section-header">
-                        <h5><i class="fas fa-baby me-2"></i>Currently Pregnant Women</h5>
-                        <a href="<?php echo $baseUrl; ?>/dashboard.php" class="btn btn-view-all">
-                            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
-                        </a>
-                    </div>
-                    <div class="section-body">
-                        <?php if (!empty($pregnantWomen)): ?>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Contact</th>
-                                            <th>EDC</th>
-                                            <th>Weeks Pregnant</th>
-                                            <th>Gravida/Para</th>
-                                            <th>Last Visit</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($pregnantWomen as $woman): 
-                                            $daysUntilDue = $woman['edc'] ? (strtotime($woman['edc']) - strtotime('now')) / (24 * 60 * 60) : null;
-                                            $gestationalWeeks = $woman['gestational_weeks'] ?? 0;
-                                        ?>
-                                        <tr>
-                                            <td>
-                                                <strong><?php echo htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']); ?></strong>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($woman['phone'] ?? 'N/A'); ?></td>
-                                            <td>
-                                                <?php if (!empty($woman['edc'])): ?>
-                                                    <?php echo date('M j, Y', strtotime($woman['edc'])); ?>
-                                                    <?php if ($daysUntilDue !== null): ?>
-                                                        <br>
-                                                        <small class="text-<?php echo $daysUntilDue <= 7 ? 'danger' : ($daysUntilDue <= 30 ? 'warning' : 'success'); ?>">
-                                                            <?php echo $daysUntilDue > 0 ? round($daysUntilDue) . ' days' : 'Overdue'; ?>
-                                                        </small>
-                                                    <?php endif; ?>
-                                                <?php else: ?>
-                                                    <span class="text-muted">Not set</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $gestationalWeeks; ?> weeks
-                                                <?php if ($gestationalWeeks > 40): ?>
-                                                    <span class="badge badge-warning">Post-term</span>
-                                                <?php elseif ($gestationalWeeks < 37): ?>
-                                                    <span class="badge badge-info">Pre-term</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                G<?php echo $woman['gravida'] ?? '?'; ?>P<?php echo $woman['para'] ?? '?'; ?>
-                                                <?php if ($woman['abortions'] > 0): ?>
-                                                    <br>
-                                                    <small class="text-muted">A<?php echo $woman['abortions']; ?>L<?php echo $woman['living_children']; ?></small>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if (!empty($woman['last_prenatal_visit'])): ?>
-                                                    <?php echo date('M j, Y', strtotime($woman['last_prenatal_visit'])); ?>
-                                                    <br>
-                                                    <small class="text-<?php echo ($woman['days_since_visit'] ?? 0) > 30 ? 'danger' : 'success'; ?>">
-                                                        <?php echo $woman['days_since_visit'] ?? 'N/A'; ?> days ago
-                                                    </small>
-                                                <?php else: ?>
-                                                    <span class="text-danger">No visits</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if (($woman['days_since_visit'] ?? 0) > 30): ?>
-                                                    <span class="badge badge-urgent">Due for checkup</span>
-                                                <?php elseif ($daysUntilDue !== null && $daysUntilDue <= 7): ?>
-                                                    <span class="badge badge-warning">Due soon</span>
-                                                <?php else: ?>
-                                                    <span class="badge badge-success">Active</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <a href="<?php echo $baseUrl; ?>/mother_profile.php?id=<?php echo $woman['id']; ?>" 
-                                                   class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-eye"></i> View
-                                                </a>
-                                                <a href="<?php echo $baseUrl; ?>/forms/prenatal_form.php?mother_id=<?php echo $woman['id']; ?>" 
-                                                   class="btn btn-sm btn-success">
-                                                    <i class="fas fa-plus"></i> Visit
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php else: ?>
-                            <div class="empty-state">
-                                <i class="fas fa-baby fa-2x mb-3 d-block"></i>
-                                <h5>No Currently Pregnant Women</h5>
-                                <p class="text-muted">There are no pregnant women in the system at the moment.</p>
-                                <a href="<?php echo $baseUrl; ?>/forms/mother_registration.php" class="btn btn-primary">
-                                    <i class="fas fa-user-plus me-2"></i>Register New Mother
-                                </a>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                <div class="overflow-x-auto">
+                    <table class="premium-table w-full text-left border-collapse" id="pregnantTable">
+                        <thead>
+                            <tr>
+                                <th>Maternal Profile</th>
+                                <th>Estimated EDC</th>
+                                <th>Gestational Age</th>
+                                <th>Obstetric Score</th>
+                                <th>Last Checkup</th>
+                                <th>Clinical Status</th>
+                                <th class="text-right">Intervention</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50 font-sans">
+                            <?php foreach ($pregnantWomen as $woman): 
+                                $daysUntilDue = $woman['edc'] ? (strtotime($woman['edc']) - time()) / (24 * 60 * 60) : null;
+                                $isHighRisk = ($woman['days_since_visit'] ?? 0) > 30 || ($daysUntilDue !== null && $daysUntilDue <= 14);
+                            ?>
+                            <tr class="group hover:bg-slate-50/50 transition-colors">
+                                <td>
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-11 h-11 rounded-[0.9rem] bg-gradient-to-br from-slate-100 to-slate-200 p-0.5 shadow-sm">
+                                            <div class="w-full h-full bg-white rounded-[0.85rem] flex items-center justify-center text-slate-400 group-hover:text-health-500 transition-colors">
+                                                <i class="fas fa-user-nurse text-lg"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-black text-slate-800 leading-none mb-1"><?= htmlspecialchars($woman['first_name'] . ' ' . $woman['last_name']) ?></p>
+                                            <p class="text-[10px] font-bold text-slate-400 tracking-wide"><?= $woman['phone'] ?: 'No Phone Linked' ?></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php if ($woman['edc']): ?>
+                                        <div class="space-y-1">
+                                            <p class="text-xs font-black text-slate-700"><?= date('M j, Y', strtotime($woman['edc'])) ?></p>
+                                            <p class="text-[9px] font-bold uppercase tracking-widest text-<?= $daysUntilDue <= 7 ? 'rose' : ($daysUntilDue <= 30 ? 'amber' : 'emerald') ?>-500">
+                                                <?= $daysUntilDue > 0 ? floor($daysUntilDue) . ' days remaining' : 'At term/Overdue' ?>
+                                            </p>
+                                        </div>
+                                    <?php else: ?>
+                                        <span class="text-[10px] font-bold text-slate-300 uppercase italic">Pending Data</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-1.5 h-8 bg-sky-200 rounded-full relative overflow-hidden">
+                                            <div class="absolute bottom-0 left-0 w-full bg-sky-500" style="height: <?= min(($woman['gestational_weeks'] / 40) * 100, 100) ?>%"></div>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-black text-slate-800"><?= $woman['gestational_weeks'] ?: '—' ?> Weeks</p>
+                                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Development</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 bg-slate-100 rounded-lg text-[10px] font-black text-slate-600">G<?= $woman['gravida'] ?: '?' ?></span>
+                                        <span class="px-2 py-1 bg-indigo-50 rounded-lg text-[10px] font-black text-indigo-600">P<?= $woman['para'] ?: '?' ?></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php if ($woman['last_prenatal_visit']): ?>
+                                        <p class="text-xs font-black text-slate-700"><?= date('M d', strtotime($woman['last_prenatal_visit'])) ?></p>
+                                        <p class="text-[9px] font-bold text-slate-400 uppercase"><?= $woman['days_since_visit'] ?> days ago</p>
+                                    <?php else: ?>
+                                        <span class="px-2 py-0.5 bg-rose-50 text-[9px] font-black text-rose-500 rounded-full border border-rose-100 uppercase tracking-widest">No Record</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($isHighRisk): ?>
+                                        <span class="px-3 py-1 bg-rose-50 text-[9px] font-black text-rose-600 rounded-lg border border-rose-100 uppercase tracking-widest flex items-center gap-1.5 w-fit">
+                                            <span class="w-1 h-1 bg-rose-600 rounded-full animate-pulse"></span>
+                                            High Priority
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="px-3 py-1 bg-emerald-50 text-[9px] font-black text-emerald-600 rounded-lg border border-emerald-100 uppercase tracking-widest flex items-center gap-1.5 w-fit">
+                                            <span class="w-1 h-1 bg-emerald-600 rounded-full"></span>
+                                            Stable
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button onclick="viewMother(<?= $woman['id'] ?>)" class="action-btn bg-health-50 text-health-600 hover:bg-health-600 hover:text-white" title="View Profile">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <a href="forms/prenatal_form.php?mother_id=<?= $woman['id'] ?>" class="action-btn bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white" title="New Visit">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            
+                            <?php if (empty($pregnantWomen)): ?>
+                            <tr>
+                                <td colspan="7" class="py-20 text-center">
+                                    <div class="float-animation inline-block mb-6">
+                                        <div class="w-20 h-20 rounded-[2rem] bg-slate-100 flex items-center justify-center text-slate-300 text-3xl mx-auto border-2 border-dashed border-slate-200">
+                                            <i class="fas fa-female"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-lg font-black text-slate-800 mb-2">Registry Empty</h3>
+                                    <p class="text-sm text-slate-400 font-medium max-w-xs mx-auto mb-8 leading-relaxed">No pregnant women currently detected in the system.</p>
+                                    <a href="forms/mother_registration.php" class="inline-flex items-center gap-2 px-8 py-4 bg-health-600 hover:bg-health-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-health-100 active:scale-95">
+                                        <i class="fas fa-user-plus"></i> New Enrollment
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
-            </main>
+            </div>
+        </main>
     </div>
 
-    <!-- JavaScript -->
+    <!-- Details Modal -->
+    <div class="modal fade" id="motherDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content !rounded-[3rem] border-none shadow-2xl overflow-hidden bg-slate-50">
+                <div class="modal-header border-none p-8 pb-0 flex items-center justify-between no-print">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-6 bg-health-600 rounded-full"></div>
+                        <h5 class="modal-title text-sm font-black text-slate-800 uppercase tracking-tighter">Clinical Intake Review</h5>
+                    </div>
+                    <button type="button" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-all active:scale-95" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body p-8 pt-6" id="motherDetailsContent">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function viewMother(id) {
+            // Use global sidebar toggle if it exists to close it
+            if (typeof toggleSidebar === "function") {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+                    toggleSidebar();
+                }
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('motherDetailsModal'));
+            const content = document.getElementById('motherDetailsContent');
+            
+            content.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-24 space-y-4">
+                    <div class="w-16 h-16 border-4 border-health-500/20 border-t-health-600 rounded-full animate-spin"></div>
+                    <p class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] animate-pulse">Syncing Medical Profile...</p>
+                </div>
+            `;
+            
+            modal.show();
+
+            fetch(`get_mother_details.php?id=${id}`)
+                .then(response => response.text())
+                .then(data => {
+                    content.innerHTML = data;
+                })
+                .catch(error => {
+                    content.innerHTML = `
+                        <div class="p-8 text-center">
+                            <i class="fas fa-exclamation-circle text-rose-500 text-3xl mb-4"></i>
+                            <p class="text-slate-700 font-bold">Failed to load profile. Please try again.</p>
+                        </div>
+                    `;
+                    console.error('Error:', error);
+                });
+        }
+
+        // Search functionality
+        document.getElementById('pregnantSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#pregnantTable tbody tr:not(:last-child)');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('p.text-sm').textContent.toLowerCase();
+                const phone = row.querySelector('p.text-[10px]').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || phone.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
