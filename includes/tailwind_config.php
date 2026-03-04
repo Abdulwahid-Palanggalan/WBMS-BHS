@@ -45,6 +45,9 @@
         .input-health {
             @apply w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-health-500 focus:border-health-500 outline-none transition-all;
         }
+        .sidebar-force-hide {
+            @apply -translate-x-full !important;
+        }
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

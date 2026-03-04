@@ -82,7 +82,7 @@ if (!function_exists('isLoggedIn')) {
 </header>
 
 <!-- Sidebar Overlay -->
-<div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0"></div>
+<div id="sidebarOverlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[80] hidden transition-opacity duration-300 opacity-0"></div>
 
 <!-- SweetAlert Script for Logout Confirmation -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -128,8 +128,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const overlay   = document.getElementById('sidebarOverlay');
 
     window.openSidebar = function() {
-        if (sidebar) sidebar.classList.add('translate-x-0');
-        if (sidebar) sidebar.classList.remove('-translate-x-full');
+        if (sidebar) {
+            sidebar.classList.add('translate-x-0');
+            sidebar.classList.remove('-translate-x-full', 'sidebar-force-hide');
+        }
         if (overlay) {
             overlay.classList.remove('hidden');
             setTimeout(() => {
@@ -140,8 +142,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     window.closeSidebar = function() {
-        if (sidebar) sidebar.classList.remove('translate-x-0');
-        if (sidebar) sidebar.classList.add('-translate-x-full');
+        if (sidebar) {
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full', 'sidebar-force-hide');
+        }
         if (overlay) {
             overlay.classList.remove('opacity-100');
             overlay.classList.add('opacity-0');
@@ -151,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function () {
-            const isHidden = sidebar && sidebar.classList.contains('-translate-x-full');
+            const isHidden = sidebar && (sidebar.classList.contains('-translate-x-full') || sidebar.classList.contains('sidebar-force-hide'));
             isHidden ? window.openSidebar() : window.closeSidebar();
         });
     }
