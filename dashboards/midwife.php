@@ -26,12 +26,15 @@ $chartLabels = json_encode(array_column($birthTrends, 'month_year') ?: []);
 $chartData = json_encode(array_column($birthTrends, 'count') ?: []);
 
 // ✅ Emergency Alerts (Active)
+// ✅ Emergency Alerts (Active) - Group by mother to avoid duplicate cards for same mother
 $activeAlerts = $pdo->query("
-    SELECT ea.*, u.first_name, u.last_name, u.phone 
+    SELECT ea.id, ea.location_data, ea.created_at, ea.status, u.first_name, u.last_name, u.phone 
     FROM emergency_alerts ea
     JOIN mothers m ON ea.mother_id = m.id
     JOIN users u ON m.user_id = u.id
     WHERE ea.status IN ('active', 'responding')
+    AND ea.created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+    GROUP BY m.id
     ORDER BY ea.created_at DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
@@ -499,19 +502,36 @@ $upcomingAppointments = $pdo->query("
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('../ajax/resolve_sos.php', {
+                    fetch('ajax/resolve_sos.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `alert_id=${id}`
-                    }).then(r => r.json()).then(data => {
+                    })
+                    .then(r => {
+                        if (!r.ok) throw new Error('Network response was not ok');
+                        return r.json();
+                    })
+                    .then(data => {
                         if (data.success) {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'SOS Resolved',
                                 text: 'The emergency alert has been updated successfully.',
+                                timer: 1500,
+                                showConfirmButton: false,
                                 customClass: { popup: 'rounded-[2rem]' }
                             }).then(() => location.reload());
+                        } else {
+                            throw new Error(data.message || 'Failed to resolve alert');
                         }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Could not resolve alert: ' + error.message,
+                            customClass: { popup: 'rounded-[2rem]' }
+                        });
                     });
                 }
             });
